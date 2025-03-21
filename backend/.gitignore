@@ -1,0 +1,14 @@
+/.vs
+/PrzedszkolePlus/.vs/ProjectEvaluation
+/PrzedszkolePlus/.vs/PrzedszkolePlus
+/PrzedszkolePlus/bin/Debug/net7.0
+/PrzedszkolePlus/bin/Release/net7.0
+/PrzedszkolePlus/obj
+/Domain/bin/Debug/net7.0
+/Domain/bin/Release/net7.0
+/Infrastructure/bin/Debug/net7.0
+/Infrastructure/bin/Release/net7.0
+/PrzedszkolePlus.Tests/bin/Debug/net7.0
+/PrzedszkolePlus.Tests/obj
+/Domain/obj
+/Infrastructure/obj

@@ -1,0 +1,6 @@
+@WebSchedule_HostAddress = http://localhost:5163
+
+GET {{WebSchedule_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

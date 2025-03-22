@@ -32,13 +32,25 @@ namespace WebSchedule.Extensions
                 {
                     OnMessageReceived = context =>
                     {
-                        if (context.Request.Headers.ContainsKey(Constants.Constants.Authorization))
+                        if (context.Request.Headers.ContainsKey(Constants.Config.Authorization))
                         {
                             context.Token = context.Request.Headers.Authorization.GetToken();
                         }
                         return Task.CompletedTask;
                     }
                 };
+            });
+        }
+
+        public static void AddCors(this IServiceCollection services, string[] allowedOrigin)
+        {
+            services.AddCors(options => {
+                options.AddPolicy(Config.Cors, policy => {
+                    policy.WithOrigins(allowedOrigin)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                });
             });
         }
     }

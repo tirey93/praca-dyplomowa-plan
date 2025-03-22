@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen(c =>
     {
         In = ParameterLocation.Header,
         Description = "Please insert JWT with Bearer into field",
-        Name = Constants.Authorization,
+        Name = Config.Authorization,
         Type = SecuritySchemeType.ApiKey
     });
     c.AddSecurityRequirement(new OpenApiSecurityRequirement 
@@ -40,14 +40,16 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.Get
 var issuer = builder.Configuration["JWT:Issuer"];
 var audience = builder.Configuration["JWT:Audience"];
 var envVariable = builder.Configuration["JWT:EnvironmentSecretVariableName"];
+var allowedOrigin = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
 builder.Services.AddJWTAuthentication(issuer, audience, envVariable);
 builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("Default"));
-
+builder.Services.AddCors(allowedOrigin);
 
 
 
 
 var app = builder.Build();
+app.UseCors(Config.Cors);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

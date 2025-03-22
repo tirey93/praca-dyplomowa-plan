@@ -26,7 +26,7 @@ namespace WebSchedule.Controllers.Authentication
         {
             _configuration = configuration;
             _mediator = mediator;
-        }+
+        }
 
         UserResponse user = new UserResponse
         {

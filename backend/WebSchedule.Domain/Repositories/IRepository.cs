@@ -1,5 +1,4 @@
-﻿
-namespace WebSchedule.Domain
+﻿namespace WebSchedule.Domain.Repositories
 {
     public interface IRepository
     {

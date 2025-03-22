@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebSchedule.Domain
+namespace WebSchedule.Domain.Entities
 {
     public class Entity
     {

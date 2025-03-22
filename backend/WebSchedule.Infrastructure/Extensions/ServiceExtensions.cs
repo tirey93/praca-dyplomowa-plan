@@ -1,7 +1,8 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using WebSchedule.Domain;
+using WebSchedule.Domain.Repositories;
+using WebSchedule.Infrastructure.Repositories;
 
 namespace WebSchedule.Infrastructure.Extensions
 {

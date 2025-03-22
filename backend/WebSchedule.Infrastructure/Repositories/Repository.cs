@@ -1,6 +1,6 @@
-﻿using WebSchedule.Domain;
+﻿using WebSchedule.Domain.Repositories;
 
-namespace WebSchedule.Infrastructure
+namespace WebSchedule.Infrastructure.Repositories
 {
     public class Repository : IRepository
     {
@@ -10,7 +10,7 @@ namespace WebSchedule.Infrastructure
         {
             _appDbContext = appDbContext;
         }
-        
+
         public async Task SaveChangesAsync()
         {
             await _appDbContext.SaveChangesAsync();

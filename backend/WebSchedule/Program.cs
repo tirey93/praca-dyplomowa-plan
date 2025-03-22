@@ -1,5 +1,6 @@
 using System.Reflection;
 using WebSchedule.Extensions;
+using WebSchedule.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ var issuer = builder.Configuration["JWT:Issuer"];
 var audience = builder.Configuration["JWT:Audience"];
 var envVariable = builder.Configuration["JWT:EnvironmentSecretVariableName"];
 builder.Services.AddJWTAuthentication(issuer, audience, envVariable);
+builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("Default"));
 
 
 

@@ -28,83 +28,13 @@ namespace WebSchedule.Controllers.Authentication
             _mediator = mediator;
         }
 
-        //[HttpGet("google")]
-        //[AllowAnonymous]
-        //public IActionResult GetGoogleLoginLink()
-        //{
-        //    var loginLink = _configuration.GetGoogleLoginLink();
-        //    return Ok(new { link = loginLink });
-        //}
-
-        //[HttpGet("google/callback")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        //[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> GoogleCallback([FromQuery] string code)
-        //{
-        //    if (string.IsNullOrEmpty(code))
-        //        return StatusCode((int)HttpStatusCode.InternalServerError,
-        //            Resource.ValidatorAuthorizationCodeNotProvided);
-
-        //    GoogleUserResponse userInfo = null;
-        //    try
-        //    {
-        //        var accessToken = await _googleClient.GetAccessTokenAsync(code);
-        //        userInfo = await _googleClient.GetUserInfoAsync(accessToken);
-
-        //        var user = await _mediator.Send(new GetUserByNameQuery
-        //        {
-        //            Username = userInfo.Email
-        //        });
-
-        //        await Login(new LoginRequest
-        //        {
-        //            Username = user.Name,
-        //            Password = null
-        //        });
-
-        //    }
-        //    catch (UserNotFoundException ex)
-        //    {
-        //        if (userInfo != null)
-        //        {
-        //            await Register(new RegisterRequest
-        //            {
-        //                DisplayName = userInfo.Name,
-        //                Username = userInfo.Email,
-        //                Password = null
-        //            });
-        //        }
-        //        else
-        //        {
-        //            return StatusCode((int)HttpStatusCode.BadRequest,
-        //                Resource.ExceptionFailedToFetchUserInfo);
-        //        }
-        //    }
-        //    catch (AuthenticationFailureException ex)
-        //    {
-        //        return StatusCode((int)HttpStatusCode.Forbidden,
-        //            string.Format(Resource.ControllerForbidden, ex.Message));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode((int)HttpStatusCode.InternalServerError,
-        //            string.Format(Resource.ControllerInternalError, ex.Message));
-        //    }
-        //    var redirectUrl = Uri.UnescapeDataString(_configuration["GoogleOAuth:ReturnUrl"]);
-        //    return Redirect(redirectUrl);
-        //}
-
-
         UserResponse user = new UserResponse
         {
             Id = 1,
             DisplayName = "Test",
             Name = "Test",
             ReservationDisabled = false,
-            Role = Roles.User,
+            Role = Roles.Admin,
         };
 
         [HttpPost("Register")]

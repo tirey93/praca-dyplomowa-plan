@@ -1,1 +1,18 @@
-<p>login works!</p>
+<form class="login-form" [formGroup]="formLogin" (ngSubmit)="onSubmit()">
+    <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Login</mat-label>
+          <input formControlName="username" matInput placeholder="login">
+        </mat-form-field>
+    </p>
+    <p>
+        <mat-form-field appearance="outline">
+          <mat-label>Password</mat-label>
+          <input formControlName="password" type="password" matInput placeholder="password">
+        </mat-form-field>
+    </p>
+    <button type="submit" mat-fab extended>
+        <mat-icon>account_circle</mat-icon>
+        Login
+    </button>
+</form>

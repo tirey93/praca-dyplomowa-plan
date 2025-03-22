@@ -97,6 +97,16 @@ namespace WebSchedule.Controllers.Authentication
         //    return Redirect(redirectUrl);
         //}
 
+
+        UserResponse user = new UserResponse
+        {
+            Id = 1,
+            DisplayName = "Test",
+            Name = "Test",
+            ReservationDisabled = false,
+            Role = "Admin",
+        };
+
         [HttpPost("Register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -132,10 +142,10 @@ namespace WebSchedule.Controllers.Authentication
         {
             try
             {
-                var response = await _mediator.Send(query);
-                AppendToCookie(response);
+                //var response = await _mediator.Send(query);
+                AppendToCookie(user);
 
-                return Ok(response);
+                return Ok(user);
             }
             catch (UserNotFoundException ex)
             {

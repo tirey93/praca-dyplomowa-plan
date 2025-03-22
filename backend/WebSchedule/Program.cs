@@ -1,4 +1,6 @@
+using Microsoft.OpenApi.Models;
 using System.Reflection;
+using WebSchedule.Constants;
 using WebSchedule.Extensions;
 using WebSchedule.Infrastructure.Extensions;
 
@@ -9,7 +11,30 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please insert JWT with Bearer into field",
+        Name = Constants.Authorization,
+        Type = SecuritySchemeType.ApiKey
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement 
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+            }
+            },
+            new string[] { }
+        }
+    });
+});
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 var issuer = builder.Configuration["JWT:Issuer"];

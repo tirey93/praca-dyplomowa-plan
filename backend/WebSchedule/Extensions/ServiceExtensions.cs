@@ -30,13 +30,11 @@ namespace WebSchedule.Extensions
                 };
                 options.Events = new JwtBearerEvents()
                 {
-                    // WSO2 sends the JWT in a different field than what is expected.
-                    // This allows us to feed it in.
                     OnMessageReceived = context =>
                     {
-                        if (context.Request.Cookies.ContainsKey(Cookies.AccessToken))
+                        if (context.Request.Headers.ContainsKey(Constants.Constants.Authorization))
                         {
-                            context.Token = context.Request.Cookies[Cookies.AccessToken];
+                            context.Token = context.Request.Headers.Authorization.GetToken();
                         }
                         return Task.CompletedTask;
                     }

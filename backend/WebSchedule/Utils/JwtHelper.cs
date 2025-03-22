@@ -3,13 +3,18 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authentication;
+using Org.BouncyCastle.Asn1.Ocsp;
+using Microsoft.Extensions.Primitives;
+using WebSchedule.Extensions;
+using System.Net;
 
 namespace WebSchedule.Utils
 {
     public class JwtHelper
     {
         public static JwtSecurityToken GetJwtToken(
-            string username,
+            string userId,
             string signingKey,
             string issuer,
             string audience,
@@ -18,7 +23,7 @@ namespace WebSchedule.Utils
         {
             var claims = new[]
             {
-            new Claim(JwtRegisteredClaimNames.Sub,username),
+            new Claim(JwtRegisteredClaimNames.NameId, userId),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
@@ -41,23 +46,26 @@ namespace WebSchedule.Utils
             );
         }
 
-        public static string GetRoleClaimFromCookie(IHttpContextAccessor httpContextAccessor)
+        public static string GetRoleClaimFromToken(StringValues authorization)
         {
-            if (httpContextAccessor.HttpContext.User.Identity is not ClaimsIdentity identity)
-                return null;
+            var tokenStr = authorization.GetToken();
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var token = jwtHandler.ReadJwtToken(tokenStr);
 
-            IEnumerable<Claim> claims = identity.Claims;
+            IEnumerable<Claim> claims = token.Claims;
             var roleClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
 
             return roleClaim?.Value;
         }
 
-        public static int? GetUserIdFromCookies(IHttpContextAccessor httpContextAccessor)
+        public static int? GetUserIdFromToken(StringValues authorization)
         {
-            if (!httpContextAccessor.HttpContext.Request.Cookies.TryGetValue(Cookies.UserId, out string cookiesUserId))
-                return null;
+            var tokenStr = authorization.GetToken();
+            var jwtHandler = new JwtSecurityTokenHandler();
+            var token = jwtHandler.ReadJwtToken(tokenStr);
 
-            if (!int.TryParse(cookiesUserId, out int userId))
+            var stringUserId = token.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.NameId).Value;
+            if (!int.TryParse(stringUserId, out int userId))
                 return null;
 
             return userId;

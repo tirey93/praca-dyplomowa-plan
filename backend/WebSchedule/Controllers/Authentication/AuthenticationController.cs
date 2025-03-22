@@ -52,7 +52,7 @@ namespace WebSchedule.Controllers.Authentication
             }
         }
 
-        [HttpPost("Login")]
+        [HttpGet("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -62,9 +62,11 @@ namespace WebSchedule.Controllers.Authentication
             try
             {
                 var response = await _mediator.Send(query);
-                AppendToCookie(response);
 
-                return Ok(response);
+                return Ok(new
+                {
+                    Token = GetJwtToken(response)
+                });
             }
             catch (LoginFailedException ex)
             {
@@ -78,7 +80,7 @@ namespace WebSchedule.Controllers.Authentication
             }
         }
 
-        [HttpPost("Logout")]
+        [HttpGet("Logout")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -89,23 +91,6 @@ namespace WebSchedule.Controllers.Authentication
         {
             try
             {
-                Response.Cookies.Delete(Cookies.UserId, new CookieOptions()
-                {
-                    SameSite = SameSiteMode.None,
-                    Secure = true,
-                    HttpOnly = true,
-                    MaxAge = new TimeSpan(12, 0, 0),
-                    Domain = "localhost"
-                });
-                Response.Cookies.Delete(Cookies.AccessToken, new CookieOptions()
-                {
-                    SameSite = SameSiteMode.None,
-                    Secure = true,
-                    HttpOnly = true,
-                    MaxAge = new TimeSpan(12, 0, 0),
-                    Domain = "localhost"
-                });
-
                 return NoContent();
             }
             catch (Exception ex)
@@ -115,11 +100,11 @@ namespace WebSchedule.Controllers.Authentication
             }
         }
 
-        private void AppendToCookie(UserResponse response)
+        private string GetJwtToken(UserResponse response)
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Role, response.Role)
+                new Claim(ClaimTypes.Role, response.Role),
             };
 
             var signingKey = Environment.GetEnvironmentVariable(_configuration["JWT:EnvironmentSecretVariableName"]);
@@ -127,16 +112,14 @@ namespace WebSchedule.Controllers.Authentication
                 throw new MissingSigningKeyException();
 
             var token = JwtHelper.GetJwtToken(
-                response.Name,
+                response.Id.ToString(),
                 signingKey,
                 _configuration["JWT:Issuer"],
                 _configuration["JWT:Audience"],
                 TimeSpan.FromMinutes(24 * 60),
                 claims.ToArray());
 
-            Response.Cookies
-                .AppendToCookie(Cookies.AccessToken, new JwtSecurityTokenHandler().WriteToken(token))
-                .AppendToCookie(Cookies.UserId, response.Id.ToString());
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }

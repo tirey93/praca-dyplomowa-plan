@@ -1,11 +1,14 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using WebSchedule.Constants;
 using WebSchedule.Controllers.Authentication.Exceptions;
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Properties;
+using WebSchedule.Utils;
 
 namespace WebSchedule.Controllers.User
 {
@@ -24,16 +27,24 @@ namespace WebSchedule.Controllers.User
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-#if !DEBUG
-        [Authorize(Roles = Roles.Admin)]
-#endif
+//#if !DEBUG
+        [Authorize(Roles = Roles.User)]
+//#endif
         public async Task<ActionResult<IEnumerable<UserResponse>>> Get()
         {
             try
             {
+                var userId = JwtHelper.GetUserIdFromToken(Request.Headers.Authorization);
+                var role = JwtHelper.GetRoleClaimFromToken(Request.Headers.Authorization);
+
+
                 //var query = new GetAllUsersQuery();
                 //var result = await _mediator.Send(query);
-                return Ok("In Get");
+                return Ok(new
+                {
+                    UserId = userId,
+                    Role = role
+                });
             }
             catch (LoginFailedException ex)
             {

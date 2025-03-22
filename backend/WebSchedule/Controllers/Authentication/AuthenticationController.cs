@@ -104,7 +104,7 @@ namespace WebSchedule.Controllers.Authentication
             DisplayName = "Test",
             Name = "Test",
             ReservationDisabled = false,
-            Role = "Admin",
+            Role = Roles.User,
         };
 
         [HttpPost("Register")]

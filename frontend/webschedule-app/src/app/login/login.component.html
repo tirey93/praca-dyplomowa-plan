@@ -15,4 +15,7 @@
         <mat-icon>account_circle</mat-icon>
         Login
     </button>
+    @if (wrongCredentials) {
+        <mat-error class="login-error">Wrong credential</mat-error>
+    }
 </form>

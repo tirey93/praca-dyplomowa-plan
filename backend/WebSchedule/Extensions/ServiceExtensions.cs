@@ -32,7 +32,7 @@ namespace WebSchedule.Extensions
                 {
                     OnMessageReceived = context =>
                     {
-                        if (context.Request.Headers.ContainsKey(Constants.Config.Authorization))
+                        if (context.Request.Headers.ContainsKey(Config.Authorization))
                         {
                             context.Token = context.Request.Headers.Authorization.GetToken();
                         }

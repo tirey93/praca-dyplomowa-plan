@@ -7,6 +7,8 @@ using System.Net;
 using WebSchedule.Constants;
 using WebSchedule.Controllers.Authentication.Exceptions;
 using WebSchedule.Controllers.Responses;
+using WebSchedule.Controllers.User.Exceptions;
+using WebSchedule.Controllers.User.Queries;
 using WebSchedule.Properties;
 using WebSchedule.Utils;
 
@@ -23,30 +25,26 @@ namespace WebSchedule.Controllers.User
             _mediator = mediator;
         }
 
-        [HttpGet]
+        [HttpGet("LoggedIn")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 //#if !DEBUG
         [Authorize(Roles = Roles.User)]
 //#endif
-        public async Task<ActionResult<IEnumerable<UserResponse>>> Get()
+        public async Task<ActionResult<UserResponse>> GetLoggedIn()
         {
             try
             {
-                var userId = JwtHelper.GetUserIdFromToken(Request.Headers.Authorization);
-                var role = JwtHelper.GetRoleClaimFromToken(Request.Headers.Authorization);
+                var userId = JwtHelper.GetUserIdFromToken(Request.Headers.Authorization)
+                    ?? throw new UserNotFoundException();
 
-
-                //var query = new GetAllUsersQuery();
-                //var result = await _mediator.Send(query);
-                return Ok(new
+                return Ok(await _mediator.Send(new GetUserQuery
                 {
                     UserId = userId,
-                    Role = role
-                });
+                }));
             }
-            catch (LoginFailedException ex)
+            catch (UserNotFoundException ex)
             {
                 return StatusCode((int)HttpStatusCode.NotFound,
                     string.Format(Resource.ControllerNotFound, ex.Message));

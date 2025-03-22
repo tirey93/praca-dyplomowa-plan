@@ -15,11 +15,11 @@ namespace WebSchedule.Controllers.Authentication.Queries
     }
 }
 
-public class AuthenticationQueryHandler : IRequestHandler<LoginQuery, UserResponse>
+public class LoginQueryHandler : IRequestHandler<LoginQuery, UserResponse>
 {
     private readonly IUserRepository _userRepository;
 
-    public AuthenticationQueryHandler(IUserRepository userRepository)
+    public LoginQueryHandler(IUserRepository userRepository)
     {
         _userRepository = userRepository;
     }

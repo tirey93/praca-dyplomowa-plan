@@ -129,14 +129,14 @@
   <data name="ExceptionUserHasReservationDisabled" xml:space="preserve">
     <value>User with ID {0} is blocked from making reservations.</value>
   </data>
-  <data name="ExceptionUserNameNotFound" xml:space="preserve">
+  <data name="LoginFailedForUser" xml:space="preserve">
     <value>Login failed for user {0}.</value>
   </data>
   <data name="ExceptionUserNotFound" xml:space="preserve">
-    <value>Login failed for user with ID {0}</value>
+    <value>User with ID {0} not found.</value>
   </data>
   <data name="ExceptionNoneUserNotFound" xml:space="preserve">
-    <value>Login failed.</value>
+    <value>User not found.</value>
   </data>
   <data name="ExceptionUserPasswordNotMatch" xml:space="preserve">
     <value>Password for user name {0} not match.</value>

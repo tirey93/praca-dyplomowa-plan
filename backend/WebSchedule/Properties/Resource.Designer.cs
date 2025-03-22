@@ -115,7 +115,7 @@ namespace WebSchedule.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User not found..
+        ///   Looks up a localized string similar to Login failed..
         /// </summary>
         internal static string ExceptionNoneUserNotFound {
             get {
@@ -160,7 +160,16 @@ namespace WebSchedule.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User with name {0} not found..
+        ///   Looks up a localized string similar to User with ID {0} is not active..
+        /// </summary>
+        internal static string ExceptionUserIsNotActive {
+            get {
+                return ResourceManager.GetString("ExceptionUserIsNotActive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Login failed for user {0}..
         /// </summary>
         internal static string ExceptionUserNameNotFound {
             get {
@@ -169,7 +178,7 @@ namespace WebSchedule.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User with ID {0} not found..
+        ///   Looks up a localized string similar to Login failed for user with ID {0}.
         /// </summary>
         internal static string ExceptionUserNotFound {
             get {

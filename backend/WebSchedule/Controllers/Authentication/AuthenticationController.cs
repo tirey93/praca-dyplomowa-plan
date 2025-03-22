@@ -28,15 +28,6 @@ namespace WebSchedule.Controllers.Authentication
             _mediator = mediator;
         }
 
-        UserResponse user = new UserResponse
-        {
-            Id = 1,
-            DisplayName = "Test",
-            Name = "Test",
-            ReservationDisabled = false,
-            Role = Roles.Admin,
-        };
-
         [HttpPost("Register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -47,7 +38,6 @@ namespace WebSchedule.Controllers.Authentication
             try
             {
                 await _mediator.Send(command);
-                //AppendToCookie(response);
                 return Ok();
             }
             catch (UserAlreadyExistsException ex)
@@ -65,27 +55,21 @@ namespace WebSchedule.Controllers.Authentication
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [AllowAnonymous]
         public async Task<ActionResult<UserResponse>> Login([FromBody] LoginQuery query)
         {
             try
             {
-                //var response = await _mediator.Send(query);
-                AppendToCookie(user);
+                var response = await _mediator.Send(query);
+                AppendToCookie(response);
 
-                return Ok(user);
+                return Ok(response);
             }
-            catch (UserNotFoundException ex)
+            catch (LoginFailedException ex)
             {
                 return StatusCode((int)HttpStatusCode.NotFound,
                     string.Format(Resource.ControllerNotFound, ex.Message));
-            }
-            catch (PasswordNotMatchException ex)
-            {
-                return StatusCode((int)HttpStatusCode.BadRequest,
-                    string.Format(Resource.ControllerBadRequest, ex.Message));
             }
             catch (Exception ex)
             {

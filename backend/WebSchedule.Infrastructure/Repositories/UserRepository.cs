@@ -21,5 +21,10 @@ namespace WebSchedule.Infrastructure.Repositories
         {
             return await _dbSet.AnyAsync(x => x.Name == userName);
         }
+
+        public async Task<User> TryLoginByPassword(string userName, string hashedPassword)
+        {
+            return await _dbSet.FirstOrDefaultAsync(x => x.Name == userName && x.HashedPassword.ToLower() == hashedPassword.ToLower());
+        }
     }
 }

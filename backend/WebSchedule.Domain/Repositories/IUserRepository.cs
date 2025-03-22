@@ -7,5 +7,6 @@ namespace WebSchedule.Domain.Repositories
     {
         Task<bool> UserExistsAsync(string userName);
         Task RegisterUserAsync(User user);
+        Task<User> TryLoginByPassword(string userName, string hashedPassword);
     }
 }

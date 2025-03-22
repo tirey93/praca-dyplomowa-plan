@@ -35,7 +35,7 @@ namespace WebSchedule.Controllers.User
                 //var result = await _mediator.Send(query);
                 return Ok("In Get");
             }
-            catch (UserNotFoundException ex)
+            catch (LoginFailedException ex)
             {
                 return StatusCode((int)HttpStatusCode.NotFound,
                     string.Format(Resource.ControllerNotFound, ex.Message));

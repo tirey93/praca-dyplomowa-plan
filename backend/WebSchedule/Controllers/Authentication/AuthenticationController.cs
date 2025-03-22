@@ -52,7 +52,7 @@ namespace WebSchedule.Controllers.Authentication
             }
         }
 
-        [HttpGet("Login")]
+        [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

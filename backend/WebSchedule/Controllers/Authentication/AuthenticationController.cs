@@ -46,9 +46,9 @@ namespace WebSchedule.Controllers.Authentication
         {
             try
             {
-                var response = await _mediator.Send(command);
-                AppendToCookie(response);
-                return Ok(response);
+                await _mediator.Send(command);
+                //AppendToCookie(response);
+                return Ok();
             }
             catch (UserAlreadyExistsException ex)
             {

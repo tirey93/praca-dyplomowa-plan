@@ -11,7 +11,7 @@ namespace WebSchedule.Infrastructure.Extensions
         public static void AddInfrastructure(this IServiceCollection services, string connectionString)
         {
             services.AddDbContext<AppDbContext>(options => options.UseMySQL(connectionString));
-            services.AddScoped<IRepository, Repository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
     }
 }

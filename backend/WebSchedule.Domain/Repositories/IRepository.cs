@@ -1,7 +1,10 @@
-﻿namespace WebSchedule.Domain.Repositories
+﻿using WebSchedule.Domain.Entities;
+
+namespace WebSchedule.Domain.Repositories
 {
-    public interface IRepository
+    public interface IRepository<T> where T : Entity
     {
+        T Get(int id);
         Task SaveChangesAsync();
     }
 }

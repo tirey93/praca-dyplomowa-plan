@@ -1,14 +1,23 @@
-﻿using WebSchedule.Domain.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using WebSchedule.Domain.Entities;
+using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Infrastructure.Repositories
 {
-    public class Repository : IRepository
+    public abstract class Repository<T> : IRepository<T> where T : Entity
     {
         private readonly AppDbContext _appDbContext;
+        protected readonly DbSet<T> _dbSet;
 
-        public Repository(AppDbContext appDbContext)
+        public Repository(AppDbContext appDbContext, DbSet<T> dbSet)
         {
             _appDbContext = appDbContext;
+            _dbSet = dbSet;
+        }
+
+        public T Get(int id)
+        {
+            return _dbSet.FirstOrDefault(x => x.Id == id);
         }
 
         public async Task SaveChangesAsync()

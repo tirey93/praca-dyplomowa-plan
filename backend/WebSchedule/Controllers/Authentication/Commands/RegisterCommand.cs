@@ -1,10 +1,13 @@
 ﻿using MediatR;
 using WebSchedule.Controllers.Authentication.Commands;
-using WebSchedule.Controllers.Responses;
+using WebSchedule.Controllers.Authentication.Exceptions;
+using WebSchedule.Domain.Entities;
+using WebSchedule.Domain.Repositories;
+using WebSchedule.Utils;
 
 namespace WebSchedule.Controllers.Authentication.Commands
 {
-    public class RegisterCommand : IRequest<UserResponse>
+    public class RegisterCommand : IRequest
     {
         public string Username { get; set; }
         public string DisplayName { get; set; }
@@ -13,15 +16,30 @@ namespace WebSchedule.Controllers.Authentication.Commands
 }
 
 
-public class RegisterCommandHandler : IRequestHandler<RegisterCommand, UserResponse>
+public class RegisterCommandHandler : IRequestHandler<RegisterCommand>
 {
-    public RegisterCommandHandler()
-    {
+    private readonly IUserRepository _userRepository;
 
+    public RegisterCommandHandler(IUserRepository userRepository)
+    {
+        _userRepository = userRepository;
     }
 
-    public async Task<UserResponse> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    public async Task Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var userExists = await _userRepository.UserExistsAsync(request.Username);
+        if (userExists) 
+            throw new UserAlreadyExistsException(request.Username);
+
+        await _userRepository.RegisterUserAsync(new User
+        {
+            DisplayName = request.DisplayName,
+            HashedPassword = ShaHelper.QuickHash(request.Password),
+            Name = request.Username,
+            Role = Role.User,
+            IsActive = true,
+        });
+
+        await _userRepository.SaveChangesAsync();
     }
 }

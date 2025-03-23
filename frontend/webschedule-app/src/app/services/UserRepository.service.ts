@@ -1,7 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoginRequest } from '../login/dtos/loginRequest';
-import { LoginResponse } from '../login/dtos/loginResponse';
 import { UserResponse } from '../login/dtos/userResponse';
 import { CookieService } from 'ngx-cookie-service';
 

@@ -39,8 +39,6 @@ export class LoginComponent {
   wrongCredentials: boolean = false;
 
   onSubmit() {
-    console.log(this.formLogin.controls.username.value, this.formLogin.controls.password.value)
-    console.log(this.cookieService.get("test"))
     this.authenticationRepository.tryLogin$({
       userName: this.formLogin.controls.username.value!,
       password: this.formLogin.controls.password.value!

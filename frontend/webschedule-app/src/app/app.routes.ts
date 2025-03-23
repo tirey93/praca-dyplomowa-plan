@@ -5,9 +5,8 @@ import { AuthGuard } from './login/guards/auth.guard';
 
 export const routes: Routes = [
     {
-        path: "",
+        path: "login",
         component: LoginComponent,
-        pathMatch: 'full'
     },
     {
         path: "week",

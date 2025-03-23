@@ -8,6 +8,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { AuthenticationRepositoryService } from '../services/AuthenticationRepository.service';
 import { UserRepositoryService } from '../services/UserRepository.service';
 import { Router } from '@angular/router';
+import { JwtService } from '../services/Jwt.service';
 
 
 interface LoginForm {
@@ -26,7 +27,12 @@ export class LoginComponent {
     private cookieService: CookieService, 
     private authenticationRepository: AuthenticationRepositoryService,
     private userRepositoryService: UserRepositoryService,
-    private router: Router) {}
+    private router: Router,
+    private jwtService: JwtService) {
+      if (jwtService.isTokenValid()) {
+        router.navigateByUrl("")
+      }  
+    }
 
   formLogin: FormGroup<LoginForm> = new FormGroup({
     username: new FormControl('', [

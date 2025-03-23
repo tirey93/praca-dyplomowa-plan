@@ -1,5 +1,8 @@
 <p>week-schedule works!</p>
 
 @if (loggedUser$ |async; as loggedUser) {
-    <p>{{loggedUser.name}}</p>
+    <p>{{loggedUser.displayName}}</p>
 }
+<button (click)="logout()" mat-fab extended>
+    Logout
+</button>

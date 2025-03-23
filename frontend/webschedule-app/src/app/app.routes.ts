@@ -5,6 +5,11 @@ import { AuthGuard } from './login/guards/auth.guard';
 
 export const routes: Routes = [
     {
+        path: "",
+        redirectTo: "week",
+        pathMatch: 'full'
+    },
+    {
         path: "login",
         component: LoginComponent,
     },

@@ -18,4 +18,7 @@
     @if (wrongCredentials) {
         <mat-error class="login-error">Wrong credential</mat-error>
     }
+    @if (noConnection) {
+        <mat-error class="login-error">No connection to server</mat-error>
+    }
 </form>

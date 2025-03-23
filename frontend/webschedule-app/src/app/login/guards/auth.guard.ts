@@ -11,7 +11,7 @@ export class AuthGuard implements CanActivate {
 
   canActivate(next: ActivatedRouteSnapshot,state: RouterStateSnapshot):boolean {
     if (!this.jwtService.isTokenValid()) {
-      this.router.navigateByUrl("")
+      this.router.navigateByUrl("/login")
       return false;
     }
     return true;

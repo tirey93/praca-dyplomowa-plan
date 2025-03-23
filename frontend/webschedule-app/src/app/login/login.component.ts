@@ -37,6 +37,7 @@ export class LoginComponent {
     ])
   })
   wrongCredentials: boolean = false;
+  noConnection: boolean = false;
 
   onSubmit() {
     this.authenticationRepository.tryLogin$({
@@ -49,7 +50,10 @@ export class LoginComponent {
           this.router.navigateByUrl("/week")
         })
       },
-      error: (error) => this.wrongCredentials = error.status === 404
+      error: (error) => {
+        this.wrongCredentials = error.status === 404;
+        this.noConnection = error.status === 0;
+      }
     })
   }
 }

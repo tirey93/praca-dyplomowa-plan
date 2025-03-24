@@ -8,7 +8,7 @@
 /WebSchedule.Domain/bin/Release
 /WebSchedule.Infrastructure/bin/Debug
 /WebSchedule.Infrastructure/bin/Release
-/WebSchedule.Tests/bin/Debug
-/WebSchedule.Tests/obj
+/WebSchedule.ZTest.Domain/bin/Debug
+/WebSchedule.ZTest.Domain/obj
 /WebSchedule.Domain/obj
 /WebSchedule.Infrastructure/obj

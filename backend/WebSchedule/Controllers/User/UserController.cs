@@ -1,11 +1,8 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using WebSchedule.Constants;
-using WebSchedule.Controllers.Authentication.Exceptions;
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Controllers.User.Exceptions;
 using WebSchedule.Controllers.User.Queries;
@@ -29,9 +26,9 @@ namespace WebSchedule.Controllers.User
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-//#if !DEBUG
+#if !DEBUG
         [Authorize(Roles = Roles.User)]
-//#endif
+#endif
         public async Task<ActionResult<UserResponse>> GetLoggedIn()
         {
             try

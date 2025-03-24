@@ -99,24 +99,19 @@ namespace WebSchedule.Controllers.Authentication
             }
         }
 
-        private string GetJwtToken(UserResponse response)
+        private string GetJwtToken(LoginResponse response)
         {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Role, response.Role),
-            };
 
             var signingKey = Environment.GetEnvironmentVariable(_configuration["JWT:EnvironmentSecretVariableName"]);
             if (string.IsNullOrEmpty(signingKey))
                 throw new MissingSigningKeyException();
 
             var token = JwtHelper.GetJwtToken(
-                response.Id.ToString(),
+                response.UserId.ToString(),
                 signingKey,
                 _configuration["JWT:Issuer"],
                 _configuration["JWT:Audience"],
-                TimeSpan.FromMinutes(24 * 60),
-                claims.ToArray());
+                TimeSpan.FromMinutes(24 * 60));
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

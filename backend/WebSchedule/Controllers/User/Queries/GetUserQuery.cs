@@ -1,11 +1,7 @@
-﻿using Domain.Exceptions;
-using MediatR;
-using WebSchedule.Controllers.Authentication.Exceptions;
-using WebSchedule.Controllers.Authentication.Queries;
+﻿using MediatR;
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Controllers.User.Exceptions;
 using WebSchedule.Domain.Repositories;
-using WebSchedule.Utils;
 
 namespace WebSchedule.Controllers.User.Queries
 {
@@ -34,7 +30,7 @@ namespace WebSchedule.Controllers.User.Queries
                 Id = user.Id,
                 Name = user.Name,
                 DisplayName = user.DisplayName,
-                Role = "Role",
+                Groups = null, //todo
                 IsActive = user.IsActive
             });
         }

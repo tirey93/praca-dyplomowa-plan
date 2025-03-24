@@ -8,14 +8,14 @@ using WebSchedule.Utils;
 
 namespace WebSchedule.Controllers.Authentication.Queries
 {
-    public class LoginQuery : IRequest<UserResponse>
+    public class LoginQuery : IRequest<LoginResponse>
     {
         public string Username { get; set; }
         public string Password { get; set; }
     }
 }
 
-public class LoginQueryHandler : IRequestHandler<LoginQuery, UserResponse>
+public class LoginQueryHandler : IRequestHandler<LoginQuery, LoginResponse>
 {
     private readonly IUserRepository _userRepository;
 
@@ -24,7 +24,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, UserResponse>
         _userRepository = userRepository;
     }
 
-    public async Task<UserResponse> Handle(LoginQuery request, CancellationToken cancellationToken)
+    public async Task<LoginResponse> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
         var hash = ShaHelper.QuickHash(request.Password);
         var user = await _userRepository.TryLoginByPassword(request.Username, hash)
@@ -33,13 +33,9 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, UserResponse>
         if (!user.IsActive)
             throw new UserIsNotActiveException(user.Id);
 
-        return new UserResponse
+        return new LoginResponse
         {
-            Id = user.Id,
-            Name = user.Name,
-            DisplayName = user.DisplayName,
-            Role = "Role",
-            IsActive = user.IsActive
+            UserId = user.Id,
         };
     }
 }

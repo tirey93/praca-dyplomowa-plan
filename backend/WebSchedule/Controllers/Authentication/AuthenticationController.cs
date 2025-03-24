@@ -1,5 +1,4 @@
-﻿using WebSchedule.Constants;
-using WebSchedule.Utils;
+﻿using WebSchedule.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
@@ -85,7 +84,7 @@ namespace WebSchedule.Controllers.Authentication
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 #if !DEBUG
-        [Authorize(Roles = Roles.User)]
+        [Authorize]
 #endif
         public IActionResult Logout()
         {

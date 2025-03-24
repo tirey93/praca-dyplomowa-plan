@@ -1,6 +1,4 @@
-﻿using WebSchedule.Domain.Entities;
-
-namespace WebSchedule.Domain.Repositories
+﻿namespace WebSchedule.Domain
 {
     public interface IRepository<T> where T : Entity
     {

@@ -1,5 +1,4 @@
-﻿
-using WebSchedule.Domain.Entities;
+﻿using WebSchedule.Domain.Entities;
 
 namespace WebSchedule.Domain.Repositories
 {

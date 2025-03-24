@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebSchedule.Domain.Entities;
-using WebSchedule.Domain.Repositories;
+using WebSchedule.Domain;
 
 namespace WebSchedule.Infrastructure.Repositories
 {

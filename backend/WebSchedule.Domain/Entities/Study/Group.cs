@@ -1,16 +1,24 @@
-﻿using WebSchedule.Domain.Exceptions;
-
+﻿
 namespace WebSchedule.Domain.Entities.Study
 {
     public class Group : Entity
     {
-        public int StartingYear { get; set; }
-        public StudyMode StudyMode { get; set; }
-        public StudyLevel StudyLevel { get; set; }
-        public Major Major { get; set; }
+        public int StartingYear { get; private set; }
+        public StudyMode StudyMode { get; private set; }
+        public StudyLevel StudyLevel { get; private set; }
+        public Major Major { get; private set; }
 
         public HashSet<User> Students { get; private set; } = [];
         public HashSet<User> Admins { get; private set; } = [];
+
+        public Group(int startingYear, StudyMode studyMode, StudyLevel studyLevel, Major major, User admin)
+        {
+            StartingYear = startingYear;
+            StudyMode = studyMode;
+            StudyLevel = studyLevel;
+            Major = major;
+            AddAdmin(admin);
+        }
 
         public void AddStudent(User student)
         {
@@ -24,21 +32,11 @@ namespace WebSchedule.Domain.Entities.Study
 
         public void AddAdmin(User admin)
         {
-            if (!Students.Contains(admin))
-            {
-                throw new UserNotBelongToTheGroupException(admin.Id, ToString());
-            }
-
             Admins.Add(admin);
         }
 
         public void RemoveAdmin(User admin)
         {
-            if (admin.Role != Role.Admin)
-            {
-                throw new UserNotAnAdminException(admin.Id);
-            }
-
             Admins.Remove(admin);
         }
 

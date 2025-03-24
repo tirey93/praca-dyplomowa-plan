@@ -36,7 +36,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand>
             DisplayName = request.DisplayName,
             HashedPassword = ShaHelper.QuickHash(request.Password),
             Name = request.Username,
-            Role = Role.User,
+            //Role = Role.User,
             IsActive = true,
         });
 

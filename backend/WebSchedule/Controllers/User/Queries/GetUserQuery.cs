@@ -34,7 +34,7 @@ namespace WebSchedule.Controllers.User.Queries
                 Id = user.Id,
                 Name = user.Name,
                 DisplayName = user.DisplayName,
-                Role = user.Role.ToString(),
+                Role = "Role",
                 IsActive = user.IsActive
             });
         }

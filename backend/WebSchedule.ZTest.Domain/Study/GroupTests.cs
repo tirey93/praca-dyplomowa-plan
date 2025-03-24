@@ -11,9 +11,7 @@ namespace WebSchedule.ZTest.Domain.Study
         {
             var group = new Group(2015, StudyMode.PartTime, StudyLevel.Bachelor, new Major { ShortName = "ABC" }, new User());
 
-            var result = group.ToString();
-
-            result.Should().Be("2015NL - ABC");
+            group.Name.Should().Be("2015NL - ABC");
         }
     }
 }

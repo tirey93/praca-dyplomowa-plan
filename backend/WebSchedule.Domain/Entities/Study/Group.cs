@@ -13,6 +13,7 @@ namespace WebSchedule.Domain.Entities.Study
 
         public string Name => $"{StartingYear}{(char)StudyMode}{(char)StudyLevel} - {Major.ShortName}";
 
+
         public Group(int startingYear, StudyMode studyMode, StudyLevel studyLevel, Major major, User admin)
         {
             StartingYear = startingYear;
@@ -41,7 +42,5 @@ namespace WebSchedule.Domain.Entities.Study
         {
             Admins.Remove(admin);
         }
-
-        public override string ToString() => Name;
     }
 }

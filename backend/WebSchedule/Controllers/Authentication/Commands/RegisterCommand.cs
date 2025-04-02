@@ -27,7 +27,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand>
 
     public async Task Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var userExists = await _userRepository.UserExistsAsync(request.Username);
+        var userExists = _userRepository.UserExists(request.Username);
         if (userExists) 
             throw new UserAlreadyExistsException(request.Username);
 

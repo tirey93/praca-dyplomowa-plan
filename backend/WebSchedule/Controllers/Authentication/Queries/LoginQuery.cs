@@ -27,7 +27,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, LoginResponse>
     public async Task<LoginResponse> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
         var hash = ShaHelper.QuickHash(request.Password);
-        var user = await _userRepository.TryLoginByPassword(request.Username, hash)
+        var user = _userRepository.TryLoginByPassword(request.Username, hash)
                 ?? throw new LoginFailedException(request.Username);
 
         if (!user.IsActive)

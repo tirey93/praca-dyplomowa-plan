@@ -14,6 +14,8 @@ namespace WebSchedule.Domain.Entities.Study
         public HashSet<User> Admins { get; private set; } = [];
         public HashSet<User> Candidates { get; private set; } = [];
 
+        public IEnumerable<User> Users => Candidates.Union(Users).Union(Admins);
+
         public string Name => $"{StartingYear}{(char)StudyMode}{(char)StudyLevel} - {StudyCourse.ShortName}";
 
 

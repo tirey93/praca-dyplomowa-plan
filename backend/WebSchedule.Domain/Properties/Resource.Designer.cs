@@ -61,20 +61,29 @@ namespace WebSchedule.Domain.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User with ID {0} is already a student in a group with id {1}.
+        /// </summary>
+        internal static string CandidateAlreadyInAGroupException {
+            get {
+                return ResourceManager.GetString("CandidateAlreadyInAGroupException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User with ID {0} is not a candidate in a group with id {1}.
+        /// </summary>
+        internal static string NoSuchCandidateInGroup {
+            get {
+                return ResourceManager.GetString("NoSuchCandidateInGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User with ID {0} is not an admin..
         /// </summary>
         internal static string UserNotAnAdmin {
             get {
                 return ResourceManager.GetString("UserNotAnAdmin", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to User with ID {0} not belong to the group {1}.
-        /// </summary>
-        internal static string UserNotBelongToTheGroup {
-            get {
-                return ResourceManager.GetString("UserNotBelongToTheGroup", resourceCulture);
             }
         }
     }

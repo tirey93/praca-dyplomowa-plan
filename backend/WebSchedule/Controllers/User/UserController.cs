@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using WebSchedule.Constants;
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Controllers.User.Exceptions;
 using WebSchedule.Controllers.User.Queries;
@@ -27,7 +26,7 @@ namespace WebSchedule.Controllers.User
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 #if !DEBUG
-        [Authorize(Roles = Roles.User)]
+        [Authorize]
 #endif
         public async Task<ActionResult<UserResponse>> GetLoggedIn()
         {

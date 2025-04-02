@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebSchedule.Domain.Entities.Study
 {
-    public class Major : Entity
+    public class StudyCourse : Entity
     {
         public string Name { get; set; }
         public string ShortName { get; set; }

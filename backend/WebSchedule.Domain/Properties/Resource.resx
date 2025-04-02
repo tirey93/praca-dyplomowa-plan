@@ -120,7 +120,10 @@
   <data name="UserNotAnAdmin" xml:space="preserve">
     <value>User with ID {0} is not an admin.</value>
   </data>
-  <data name="UserNotBelongToTheGroup" xml:space="preserve">
-    <value>User with ID {0} not belong to the group {1}</value>
+  <data name="NoSuchCandidateInGroup" xml:space="preserve">
+    <value>User with ID {0} is not a candidate in a group with id {1}</value>
+  </data>
+  <data name="CandidateAlreadyInAGroupException" xml:space="preserve">
+    <value>User with ID {0} is already a student in a group with id {1}</value>
   </data>
 </root>

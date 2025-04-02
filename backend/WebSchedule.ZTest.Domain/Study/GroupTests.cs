@@ -9,7 +9,7 @@ namespace WebSchedule.ZTest.Domain.Study
         [Fact]
         public void ToString_ShouldSuccess()
         {
-            var group = new Group(2015, StudyMode.PartTime, StudyLevel.Bachelor, new Major { ShortName = "ABC" }, new User());
+            var group = new Group(2015, StudyMode.PartTime, StudyLevel.Bachelor, new StudyCourse { ShortName = "ABC" }, new User());
 
             group.Name.Should().Be("2015NL - ABC");
         }

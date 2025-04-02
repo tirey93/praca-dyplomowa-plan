@@ -46,18 +46,6 @@ namespace WebSchedule.Utils
             );
         }
 
-        public static string GetRoleClaimFromToken(StringValues authorization)
-        {
-            var tokenStr = authorization.GetToken();
-            var jwtHandler = new JwtSecurityTokenHandler();
-            var token = jwtHandler.ReadJwtToken(tokenStr);
-
-            IEnumerable<Claim> claims = token.Claims;
-            var roleClaim = claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
-
-            return roleClaim?.Value;
-        }
-
         public static int? GetUserIdFromToken(StringValues authorization)
         {
             var tokenStr = authorization.GetToken();

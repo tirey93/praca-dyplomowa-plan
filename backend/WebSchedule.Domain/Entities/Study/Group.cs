@@ -50,7 +50,7 @@ namespace WebSchedule.Domain.Entities.Study
             if (Students.Contains(candidate))
                 throw new CandidateAlreadyInAGroupException(candidate.Id, Id);
 
-            MembersInGroup.First(x => x.Equals(candidate)).ChangeRole(UserRole.Candidate);
+            MembersInGroup.First(x => x.User.Equals(candidate)).ChangeRole(UserRole.Student);
         }
 
         public void MakeAdmin(User candidate)
@@ -60,7 +60,7 @@ namespace WebSchedule.Domain.Entities.Study
             if (Admins.Contains(candidate))
                 throw new CandidateAlreadyInAGroupException(candidate.Id, Id);
 
-            MembersInGroup.First(x => x.Equals(candidate)).ChangeRole(UserRole.Admin);
+            MembersInGroup.First(x => x.User.Equals(candidate)).ChangeRole(UserRole.Admin);
         }
 
         public void RemoveMember(User member)

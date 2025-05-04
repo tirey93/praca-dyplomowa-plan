@@ -1,4 +1,5 @@
 ﻿
+using System.ComponentModel.DataAnnotations.Schema;
 using WebSchedule.Domain.Exceptions;
 
 namespace WebSchedule.Domain.Entities.Study
@@ -10,11 +11,15 @@ namespace WebSchedule.Domain.Entities.Study
         public StudyLevel StudyLevel { get; private set; }
         public StudyCourse StudyCourse { get; private set; }
 
-        public ICollection<UserInGroup> MembersInGroup { get; set; }
+        public ICollection<UserInGroup> MembersInGroup { get; private set; }
 
+        [NotMapped]
         public IEnumerable<User> Members => MembersInGroup.Select(x => x.User);
+        [NotMapped]
         public IEnumerable<User> Candidates => MembersInGroup.Where(x => x.UserRole == UserRole.Candidate).Select(x => x.User);
+        [NotMapped]
         public IEnumerable<User> Students => MembersInGroup.Where(x => x.UserRole == UserRole.Student).Select(x => x.User);
+        [NotMapped]
         public IEnumerable<User> Admins => MembersInGroup.Where(x => x.UserRole == UserRole.Admin).Select(x => x.User);
 
         public string Name => $"{StartingYear}{(char)StudyMode}{(char)StudyLevel} - {StudyCourse.ShortName}";
@@ -22,6 +27,7 @@ namespace WebSchedule.Domain.Entities.Study
         protected Group() {}
         public Group(int startingYear, StudyMode studyMode, StudyLevel studyLevel, StudyCourse studyCourse, User admin)
         {
+            MembersInGroup = [];
             StartingYear = startingYear;
             StudyMode = studyMode;
             StudyLevel = studyLevel;

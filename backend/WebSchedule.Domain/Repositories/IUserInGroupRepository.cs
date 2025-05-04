@@ -3,7 +3,8 @@ using WebSchedule.Domain.Entities.Study;
 
 namespace WebSchedule.Domain.Repositories
 {
-    public interface IGroupRepository : IRepository<Group>
+    public interface IUserInGroupRepository : IRepository<UserInGroup>
     {
+        IEnumerable<UserGroupDto> GetUserGroups(int userId);
     }
 }

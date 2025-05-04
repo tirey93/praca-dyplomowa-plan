@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WebSchedule.Domain.Dtos;
-using WebSchedule.Domain.Entities.Study;
+﻿using WebSchedule.Domain.Entities.Study;
 using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Infrastructure.Repositories
@@ -10,16 +8,6 @@ namespace WebSchedule.Infrastructure.Repositories
         public GroupRepository(AppDbContext appDbContext)
             : base(appDbContext, appDbContext.Groups)
         {
-        }
-        public UserGroupDto GetUserGroup(int userId)
-        {
-            var groups = _dbSet
-                .Include(g => g.MembersInGroup)
-                .Where(g => g.MembersInGroup.Any(u => u.Id == userId));
-
-            //to test
-            //todo
-            return null;
         }
 
         public async Task AddGroup(Group group)

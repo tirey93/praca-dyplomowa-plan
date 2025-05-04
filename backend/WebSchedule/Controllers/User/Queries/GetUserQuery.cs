@@ -13,10 +13,12 @@ namespace WebSchedule.Controllers.User.Queries
     public class GetUserQueryHandler : IRequestHandler<GetUserQuery, UserResponse>
     {
         private readonly IUserRepository _userRepository;
+        private readonly IUserInGroupRepository _userInGroupRepository;
 
-        public GetUserQueryHandler(IUserRepository userRepository)
+        public GetUserQueryHandler(IUserRepository userRepository, IUserInGroupRepository userInGroupRepository)
         {
             _userRepository = userRepository;
+            _userInGroupRepository = userInGroupRepository;
         }
 
         public Task<UserResponse> Handle(GetUserQuery request, CancellationToken cancellationToken)
@@ -24,13 +26,19 @@ namespace WebSchedule.Controllers.User.Queries
             var user = _userRepository.Get(request.UserId)
                     ?? throw new UserNotFoundException(request.UserId.ToString());
 
-
+            var userGroups = _userInGroupRepository.GetUserGroups(request.UserId);
             return Task.FromResult(new UserResponse
             {
                 Id = user.Id,
                 Name = user.Name,
                 DisplayName = user.DisplayName,
-                Groups = null, //todo
+                Groups = userGroups.Select(x => new UserGroupResponse
+                {
+                    Id = x.Id,
+                    IsAdmin = x.IsAdmin,
+                    IsCandidate = x.IsCandidate,
+                    Name = x.Name
+                }).ToList(),
                 IsActive = user.IsActive
             });
         }

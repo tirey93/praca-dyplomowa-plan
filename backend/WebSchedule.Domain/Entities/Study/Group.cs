@@ -22,7 +22,7 @@ namespace WebSchedule.Domain.Entities.Study
         [NotMapped]
         public IEnumerable<User> Admins => MembersInGroup.Where(x => x.UserRole == UserRole.Admin).Select(x => x.User);
 
-        public string Name => $"{StartingYear}{(char)StudyMode}{(char)StudyLevel} - {StudyCourse.ShortName}";
+        public string Name => $"{StartingYear}{StudyMode.ToShort()}{StudyLevel.ToShort()}{StudyCourse.ShortName}";
 
         protected Group() {}
         public Group(int startingYear, StudyMode studyMode, StudyLevel studyLevel, StudyCourse studyCourse, User admin)

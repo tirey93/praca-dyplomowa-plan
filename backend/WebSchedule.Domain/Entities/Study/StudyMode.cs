@@ -3,7 +3,20 @@ namespace WebSchedule.Domain.Entities.Study
 {
     public enum StudyMode
     {
-        FullTime = 'S',
-        PartTime = 'N'
+        FullTime,
+        PartTime
+    }
+
+    public static class StudyModeExtensions 
+    {
+        public static string ToShort(this StudyMode mode)
+        {
+            return mode switch
+            {
+                StudyMode.FullTime => "S",
+                StudyMode.PartTime => "N",
+                _ => "?",
+            };
+        }
     }
 }

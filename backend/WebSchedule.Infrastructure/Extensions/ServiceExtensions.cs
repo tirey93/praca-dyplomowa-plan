@@ -13,6 +13,7 @@ namespace WebSchedule.Infrastructure.Extensions
             services.AddDbContext<AppDbContext>(options => options.UseMySQL(connectionString));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IUserInGroupRepository, UserInGroupRepository>();
         }
     }
 }

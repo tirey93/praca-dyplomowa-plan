@@ -14,11 +14,6 @@ namespace WebSchedule.Infrastructure.Repositories
             _dbSet = dbSet;
         }
 
-        public T Get(int id)
-        {
-            return _dbSet.FirstOrDefault(x => x.Id == id);
-        }
-
         public async Task SaveChangesAsync()
         {
             await _appDbContext.SaveChangesAsync();

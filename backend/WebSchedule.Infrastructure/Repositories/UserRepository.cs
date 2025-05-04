@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using WebSchedule.Domain.Entities;
 using WebSchedule.Domain.Repositories;
 
@@ -11,6 +12,12 @@ namespace WebSchedule.Infrastructure.Repositories
         {
         }
 
+        public User Get(int id)
+        {
+            return _dbSet
+                .Where(x => x.Id == id)
+                .FirstOrDefault();
+        }
         public async Task RegisterUserAsync(User user)
         {
             await _dbSet.AddAsync(user);

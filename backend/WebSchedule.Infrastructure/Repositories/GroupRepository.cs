@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebSchedule.Domain.Dtos;
-using WebSchedule.Domain.Entities;
 using WebSchedule.Domain.Entities.Study;
 using WebSchedule.Domain.Repositories;
 
@@ -15,8 +14,8 @@ namespace WebSchedule.Infrastructure.Repositories
         public UserGroupDto GetUserGroup(int userId)
         {
             var groups = _dbSet
-                .Include(g => g.Users)
-                .Where(g => g.Users.Any(u => u.Id == userId));
+                .Include(g => g.MembersInGroup)
+                .Where(g => g.MembersInGroup.Any(u => u.Id == userId));
 
             //to test
             //todo

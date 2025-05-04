@@ -79,6 +79,15 @@ namespace WebSchedule.Domain.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User with ID {0} is not a member in a group with id {1}.
+        /// </summary>
+        internal static string NoSuchMemberInGroup {
+            get {
+                return ResourceManager.GetString("NoSuchMemberInGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User with ID {0} is not an admin..
         /// </summary>
         internal static string UserNotAnAdmin {

@@ -10,29 +10,31 @@ namespace WebSchedule.Domain.Entities.Study
         public StudyLevel StudyLevel { get; private set; }
         public StudyCourse StudyCourse { get; private set; }
 
-        public HashSet<User> Students { get; private set; } = [];
-        public HashSet<User> Admins { get; private set; } = [];
-        public HashSet<User> Candidates { get; private set; } = [];
+        public ICollection<UserInGroup> MembersInGroup { get; set; }
 
-        public IEnumerable<User> Users => Candidates.Union(Users).Union(Admins);
+        public IEnumerable<User> Members => MembersInGroup.Select(x => x.User);
+        public IEnumerable<User> Candidates => MembersInGroup.Where(x => x.UserRole == UserRole.Candidate).Select(x => x.User);
+        public IEnumerable<User> Students => MembersInGroup.Where(x => x.UserRole == UserRole.Student).Select(x => x.User);
+        public IEnumerable<User> Admins => MembersInGroup.Where(x => x.UserRole == UserRole.Admin).Select(x => x.User);
 
         public string Name => $"{StartingYear}{(char)StudyMode}{(char)StudyLevel} - {StudyCourse.ShortName}";
 
-
+        protected Group() {}
         public Group(int startingYear, StudyMode studyMode, StudyLevel studyLevel, StudyCourse studyCourse, User admin)
         {
             StartingYear = startingYear;
             StudyMode = studyMode;
             StudyLevel = studyLevel;
             StudyCourse = studyCourse;
-            AddAdmin(admin);
+            AddCandidate(admin);
+            MakeAdmin(admin);
         }
 
         public void AddCandidate(User candidate)
         {
             if (Candidates.Contains(candidate))
                 throw new CandidateAlreadyInAGroupException(candidate.Id, Id);
-            Candidates.Add(candidate);
+            MembersInGroup.Add(new UserInGroup(this, candidate, UserRole.Candidate));
         }
 
         public void MakeStudent(User candidate)
@@ -41,23 +43,26 @@ namespace WebSchedule.Domain.Entities.Study
                 throw new NoSuchCandidateInGroupException(candidate.Id, Id);
             if (Students.Contains(candidate))
                 throw new CandidateAlreadyInAGroupException(candidate.Id, Id);
-            Candidates.Remove(candidate);
-            Students.Add(candidate);
+
+            MembersInGroup.First(x => x.Equals(candidate)).ChangeRole(UserRole.Candidate);
         }
 
-        public void RemoveStudent(User student)
+        public void MakeAdmin(User candidate)
         {
-            Students.Remove(student);
+            if (!Candidates.Contains(candidate))
+                throw new NoSuchCandidateInGroupException(candidate.Id, Id);
+            if (Admins.Contains(candidate))
+                throw new CandidateAlreadyInAGroupException(candidate.Id, Id);
+
+            MembersInGroup.First(x => x.Equals(candidate)).ChangeRole(UserRole.Admin);
         }
 
-        public void AddAdmin(User admin)
+        public void RemoveMember(User member)
         {
-            Admins.Add(admin);
-        }
-
-        public void RemoveAdmin(User admin)
-        {
-            Admins.Remove(admin);
+            if (!Members.Contains(member))
+                throw new NoSuchMemberInGroupException(member.Id, Id);
+            var userInGroup = MembersInGroup.First(x => x.User == member);
+            MembersInGroup.Remove(userInGroup);
         }
     }
 }

@@ -1,10 +1,35 @@
 <main class="main">
-  <div class="content">
-    <div class="left-side">
-      <h1>Hello, {{ title }}</h1>
-      <p>Congratulations! Your app is running. 🎉</p>
-    </div>
-  </div>
+  <mat-toolbar>
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <mat-icon>menu</mat-icon>
+    </button>
+    <span>My App</span>
+    <span class="example-spacer"></span>
+    <button mat-fab extended  class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      <mat-icon>favorite</mat-icon>
+      Link
+    </button>
+    @if (showIcon()) {
+      <button mat-fab extended [matMenuTriggerFor]="menu" class="example-icon" aria-label="Example icon-button with share icon">
+        <mat-icon>share</mat-icon>
+        Basic
+      </button>
+    }
+  </mat-toolbar>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>
+      <mat-icon>dialpad</mat-icon>
+      <span>Redial</span>
+    </button>
+    <button mat-menu-item disabled>
+      <mat-icon>voicemail</mat-icon>
+      <span>Check voice mail</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>notifications_off</mat-icon>
+      <span>Disable alerts</span>
+    </button>
+  </mat-menu>
 
   <div class="content">
     <div class="left-side">

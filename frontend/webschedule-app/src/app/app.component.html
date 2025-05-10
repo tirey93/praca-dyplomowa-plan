@@ -5,32 +5,29 @@
     </button>
     <span>My App</span>
     <span class="example-spacer"></span>
-    <button mat-fab extended  class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
       <mat-icon>favorite</mat-icon>
-      Link
     </button>
-    @if (showIcon()) {
-      <button mat-fab extended [matMenuTriggerFor]="menu" class="example-icon" aria-label="Example icon-button with share icon">
-        <mat-icon>share</mat-icon>
-        Basic
+    @if (isUserLogIn()) {
+      <button (click)="loadGroups()" mat-icon-button [matMenuTriggerFor]="menu" class="example-icon" aria-label="Example icon-button with share icon">
+        <mat-icon>groups</mat-icon>
       </button>
     }
   </mat-toolbar>
   <mat-menu #menu="matMenu">
-    <button mat-menu-item>
-      <mat-icon>dialpad</mat-icon>
-      <span>Redial</span>
-    </button>
-    <button mat-menu-item disabled>
-      <mat-icon>voicemail</mat-icon>
-      <span>Check voice mail</span>
-    </button>
-    <button mat-menu-item>
-      <mat-icon>notifications_off</mat-icon>
-      <span>Disable alerts</span>
-    </button>
+    <div class="groups-menu">
+      <p>Grupy</p>
+      <ul style="list-style-type: none; margin-right: 20px;">
+      @for (group of groups; track $index; let i = $index) {
+        <li>
+          <mat-checkbox [checked]="group.checked" (click)="update($event, i)">
+            {{group.name}}
+          </mat-checkbox>
+        </li>
+      }
+      </ul>
+    </div>
   </mat-menu>
-
   <div class="content">
     <div class="left-side">
       <router-outlet />

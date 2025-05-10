@@ -1,14 +1,10 @@
-﻿
-namespace WebSchedule.Domain.Dtos
+﻿namespace WebSchedule.Controllers.Responses
 {
-    public class UserGroupDto
+    public class GroupInfoResponse
     {
-        public int Id { get; set; }
         public int StartingYear { get; set; }
         public string StudyCourseShort { get; set; }
         public string StudyLevel { get; set; }
         public string StudyMode { get; set; }
-        public bool IsAdmin { get; set; }
-        public bool IsCandidate { get; set; }
     }
 }

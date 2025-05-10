@@ -27,7 +27,7 @@ namespace WebSchedule.Controllers.User.Queries
                     ?? throw new UserNotFoundException(request.UserId.ToString());
 
             var userGroups = _userInGroupRepository.GetUserGroups(request.UserId);
-            return Task.FromResult(new UserResponse
+            var res = Task.FromResult(new UserResponse
             {
                 Id = user.Id,
                 Name = user.Name,
@@ -37,10 +37,18 @@ namespace WebSchedule.Controllers.User.Queries
                     Id = x.Id,
                     IsAdmin = x.IsAdmin,
                     IsCandidate = x.IsCandidate,
-                    Name = x.Name
+                    GroupInfo = new GroupInfoResponse
+                    {
+                        StartingYear = x.StartingYear,
+                        StudyCourseShort = x.StudyCourseShort,
+                        StudyLevel = x.StudyLevel,
+                        StudyMode = x.StudyMode
+                    }
                 }).ToList(),
                 IsActive = user.IsActive
             });
+
+            return res;
         }
     }
 }

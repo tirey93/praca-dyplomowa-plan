@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserRepositoryService } from '../services/UserRepository.service';
+import { UserRepositoryService } from '../services/userRepository.service';
 import { UserResponse } from '../login/dtos/userResponse';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common'; // Dodaj import

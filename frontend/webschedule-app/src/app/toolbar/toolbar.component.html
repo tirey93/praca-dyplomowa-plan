@@ -18,14 +18,14 @@
                 <mat-icon>add</mat-icon>
             </button>
         </div>
-        <ul style="list-style-type: none; margin-right: 20px;">
-        @for (group of groups; track $index; let i = $index) {
-        <li>
-            <mat-checkbox [checked]="group.checked" (click)="update($event, i)">
-            {{group.name}}
-            </mat-checkbox>
-        </li>
-        }
+        <ul class="groups-menu-list">
+          @for (group of groups; track $index; let i = $index) {
+          <li>
+              <mat-checkbox [checked]="group.checked" (click)="update($event, i)">
+              {{group.name}}
+              </mat-checkbox>
+          </li>
+          }
         </ul>
     </div>
 </mat-menu>

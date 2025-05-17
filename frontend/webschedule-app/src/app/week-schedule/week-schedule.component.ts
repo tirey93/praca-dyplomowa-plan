@@ -16,19 +16,11 @@ import { Router } from '@angular/router';
 export class WeekScheduleComponent implements OnInit {
 
   constructor(
-    private userRepositoryService: UserRepositoryService,
-    private cookieService: CookieService,
-    private router: Router  ) {}
+    private userRepositoryService: UserRepositoryService) {}
 
   loggedUser$!: Observable<UserResponse>;
   ngOnInit(): void {
     this.loggedUser$ = this.userRepositoryService.getLoggedIn$();
-  }
-
-  logout() {
-    this.cookieService.delete("token");
-    this.cookieService.delete("backdoor");
-    this.router.navigateByUrl("/login");
   }
 
 }

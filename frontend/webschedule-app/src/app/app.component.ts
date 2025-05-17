@@ -10,46 +10,14 @@ import { JwtService } from './services/jwt.service';
 import {MatCheckboxChange, MatCheckboxModule} from '@angular/material/checkbox';
 import { UserRepositoryService } from './services/userRepository.service';
 import { GroupHelper } from './helpers/groupHelper';
-
-export interface GroupSelected {
-  name: string;
-  checked: boolean;
-}
+import { ToolbarComponent } from "./toolbar/toolbar.component";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MatButtonModule, MatToolbarModule, MatIconModule, MatMenuModule, MatCheckboxModule],
+  imports: [RouterOutlet, MatButtonModule, MatToolbarModule, MatIconModule, MatMenuModule, MatCheckboxModule, ToolbarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
 
-  groups!: GroupSelected[]
-
-  constructor(
-    private jwtService: JwtService,
-    private userRepository: UserRepositoryService) {}
-
-
-  isUserLogIn() : boolean {
-    return this.jwtService.isTokenValid();
-  }
-
-  loadGroups() {
-    if (this.groups != undefined)
-      return;
-    this.userRepository.getLoggedIn$().subscribe({
-      next: (userResponse) => {
-        this.groups = userResponse.groups.map(x => ({
-          name: GroupHelper.groupInfoToString(x.groupInfo),
-          checked: true
-        }) as GroupSelected);
-      }
-    })
-  }
-  update($event: MouseEvent, index: number) {
-    this.groups[index].checked = !this.groups[index].checked;
-    $event.stopPropagation()
-
-  }
 }

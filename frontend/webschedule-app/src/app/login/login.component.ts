@@ -46,25 +46,28 @@ export class LoginComponent {
   noConnection: boolean = false;
 
   backdoor() {
-    this.cookieService.set("backdoor", "b1");
-    this.router.navigateByUrl("/week")
+    this.tryLogin('string', 'string');
   }
 
   onSubmit() {
+    this.tryLogin(this.formLogin.controls.username.value!, this.formLogin.controls.password.value!);
+  }
+
+  private tryLogin(userName:string, password:string) {
     this.authenticationRepository.tryLogin$({
-      userName: this.formLogin.controls.username.value!,
-      password: this.formLogin.controls.password.value!
+      userName: userName,
+      password: password
     }).subscribe({
       next: (loginResponse) => {
         this.cookieService.set("token", loginResponse.token);
         this.userRepositoryService.getLoggedIn$().subscribe(() => {
-          this.router.navigateByUrl("/week")
-        })
+          this.router.navigateByUrl("/week");
+        });
       },
       error: (error) => {
         this.wrongCredentials = error.status === 404;
         this.noConnection = error.status === 0;
       }
-    })
+    });
   }
 }

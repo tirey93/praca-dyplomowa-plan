@@ -1,6 +1,3 @@
 @if (loggedUser$ |async; as loggedUser) {
     <p>{{loggedUser.displayName}}</p>
 }
-<button (click)="logout()" mat-fab extended>
-    Logout
-</button>

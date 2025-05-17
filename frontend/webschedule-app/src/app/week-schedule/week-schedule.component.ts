@@ -27,6 +27,7 @@ export class WeekScheduleComponent implements OnInit {
 
   logout() {
     this.cookieService.delete("token");
+    this.cookieService.delete("backdoor");
     this.router.navigateByUrl("/login");
   }
 

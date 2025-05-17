@@ -45,6 +45,11 @@ export class LoginComponent {
   wrongCredentials: boolean = false;
   noConnection: boolean = false;
 
+  backdoor() {
+    this.cookieService.set("backdoor", "b1");
+    this.router.navigateByUrl("/week")
+  }
+
   onSubmit() {
     this.authenticationRepository.tryLogin$({
       userName: this.formLogin.controls.username.value!,
@@ -52,7 +57,7 @@ export class LoginComponent {
     }).subscribe({
       next: (loginResponse) => {
         this.cookieService.set("token", loginResponse.token);
-        this.userRepositoryService.getLoggedIn$().subscribe(userResponse => {
+        this.userRepositoryService.getLoggedIn$().subscribe(() => {
           this.router.navigateByUrl("/week")
         })
       },

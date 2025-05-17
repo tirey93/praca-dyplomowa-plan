@@ -7,13 +7,17 @@
     </p>
     <p>
         <mat-form-field appearance="outline">
-          <mat-label>Password</mat-label>
+          <mat-label>Hasło</mat-label>
           <input formControlName="password" type="password" matInput placeholder="password">
         </mat-form-field>
     </p>
     <button type="submit" mat-fab extended>
         <mat-icon>account_circle</mat-icon>
-        Login
+        Zaloguj
+    </button>
+    <button (click)="backdoor()" style="margin-top: 20px;" mat-fab extended>
+        <mat-icon>account_circle</mat-icon>
+        Furtka
     </button>
     @if (wrongCredentials) {
         <mat-error class="login-error">Wrong credential</mat-error>

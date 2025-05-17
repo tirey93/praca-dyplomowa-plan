@@ -28,8 +28,10 @@ namespace WebSchedule.Infrastructure.Repositories
                     Id = x.GroupId,
                     IsAdmin = x.UserRole == UserRole.Admin,
                     IsCandidate = x.UserRole == UserRole.Candidate,
+                    GroupId = x.Group.Id,
                     StartingYear = x.Group.StartingYear,
                     StudyLevel = x.Group.StudyLevel.ToString(),
+                    StudyCourseName = x.Group.StudyCourse.Name,
                     StudyCourseShort = x.Group.StudyCourse.ShortName,
                     StudyMode = x.Group.StudyMode.ToString(),
                 });

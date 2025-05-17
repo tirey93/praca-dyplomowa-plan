@@ -39,7 +39,9 @@ namespace WebSchedule.Controllers.User.Queries
                     IsCandidate = x.IsCandidate,
                     GroupInfo = new GroupInfoResponse
                     {
+                        Id = x.GroupId,
                         StartingYear = x.StartingYear,
+                        StudyCourseName = x.StudyCourseName,
                         StudyCourseShort = x.StudyCourseShort,
                         StudyLevel = x.StudyLevel,
                         StudyMode = x.StudyMode

@@ -2,10 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UserRepositoryService } from '../services/userRepository.service';
 import { UserResponse } from '../login/dtos/userResponse';
 import { Observable } from 'rxjs';
-import { AsyncPipe } from '@angular/common'; // Dodaj import
+import { AsyncPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { CookieService } from 'ngx-cookie-service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-week-schedule',

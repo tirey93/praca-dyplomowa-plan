@@ -11,7 +11,7 @@ import { GroupHelper } from '../helpers/groupHelper';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { GroupRepositoryService } from '../services/group/groupRepository.service';
-import { BehaviorSubject, map, Observable, scan, shareReplay, startWith, switchMap } from 'rxjs';
+import { BehaviorSubject, map, Observable, scan, startWith, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 
@@ -36,19 +36,14 @@ export class ToolbarComponent {
       private groupRepository: GroupRepositoryService,
       private cookieService: CookieService,
       private router: Router) {
-    const initialGroupsLoad$ = this.groupRepository.getByLoggedIn$().pipe(
+    this.groups$ = this.groupRepository.getByLoggedIn$().pipe(
       map(apiGroups =>
         apiGroups.map(apiGroup => ({
-          id: apiGroup.id,
           name: GroupHelper.groupInfoToString(apiGroup),
           checked: true,
           originalData: apiGroup
         } as GroupSelected))
       ),
-      shareReplay({ bufferSize: 1, refCount: true })
-    );
-
-    this.groups$ = initialGroupsLoad$.pipe(
       switchMap(initialGroups => {
         return this.toggleGroupAction$.pipe(
           scan((accGroups: GroupSelected[], groupIdToToggle: number) => {

@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserResponse } from './dtos/userResponse';
 import { CookieService } from 'ngx-cookie-service';
+import { environment } from '../../../enviroments/enviroments';
 
 @Injectable({
     providedIn: 'root'
   })
   export class UserRepositoryService {
-    protected url = 'http://localhost:5163/User'
+    protected url = `${environment.host}:${environment.port}/User`
 
     constructor(private http: HttpClient, private cookieService: CookieService) { }
 

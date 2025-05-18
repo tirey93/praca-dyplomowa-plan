@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { UserGroupResponse } from './dtos/userGroupResponse';
+import { environment } from '../../../enviroments/enviroments';
 
 @Injectable({
     providedIn: 'root'
   })
   export class GroupRepositoryService {
-    protected url = 'http://localhost:5163/Group'
+    protected url = `${environment.host}:${environment.port}/Group`
 
     constructor(private http: HttpClient, private cookieService: CookieService) { }
 

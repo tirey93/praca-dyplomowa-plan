@@ -11,7 +11,7 @@ import { GroupHelper } from '../helpers/groupHelper';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { GroupRepositoryService } from '../services/group/groupRepository.service';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, scan, shareReplay, startWith, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 
 
@@ -28,32 +28,45 @@ export interface GroupSelected {
   styleUrl: './toolbar.component.scss'
 })
 export class ToolbarComponent {
-  groups$ = new BehaviorSubject<GroupSelected[]>([]);
+  public groups$: Observable<GroupSelected[]>;
+  public toggleGroupAction$ = new BehaviorSubject<number>(0); // Emituje ID grupy do przełączenia
+
   constructor(
       private jwtService: JwtService,
       private groupRepository: GroupRepositoryService,
       private cookieService: CookieService,
       private router: Router) {
-        this.groupRepository.getByLoggedIn$().pipe(
-          map(x => x. map(y => ({
-            name: GroupHelper.groupInfoToString(y),
-            checked: true
-          }) as GroupSelected))
-        ).subscribe({
-          next: (groups) => {
-            this.groups$.next(groups);
-          }
-        })
-    }
+    const initialGroupsLoad$ = this.groupRepository.getByLoggedIn$().pipe(
+      map(apiGroups =>
+        apiGroups.map(apiGroup => ({
+          id: apiGroup.id,
+          name: GroupHelper.groupInfoToString(apiGroup),
+          checked: true,
+          originalData: apiGroup
+        } as GroupSelected))
+      ),
+      shareReplay({ bufferSize: 1, refCount: true })
+    );
+
+    this.groups$ = initialGroupsLoad$.pipe(
+      switchMap(initialGroups => {
+        return this.toggleGroupAction$.pipe(
+          scan((accGroups: GroupSelected[], groupIdToToggle: number) => {
+              accGroups[groupIdToToggle].checked = !accGroups[groupIdToToggle].checked;
+              return accGroups;
+          }, initialGroups),
+          startWith(initialGroups)
+        );
+      }),
+    );
+  }
 
   isUserLogIn() : boolean {
     return this.jwtService.isTokenValid();
   }
 
   update($event: MouseEvent, index: number) {
-    const updatedGroups = this.groups$.getValue();
-    updatedGroups[index].checked = !updatedGroups[index].checked;
-    this.groups$.next(updatedGroups);
+    this.toggleGroupAction$.next(index);
     $event.stopPropagation()
   }
 

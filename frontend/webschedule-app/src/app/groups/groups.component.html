@@ -4,7 +4,13 @@
     </div>
     <div class="content-my-groups">
         <h3>Moje grupy</h3>
-        <table mat-table [dataSource]="groups$">
+        <div *ngIf="isLoading$ | async">
+            <mat-spinner></mat-spinner>
+        </div>
+        <div *ngIf="noData$ | async">
+            Brak grup
+        </div>
+        <table *ngIf="!(isLoading$ | async) && !(noData$ | async)" mat-table [dataSource]="groups$">
             <ng-container matColumnDef="name">
                 <th mat-header-cell *matHeaderCellDef> Nazwa </th>
                 <td mat-cell *matCellDef="let element"> {{getName(element)}} </td>

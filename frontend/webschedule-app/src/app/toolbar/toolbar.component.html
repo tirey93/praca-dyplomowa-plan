@@ -2,7 +2,7 @@
     <span>Web Schedule</span>
     <span class="example-spacer"></span>
     @if (isUserLogIn()) {
-      <button (click)="loadGroups()" mat-icon-button [matMenuTriggerFor]="menu" class="example-icon" aria-label="Example icon-button with share icon">
+      <button mat-icon-button [matMenuTriggerFor]="menu" class="example-icon" aria-label="Example icon-button with share icon">
         <mat-icon>groups</mat-icon>
       </button>
       <button (click)="logout()" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
@@ -19,7 +19,7 @@
             </button>
         </div>
         <ul class="groups-menu-list">
-          @for (group of groups; track $index; let i = $index) {
+          @for (group of groups$|async; track $index; let i = $index) {
           <li>
               <mat-checkbox [checked]="group.checked" (click)="update($event, i)">
               {{group.name}}

@@ -5,10 +5,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators, FormsModule  } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
-import { AuthenticationRepositoryService } from '../services/authenticationRepository.service';
-import { UserRepositoryService } from '../services/userRepository.service';
+import { UserRepositoryService } from '../services/user/userRepository.service';
 import { Router } from '@angular/router';
 import { JwtService } from '../services/jwt.service';
+import { AuthenticationRepositoryService } from '../services/authentication/authenticationRepository.service';
 
 
 interface LoginForm {

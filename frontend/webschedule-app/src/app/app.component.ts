@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
 import { JwtService } from './services/jwt.service';
 import {MatCheckboxChange, MatCheckboxModule} from '@angular/material/checkbox';
-import { UserRepositoryService } from './services/userRepository.service';
+import { UserRepositoryService } from './services/user/userRepository.service';
 import { GroupHelper } from './helpers/groupHelper';
 import { ToolbarComponent } from "./toolbar/toolbar.component";
 

@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import {MatIconModule} from '@angular/material/icon';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 
-import {MatMenuModule} from '@angular/material/menu';
-import {MatCheckboxChange, MatCheckboxModule} from '@angular/material/checkbox';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { JwtService } from '../services/jwt.service';
-import { UserRepositoryService } from '../services/userRepository.service';
 import { GroupHelper } from '../helpers/groupHelper';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
+import { GroupRepositoryService } from '../services/group/groupRepository.service';
+import { BehaviorSubject, map, Observable } from 'rxjs';
+import { AsyncPipe } from '@angular/common';
 
 
 export interface GroupSelected {
@@ -20,38 +22,38 @@ export interface GroupSelected {
 
 @Component({
   selector: 'app-toolbar',
-  imports: [MatButtonModule, MatToolbarModule, MatIconModule, MatMenuModule, MatCheckboxModule],
+  imports: [MatButtonModule, MatToolbarModule, MatIconModule, 
+    MatMenuModule, MatCheckboxModule, AsyncPipe],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss'
 })
 export class ToolbarComponent {
-
+  groups$ = new BehaviorSubject<GroupSelected[]>([]);
   constructor(
       private jwtService: JwtService,
-      private userRepository: UserRepositoryService,
+      private groupRepository: GroupRepositoryService,
       private cookieService: CookieService,
-      private router: Router) {}
-
-  groups!: GroupSelected[]
+      private router: Router) {
+        this.groupRepository.getByLoggedIn$().pipe(
+          map(x => x. map(y => ({
+            name: GroupHelper.groupInfoToString(y),
+            checked: true
+          }) as GroupSelected))
+        ).subscribe({
+          next: (groups) => {
+            this.groups$.next(groups);
+          }
+        })
+    }
 
   isUserLogIn() : boolean {
     return this.jwtService.isTokenValid();
   }
 
-  loadGroups() {
-    if (this.groups != undefined)
-      return;
-    this.userRepository.getLoggedIn$().subscribe({
-      next: (userResponse) => {
-        this.groups = userResponse.groups.map(x => ({
-          name: GroupHelper.groupInfoToString(x.groupInfo),
-          checked: true
-        }) as GroupSelected);
-      }
-    })
-  }
   update($event: MouseEvent, index: number) {
-    this.groups[index].checked = !this.groups[index].checked;
+    const updatedGroups = this.groups$.getValue();
+    updatedGroups[index].checked = !updatedGroups[index].checked;
+    this.groups$.next(updatedGroups);
     $event.stopPropagation()
   }
 

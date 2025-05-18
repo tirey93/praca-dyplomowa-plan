@@ -27,30 +27,13 @@ namespace WebSchedule.Controllers.User.Queries
                     ?? throw new UserNotFoundException(request.UserId.ToString());
 
             var userGroups = _userInGroupRepository.GetUserGroups(request.UserId);
-            var res = Task.FromResult(new UserResponse
+            return Task.FromResult(new UserResponse
             {
                 Id = user.Id,
                 Name = user.Name,
                 DisplayName = user.DisplayName,
-                Groups = userGroups.Select(x => new UserGroupResponse
-                {
-                    Id = x.Id,
-                    IsAdmin = x.IsAdmin,
-                    IsCandidate = x.IsCandidate,
-                    GroupInfo = new GroupInfoResponse
-                    {
-                        Id = x.GroupId,
-                        StartingYear = x.StartingYear,
-                        StudyCourseName = x.StudyCourseName,
-                        StudyCourseShort = x.StudyCourseShort,
-                        StudyLevel = x.StudyLevel,
-                        StudyMode = x.StudyMode
-                    }
-                }).ToList(),
                 IsActive = user.IsActive
             });
-
-            return res;
         }
     }
 }

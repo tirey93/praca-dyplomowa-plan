@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UserRepositoryService } from '../services/userRepository.service';
-import { UserResponse } from '../login/dtos/userResponse';
+import { UserRepositoryService } from '../services/user/userRepository.service';
+import { UserResponse } from '../services/user/dtos/userResponse';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,14 +11,11 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './week-schedule.component.html',
   styleUrl: './week-schedule.component.scss'
 })
-export class WeekScheduleComponent implements OnInit {
-
+export class WeekScheduleComponent {
+  loggedUser$: Observable<UserResponse>;
+  
   constructor(
-    private userRepositoryService: UserRepositoryService) {}
-
-  loggedUser$!: Observable<UserResponse>;
-  ngOnInit(): void {
-    this.loggedUser$ = this.userRepositoryService.getLoggedIn$();
-  }
-
+    private userRepositoryService: UserRepositoryService) {
+      this.loggedUser$ = this.userRepositoryService.getLoggedIn$();
+    }
 }

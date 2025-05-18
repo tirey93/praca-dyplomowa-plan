@@ -6,6 +6,5 @@
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public bool IsActive { get; set; }
-        public List<UserGroupResponse> Groups { get; set; }
     }
 }

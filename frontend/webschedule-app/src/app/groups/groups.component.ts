@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { distinctUntilChanged, finalize, map, Observable, shareReplay, startWith } from 'rxjs';
-import { GroupNameResponse } from '../login/dtos/groupNameResponse';
-import { UserRepositoryService } from '../services/userRepository.service';
+import { distinctUntilChanged, map, Observable, shareReplay, startWith } from 'rxjs';
 import {MatTableModule} from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
 import { GroupHelper } from '../helpers/groupHelper';
@@ -9,6 +7,8 @@ import {MatIconModule} from '@angular/material/icon'
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { UserGroupResponse } from '../services/group/dtos/userGroupResponse';
+import { GroupRepositoryService } from '../services/group/groupRepository.service';
 
 
 @Component({
@@ -21,20 +21,14 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 export class GroupsComponent {
   isLoading$: Observable<boolean>;
   noData$: Observable<boolean>;
-  groups$: Observable<GroupNameResponse[]>;
+  groups$: Observable<UserGroupResponse[]>;
   displayedColumns: string[] = ['name', 'startingYear', 'studyCourseName', 'studyLevel', 'studyMode', 'actions'];
   
-  constructor(private userService: UserRepositoryService) {
-    const userResponseSource$ = this.userService.getLoggedIn$().pipe(
+  constructor(private groupService: GroupRepositoryService) {
+    this.groups$ = this.groupService.getByLoggedIn$().pipe(
       shareReplay({ bufferSize: 1, refCount: true })
     )
-    this.groups$ =  userResponseSource$.pipe(
-      finalize(() => {
-        console.log();
-      }),
-      map(x => x.groups.map(y => y.groupInfo))
-    );
-    this.isLoading$ = userResponseSource$.pipe(
+    this.isLoading$ = this.groups$.pipe(
       map(() => false),
       startWith(true),
       distinctUntilChanged()
@@ -45,7 +39,7 @@ export class GroupsComponent {
     );
    }
 
-   getName(group: GroupNameResponse):string {
+   getName(group: UserGroupResponse):string {
     return GroupHelper.groupInfoToString(group);
    }
 }

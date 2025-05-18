@@ -1,4 +1,4 @@
-import { UserGroupResponse } from "./userGroupResponse"
+import { UserGroupResponse } from "../../group/dtos/userGroupResponse"
 
 export interface UserResponse {
     id: number,

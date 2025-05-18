@@ -9,12 +9,15 @@ import { CommonModule } from '@angular/common';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { UserGroupResponse } from '../services/group/dtos/userGroupResponse';
 import { GroupRepositoryService } from '../services/group/groupRepository.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 
 @Component({
   selector: 'app-groups',
   imports: [MatTableModule, MatMenuModule, MatIconModule, 
-    MatButtonModule, CommonModule, MatProgressSpinnerModule],
+    MatButtonModule, CommonModule, MatProgressSpinnerModule,
+    TranslatePipe
+  ],
   templateUrl: './groups.component.html',
   styleUrl: './groups.component.scss'
 })

@@ -1,28 +1,31 @@
-<form class="login-form" [formGroup]="formLogin" (ngSubmit)="onSubmit()">
-    <p>
-        <mat-form-field appearance="outline">
-          <mat-label>Login</mat-label>
-          <input formControlName="username" matInput placeholder="login">
-        </mat-form-field>
-    </p>
-    <p>
-        <mat-form-field appearance="outline">
-          <mat-label>Hasło</mat-label>
-          <input formControlName="password" type="password" matInput placeholder="password">
-        </mat-form-field>
-    </p>
-    <button type="submit" mat-fab extended>
-        <mat-icon>account_circle</mat-icon>
-        Zaloguj
-    </button>
-    <button (click)="backdoor()" style="margin-top: 20px;" mat-fab extended>
-        <mat-icon>account_circle</mat-icon>
-        Furtka
-    </button>
-    @if (wrongCredentials) {
-        <mat-error class="login-error">Wrong credential</mat-error>
-    }
-    @if (noConnection) {
-        <mat-error class="login-error">No connection to server</mat-error>
-    }
-</form>
+<div class="content">
+    <form class="login-form" [formGroup]="formLogin" (ngSubmit)="onSubmit()">
+        <p>
+            <mat-form-field appearance="outline">
+            <mat-label>Login</mat-label>
+            <input formControlName="username" matInput placeholder="login">
+            </mat-form-field>
+        </p>
+        <p>
+            <mat-form-field appearance="outline">
+            <mat-label>Hasło</mat-label>
+            <input formControlName="password" type="password" matInput placeholder="password">
+            </mat-form-field>
+        </p>
+        <button type="submit" mat-fab extended>
+            <mat-icon>account_circle</mat-icon>
+            Zaloguj
+        </button>
+        <button (click)="backdoor()" style="margin-top: 20px;" mat-fab extended>
+            <mat-icon>account_circle</mat-icon>
+            Furtka
+        </button>
+        @if (wrongCredentials) {
+            <mat-error class="login-error">Wrong credential</mat-error>
+        }
+        @if (noConnection) {
+            <mat-error class="login-error">No connection to server</mat-error>
+        }
+    </form>
+</div>
+

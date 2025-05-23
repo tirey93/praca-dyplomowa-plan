@@ -60,9 +60,7 @@ export class LoginComponent {
     }).subscribe({
       next: (loginResponse) => {
         this.cookieService.set("token", loginResponse.token);
-        this.userRepositoryService.getLoggedIn$().subscribe(() => {
-          this.router.navigateByUrl("/week");
-        });
+        this.router.navigateByUrl("/week");
       },
       error: (error) => {
         this.wrongCredentials = error.status === 404;

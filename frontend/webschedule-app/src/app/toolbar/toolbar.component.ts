@@ -29,7 +29,7 @@ export interface GroupSelected {
 })
 export class ToolbarComponent {
   public groups$: Observable<GroupSelected[]>;
-  public toggleGroupAction$ = new BehaviorSubject<number>(0); // Emituje ID grupy do przełączenia
+  public toggleGroupAction$ = new BehaviorSubject<number | null>(null); // Emituje ID grupy do przełączenia
 
   constructor(
       private jwtService: JwtService,
@@ -46,8 +46,10 @@ export class ToolbarComponent {
       ),
       switchMap(initialGroups => {
         return this.toggleGroupAction$.pipe(
-          scan((accGroups: GroupSelected[], groupIdToToggle: number) => {
-              accGroups[groupIdToToggle].checked = !accGroups[groupIdToToggle].checked;
+          scan((accGroups: GroupSelected[], groupIdToToggle: number | null) => {
+              if (groupIdToToggle != null){
+                accGroups[groupIdToToggle!].checked = !accGroups[groupIdToToggle!].checked;
+              }
               return accGroups;
           }, initialGroups),
           startWith(initialGroups)

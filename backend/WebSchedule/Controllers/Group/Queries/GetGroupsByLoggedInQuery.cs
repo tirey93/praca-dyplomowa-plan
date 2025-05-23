@@ -3,7 +3,7 @@ using WebSchedule.Controllers.Responses;
 using WebSchedule.Controllers.User.Exceptions;
 using WebSchedule.Domain.Repositories;
 
-namespace WebSchedule.Controllers.User.Queries
+namespace WebSchedule.Controllers.Group.Queries
 {
     public class GetGroupsByLoggedInQuery : IRequest<IEnumerable<UserGroupResponse>>
     {

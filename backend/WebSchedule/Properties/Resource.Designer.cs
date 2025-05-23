@@ -115,6 +115,15 @@ namespace WebSchedule.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Group with ID {0} not found..
+        /// </summary>
+        internal static string ExceptionGroupNotFound {
+            get {
+                return ResourceManager.GetString("ExceptionGroupNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User not found..
         /// </summary>
         internal static string ExceptionNoneUserNotFound {

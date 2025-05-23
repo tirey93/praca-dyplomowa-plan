@@ -5,6 +5,7 @@ namespace WebSchedule.Domain.Repositories
 {
     public interface IUserInGroupRepository : IRepository<UserInGroup>
     {
+        UserGroupDto Get(int groupId);
         IEnumerable<UserGroupDto> GetUserGroups(int userId);
     }
 }

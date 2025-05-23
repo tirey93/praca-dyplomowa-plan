@@ -19,4 +19,12 @@ import { environment } from '../../../enviroments/enviroments';
         }
       })
     }
+
+    getById$(groupId: number) {
+      return this.http.get<UserGroupResponse>(`${this.url}/${groupId}`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
   }

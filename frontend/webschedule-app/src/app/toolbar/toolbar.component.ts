@@ -13,6 +13,8 @@ import { GroupRepositoryService } from '../services/group/groupRepository.servic
 import { map, Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
+import { GroupDialogComponent } from '../group-dialog/group-dialog.component';
 
 export interface GroupSelected {
   id: number;
@@ -32,7 +34,8 @@ export class ToolbarComponent {
       private readonly jwtService: JwtService,
       private readonly groupRepository: GroupRepositoryService,
       private readonly cookieService: CookieService,
-      private readonly router: Router) {
+      private readonly router: Router,
+      private readonly dialog: MatDialog) {
     this.groups$ = this.groupRepository.getByLoggedIn$().pipe(
       map(apiGroups => 
         apiGroups.map(apiGroup => ({
@@ -57,6 +60,6 @@ export class ToolbarComponent {
   }
 
   onGroupSelected(id: number) {
-    console.log(id);
+    this.dialog.open<GroupDialogComponent, number>(GroupDialogComponent, { data: id });
   }
 }

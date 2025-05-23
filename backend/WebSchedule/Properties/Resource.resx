@@ -135,6 +135,9 @@
   <data name="ExceptionUserNotFound" xml:space="preserve">
     <value>User with ID {0} not found.</value>
   </data>
+  <data name="ExceptionGroupNotFound" xml:space="preserve">
+    <value>Group with ID {0} not found.</value>
+  </data>
   <data name="ExceptionNoneUserNotFound" xml:space="preserve">
     <value>User not found.</value>
   </data>

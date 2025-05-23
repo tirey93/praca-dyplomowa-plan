@@ -1,10 +1,10 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using WebSchedule.Controllers.Group.Exceptions;
+using WebSchedule.Controllers.Group.Queries;
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Controllers.User.Exceptions;
-using WebSchedule.Controllers.User.Queries;
 using WebSchedule.Properties;
 using WebSchedule.Utils;
 
@@ -41,6 +41,34 @@ namespace WebSchedule.Controllers.Group
                 }));
             }
             catch (UserNotFoundException ex)
+            {
+                return StatusCode((int)HttpStatusCode.NotFound,
+                    string.Format(Resource.ControllerNotFound, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError,
+                    string.Format(Resource.ControllerInternalError, ex.Message));
+            }
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+#if !DEBUG
+        [Authorize]
+#endif
+        public async Task<ActionResult<UserGroupResponse>> GetById(int id)
+        {
+            try
+            {
+                return Ok(await _mediator.Send(new GetGroupsByIdQuery
+                {
+                    GroupId = id,
+                }));
+            }
+            catch (GroupNotFoundException ex)
             {
                 return StatusCode((int)HttpStatusCode.NotFound,
                     string.Format(Resource.ControllerNotFound, ex.Message));

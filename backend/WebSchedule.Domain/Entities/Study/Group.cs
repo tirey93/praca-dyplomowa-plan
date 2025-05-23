@@ -10,6 +10,7 @@ namespace WebSchedule.Domain.Entities.Study
         public StudyMode StudyMode { get; private set; }
         public StudyLevel StudyLevel { get; private set; }
         public StudyCourse StudyCourse { get; private set; }
+        public int Subgroup { get; private set; }
 
         public ICollection<UserInGroup> MembersInGroup { get; private set; }
 
@@ -23,13 +24,14 @@ namespace WebSchedule.Domain.Entities.Study
         public IEnumerable<User> Admins => MembersInGroup.Where(x => x.UserRole == UserRole.Admin).Select(x => x.User);
 
         protected Group() {}
-        public Group(int startingYear, StudyMode studyMode, StudyLevel studyLevel, StudyCourse studyCourse, User admin)
+        public Group(int startingYear, StudyMode studyMode, StudyLevel studyLevel, StudyCourse studyCourse, User admin, int subgroup)
         {
             MembersInGroup = [];
             StartingYear = startingYear;
             StudyMode = studyMode;
             StudyLevel = studyLevel;
             StudyCourse = studyCourse;
+            Subgroup = subgroup;
             AddCandidate(admin);
             MakeAdmin(admin);
         }

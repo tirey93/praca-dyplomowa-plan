@@ -36,7 +36,8 @@ namespace WebSchedule.Controllers.Group.Queries
                 StartingYear = x.StartingYear,
                 StudyCourseShort = x.StudyCourseShort,
                 StudyLevel = x.StudyLevel,
-                StudyMode = x.StudyMode
+                StudyMode = x.StudyMode,
+                Subgroup = x.Subgroup,
             }));
         }
     }

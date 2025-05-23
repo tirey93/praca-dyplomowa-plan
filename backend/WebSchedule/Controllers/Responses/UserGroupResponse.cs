@@ -10,5 +10,6 @@
         public string StudyCourseShort { get; set; }
         public string StudyLevel { get; set; }
         public string StudyMode { get; set; }
+        public int Subgroup { get; set; }
     }
 }

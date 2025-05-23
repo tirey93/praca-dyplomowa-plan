@@ -7,5 +7,6 @@ export interface UserGroupResponse {
     studyCourseName: string,
     studyCourseShort: string,
     studyLevel: string,
-    studyMode: string
+    studyMode: string,
+    subgroup: number
 }

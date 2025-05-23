@@ -2,7 +2,10 @@ import { UserGroupResponse } from "../services/group/dtos/userGroupResponse";
 
 export class GroupHelper {
     static groupInfoToString(groupName: UserGroupResponse): string {
-        return `${this.parseStartingYear(groupName.startingYear)}${this.parseStudyMode(groupName.studyMode)}${this.parseStudyLevel(groupName.studyLevel)}${this.parseShortName(groupName.studyCourseShort)}`;
+        return `${this.parseStartingYear(groupName.startingYear)}${this.parseStudyMode(groupName.studyMode)}${this.parseStudyLevel(groupName.studyLevel)}${this.parseShortName(groupName.studyCourseShort)}${this.parseSubgroup(groupName.subgroup)}`;
+    }
+    static parseSubgroup(subgroup: number) {
+        return subgroup.toLocaleString('en-us', {minimumIntegerDigits: 2})
     }
     private static parseStartingYear(startingYear: number): string {
         return startingYear.toString().substring(2);

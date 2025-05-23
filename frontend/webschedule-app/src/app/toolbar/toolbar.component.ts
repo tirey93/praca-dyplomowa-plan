@@ -15,6 +15,7 @@ import { AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { ShowGroupDialogComponent } from '../show-group-dialog/show-group-dialog.component';
+import { SearchGroupDialogComponent } from '../search-group-dialog/search-group-dialog.component';
 
 export interface GroupSelected {
   id: number;
@@ -55,8 +56,8 @@ export class ToolbarComponent {
     this.router.navigateByUrl("/login");
   }
 
-  dialogForNewGroup() {
-    console.log('new group');
+  onGroupSearch() {
+    this.dialog.open(SearchGroupDialogComponent);
   }
 
   onGroupSelected(id: number) {

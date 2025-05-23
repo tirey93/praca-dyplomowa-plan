@@ -14,8 +14,8 @@
     <div class="groups-menu">
         <div class="groups-menu-header">
             <p>Grupy</p>
-            <button (click)="dialogForNewGroup()" style="transform: translateY(3px);" mat-icon-button>
-                <mat-icon>add</mat-icon>
+            <button (click)="onGroupSearch()" style="transform: translateY(3px);" mat-icon-button>
+                <mat-icon>search</mat-icon>
             </button>
         </div>
         @for (group of groups$|async; track $index; let i = $index) {

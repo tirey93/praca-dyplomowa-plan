@@ -29,8 +29,7 @@ export interface GroupSelected {
 })
 export class ToolbarComponent {
   public groups$: Observable<GroupSelected[]>;
-  public toggleGroupAction$ = new BehaviorSubject<number | null>(null); // Emituje ID grupy do przełączenia
-
+  public toggleGroupAction$ = new BehaviorSubject<number | null>(null);
   constructor(
       private jwtService: JwtService,
       private groupRepository: GroupRepositoryService,
@@ -71,7 +70,8 @@ export class ToolbarComponent {
     this.cookieService.delete("token");
     this.router.navigateByUrl("/login");
   }
-  goToGroups() {
-    this.router.navigateByUrl("/groups");
+
+  dialogForNewGroup() {
+    console.log('new group');
   }
 }

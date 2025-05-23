@@ -57,7 +57,9 @@ export class ToolbarComponent {
   }
 
   onGroupSearch() {
-    this.dialog.open(SearchGroupDialogComponent);
+    this.dialog.open(SearchGroupDialogComponent, {
+      maxWidth: '100vw',
+    });
   }
 
   onGroupSelected(id: number) {

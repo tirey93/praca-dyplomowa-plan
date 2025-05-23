@@ -1,3 +1,59 @@
-<mat-dialog-content>
+<mat-dialog-content class="search-dialog">
     <p mat-dialog-title>search-group-dialog works!</p>
+    <div class="search-dialog-list">
+        <div *ngIf="isLoading$ | async">
+            <mat-spinner></mat-spinner>
+        </div>
+        <div *ngIf="noData$ | async">
+            Brak grup
+        </div>
+        <div *ngIf="!(isLoading$ | async) && !(noData$ | async)">
+            <mat-table *ngIf="groups$ |async as groups" [dataSource]="groups">
+                <ng-container matColumnDef="name">
+                    <th mat-header-cell *matHeaderCellDef> Nazwa </th>
+                    <td mat-cell *matCellDef="let element"> {{getName(element)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="startingYear">
+                    <th mat-header-cell *matHeaderCellDef> Rok </th>
+                    <td mat-cell *matCellDef="let element"> {{element.startingYear}} </td>
+                </ng-container>
+                <ng-container matColumnDef="studyCourseName">
+                    <th mat-header-cell *matHeaderCellDef> Zajęcia </th>
+                    <td mat-cell *matCellDef="let element"> {{element.studyCourseName}} </td>
+                </ng-container>
+                <ng-container matColumnDef="studyLevel">
+                    <th mat-header-cell *matHeaderCellDef> Stopień </th>
+                    <td mat-cell *matCellDef="let element"> {{element.studyLevel | translate}} </td>
+                </ng-container>
+                <ng-container matColumnDef="studyMode">
+                    <th mat-header-cell *matHeaderCellDef> Tryb </th>
+                    <td mat-cell *matCellDef="let element"> {{element.studyMode | translate}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef> Actions </th>
+                    <td mat-cell *matCellDef="let element">
+                        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Actions">
+                            <mat-icon>more_vert</mat-icon>
+                        </button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item >
+                                <mat-icon>edit</mat-icon>
+                                <span>Edit</span>
+                            </button>
+                            <button mat-menu-item>
+                                <mat-icon>delete</mat-icon>
+                                <span>Delete</span>
+                            </button>
+                        </mat-menu>
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </mat-table>
+            <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                showFirstLastButtons>
+            </mat-paginator>
+        </div>
+    </div>
 </mat-dialog-content>

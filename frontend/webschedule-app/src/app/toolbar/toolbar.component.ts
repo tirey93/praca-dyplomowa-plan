@@ -14,7 +14,7 @@ import { map, Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
-import { GroupDialogComponent } from '../group-dialog/group-dialog.component';
+import { ShowGroupDialogComponent } from '../show-group-dialog/show-group-dialog.component';
 
 export interface GroupSelected {
   id: number;
@@ -60,6 +60,6 @@ export class ToolbarComponent {
   }
 
   onGroupSelected(id: number) {
-    this.dialog.open<GroupDialogComponent, number>(GroupDialogComponent, { data: id });
+    this.dialog.open<ShowGroupDialogComponent, number>(ShowGroupDialogComponent, { data: id });
   }
 }

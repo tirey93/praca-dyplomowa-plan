@@ -11,12 +11,12 @@ import { AsyncPipe } from '@angular/common';
 import { GroupHelper } from '../helpers/groupHelper';
 
 @Component({
-  selector: 'app-group-dialog',
+  selector: 'app-show-group-dialog',
   imports: [MatDialogContent, MatDialogTitle, AsyncPipe],
-  templateUrl: './group-dialog.component.html',
-  styleUrl: './group-dialog.component.scss'
+  templateUrl: './show-group-dialog.component.html',
+  styleUrl: './show-group-dialog.component.scss'
 })
-export class GroupDialogComponent {
+export class ShowGroupDialogComponent {
   group$: Observable<UserGroupResponse>
   
   constructor(

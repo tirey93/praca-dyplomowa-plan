@@ -18,14 +18,10 @@
                 <mat-icon>add</mat-icon>
             </button>
         </div>
-        <ul class="groups-menu-list">
-          @for (group of groups$|async; track $index; let i = $index) {
-          <li>
-              <mat-checkbox [checked]="group.checked" (click)="update($event, i)">
-              {{group.name}}
-              </mat-checkbox>
-          </li>
-          }
-        </ul>
+        @for (group of groups$|async; track $index; let i = $index) {
+          <mat-card (click)="onGroupSelected(group.id)" role="button" class="groups-menu-list-item">
+              <mat-card-content>{{group.name}}</mat-card-content>
+          </mat-card>
+        }
     </div>
 </mat-menu>

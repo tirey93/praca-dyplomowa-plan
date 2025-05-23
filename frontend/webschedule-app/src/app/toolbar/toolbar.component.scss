@@ -10,8 +10,11 @@
     gap: 80px;
   }
 
-  .groups-menu-list {
-    list-style-type: none; 
-    margin-right: 20px; 
-    transform: translateX(-30px);
+  .groups-menu-list-item {
+    margin: 10px; 
+  }
+
+  .groups-menu-list-item:hover {
+    font-weight: bold;
+    box-shadow: 0 3px 5px -1px #0003, 0 6px 10px #00000024, 0 1px 18px #0000001f;
   }

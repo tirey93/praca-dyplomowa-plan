@@ -52,6 +52,37 @@ namespace WebSchedule.Controllers.Group
             }
         }
 
+        [HttpGet()]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+#if !DEBUG
+        [Authorize]
+#endif
+        public async Task<ActionResult<IOrderedEnumerable<GroupInfoResponse>>> Get()
+        {
+            try
+            {
+                var userId = JwtHelper.GetUserIdFromToken(Request.Headers.Authorization)
+                    ?? throw new UserNotFoundException();
+
+                return Ok(await _mediator.Send(new GetGroupsInQuery
+                {
+                    UserId = userId,
+                }));
+            }
+            catch (UserNotFoundException ex)
+            {
+                return StatusCode((int)HttpStatusCode.NotFound,
+                    string.Format(Resource.ControllerNotFound, ex.Message));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError,
+                    string.Format(Resource.ControllerInternalError, ex.Message));
+            }
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -63,7 +94,7 @@ namespace WebSchedule.Controllers.Group
         {
             try
             {
-                return Ok(await _mediator.Send(new GetGroupsByIdQuery
+                return Ok(await _mediator.Send(new GetGroupByIdQuery
                 {
                     GroupId = id,
                 }));

@@ -30,7 +30,7 @@ namespace WebSchedule.Infrastructure.Repositories
                     Subgroup = x.Group.Subgroup,
                 });
         }
-        
+
         public UserGroupDto Get(int groupId)
         {
             return _dbSet

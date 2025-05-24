@@ -22,8 +22,13 @@ namespace WebSchedule.Domain.Entities.Study
         public IEnumerable<User> Students => MembersInGroup.Where(x => x.UserRole == UserRole.Student).Select(x => x.User);
         [NotMapped]
         public IEnumerable<User> Admins => MembersInGroup.Where(x => x.UserRole == UserRole.Admin).Select(x => x.User);
+        [NotMapped]
+        public int MembersCount => Students.Count() + Admins.Count();
 
-        protected Group() {}
+        protected Group() 
+        {
+            MembersInGroup = [];
+        }
         public Group(int startingYear, StudyMode studyMode, StudyLevel studyLevel, StudyCourse studyCourse, User admin, int subgroup)
         {
             MembersInGroup = [];
@@ -55,7 +60,7 @@ namespace WebSchedule.Domain.Entities.Study
 
         public void MakeAdmin(User candidate)
         {
-            if (!Candidates.Contains(candidate))
+            if (!Candidates.Contains(candidate) && !Students.Contains(candidate))
                 throw new NoSuchCandidateInGroupException(candidate.Id, Id);
             if (Admins.Contains(candidate))
                 throw new CandidateAlreadyInAGroupException(candidate.Id, Id);

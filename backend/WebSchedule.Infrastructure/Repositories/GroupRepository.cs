@@ -1,4 +1,5 @@
-﻿using WebSchedule.Domain.Entities.Study;
+﻿using Microsoft.EntityFrameworkCore;
+using WebSchedule.Domain.Entities.Study;
 using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Infrastructure.Repositories
@@ -13,6 +14,13 @@ namespace WebSchedule.Infrastructure.Repositories
         public async Task AddGroup(Group group)
         {
             await _dbSet.AddAsync(group);
+        }
+
+        public IEnumerable<Group> Get()
+        {
+            return _dbSet
+                .Include(x => x.StudyCourse)
+                .Include(x => x.MembersInGroup).ThenInclude(x => x.User);
         }
     }
 }

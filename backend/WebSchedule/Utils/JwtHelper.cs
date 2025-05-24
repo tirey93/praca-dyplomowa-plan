@@ -49,6 +49,8 @@ namespace WebSchedule.Utils
         public static int? GetUserIdFromToken(StringValues authorization)
         {
             var tokenStr = authorization.GetToken();
+            if(string.IsNullOrEmpty(tokenStr)) 
+                return null;
             var jwtHandler = new JwtSecurityTokenHandler();
             var token = jwtHandler.ReadJwtToken(tokenStr);
 

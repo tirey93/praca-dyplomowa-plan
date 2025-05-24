@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { UserGroupResponse } from './dtos/userGroupResponse';
 import { environment } from '../../../enviroments/enviroments';
+import { GroupInfoResponse } from './dtos/groupInfoResponse';
 
 @Injectable({
     providedIn: 'root'
@@ -14,6 +15,14 @@ import { environment } from '../../../enviroments/enviroments';
 
     getByLoggedIn$() {
       return this.http.get<UserGroupResponse[]>(`${this.url}/ByLoggedIn`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
+    get$() {
+      return this.http.get<GroupInfoResponse[]>(`${this.url}`, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

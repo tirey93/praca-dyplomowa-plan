@@ -15,7 +15,7 @@ namespace WebSchedule.Domain.Entities.Study
         public ICollection<UserInGroup> MembersInGroup { get; private set; }
 
         [NotMapped]
-        public IEnumerable<User> Members => MembersInGroup.Select(x => x.User);
+        public IEnumerable<User> Members => MembersInGroup.Where(x => x.UserRole == UserRole.Admin || x.UserRole == UserRole.Student).Select(x => x.User);
         [NotMapped]
         public IEnumerable<User> Candidates => MembersInGroup.Where(x => x.UserRole == UserRole.Candidate).Select(x => x.User);
         [NotMapped]
@@ -70,7 +70,7 @@ namespace WebSchedule.Domain.Entities.Study
 
         public void RemoveMember(User member)
         {
-            if (!Members.Contains(member))
+            if (!MembersInGroup.Select(x => x.User).Contains(member))
                 throw new NoSuchMemberInGroupException(member.Id, Id);
             var userInGroup = MembersInGroup.First(x => x.User == member);
             MembersInGroup.Remove(userInGroup);

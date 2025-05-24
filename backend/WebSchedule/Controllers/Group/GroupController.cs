@@ -59,7 +59,7 @@ namespace WebSchedule.Controllers.Group
 #if !DEBUG
         [Authorize]
 #endif
-        public async Task<ActionResult<IOrderedEnumerable<GroupInfoResponse>>> Get()
+        public async Task<ActionResult<IEnumerable<GroupInfoResponse>>> Get()
         {
             try
             {

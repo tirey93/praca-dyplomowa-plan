@@ -5,12 +5,12 @@ using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Controllers.Group.Queries
 {
-    public class GetGroupsInQuery : IRequest<IOrderedEnumerable<GroupInfoResponse>>
+    public class GetGroupsInQuery : IRequest<IEnumerable<GroupInfoResponse>>
     {
         public int UserId { get; set; }
     }
 
-    public class GetGroupsInQueryHandler : IRequestHandler<GetGroupsInQuery, IOrderedEnumerable<GroupInfoResponse>>
+    public class GetGroupsInQueryHandler : IRequestHandler<GetGroupsInQuery, IEnumerable<GroupInfoResponse>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserInGroupRepository _userInGroupRepository;
@@ -23,9 +23,11 @@ namespace WebSchedule.Controllers.Group.Queries
             _groupRepository = groupRepository;
         }
 
-        public Task<IOrderedEnumerable<GroupInfoResponse>> Handle(GetGroupsInQuery request, CancellationToken cancellationToken)
+        public Task<IEnumerable<GroupInfoResponse>> Handle(GetGroupsInQuery request, CancellationToken cancellationToken)
         {
-            var groups = _groupRepository.Get();
+            var groups = _groupRepository.Get()
+                .Where(g => !g.Members.Any(m => m.Id == request.UserId))
+                .OrderByDescending(x => x.MembersCount);
 
             return Task.FromResult(groups.Select(gi => new GroupInfoResponse
             {
@@ -38,8 +40,7 @@ namespace WebSchedule.Controllers.Group.Queries
                 Subgroup = gi.Subgroup,
                 MembersCount = gi.MembersCount,
                 IsCandidate = gi.Candidates.Any(m => m.Id == request.UserId),
-                IsMember = gi.Admins.Any(m => m.Id == request.UserId) || gi.Students.Any(m => m.Id == request.UserId),
-            }).OrderByDescending(x => x.MembersCount));
+            }));
         }
     }
 }

@@ -12,18 +12,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { GroupInfoResponse } from '../services/group/dtos/groupInfoResponse';
+import { MatChipSelectionChange, MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-search-group-dialog',
   imports: [MatDialogContent, MatDialogTitle,
     MatTableModule, MatMenuModule, MatIconModule, 
     MatButtonModule, CommonModule, MatProgressSpinnerModule,
-    TranslatePipe, MatPaginator, MatPaginatorModule
+    TranslatePipe, MatPaginator, MatPaginatorModule, MatChipsModule
   ],
   templateUrl: './search-group-dialog.component.html',
   styleUrl: './search-group-dialog.component.scss'
 })
 export class SearchGroupDialogComponent {
+
   isLoading$: Observable<boolean>;
   noData$: Observable<boolean>;
 
@@ -32,7 +34,7 @@ export class SearchGroupDialogComponent {
 
   displayedColumns: string[] = [
     'name', 'startingYear', 'studyCourseName', 'studyLevel', 
-    'studyMode', 'subgroup', 'membersCount'];
+    'studyMode', 'subgroup', 'membersCount', 'join'];
 
   constructor(private groupService: GroupRepositoryService) {
     this.groups$ = this.groupService.get$().pipe(
@@ -56,5 +58,9 @@ export class SearchGroupDialogComponent {
 
   getName(group: GroupInfoResponse):string {
     return GroupHelper.groupInfoToString(group);
+  }
+
+  handleCandidateJoin(groupId: number, selected: boolean) {
+    console.log(groupId, selected);
   }
 }

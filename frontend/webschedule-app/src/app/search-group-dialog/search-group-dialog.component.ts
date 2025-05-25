@@ -37,6 +37,7 @@ export class SearchGroupDialogComponent {
   constructor(private groupService: GroupRepositoryService) {
     this.groupService.get$().subscribe({
       next: (groups => {
+        this.isLoading = false;
         if (groups.length === 0) {
           this.noData = true;
           return;
@@ -44,7 +45,6 @@ export class SearchGroupDialogComponent {
         this.groups = new MatTableDataSource<GroupInfoResponse>();
         this.groups.data = groups;
         setTimeout(() => this.groups!.paginator = this.paginator);
-        this.isLoading = false;
       })
     })
   }

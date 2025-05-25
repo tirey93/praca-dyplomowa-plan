@@ -3,6 +3,5 @@
   "Master": "Magister",
   "Engineer": "Inżynier",
   "FullTime": "Stacjonarne",
-  "PartTime": "Niestacjonarne",
-  "search.filter.all": "Wszystkie"
+  "PartTime": "Niestacjonarne"
 }

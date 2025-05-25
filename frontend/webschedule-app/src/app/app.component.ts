@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 
 
 import { ToolbarComponent } from "./toolbar/toolbar.component";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -12,5 +13,10 @@ import { ToolbarComponent } from "./toolbar/toolbar.component";
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-
+  /**
+   *
+   */
+  constructor(public translate: TranslateService) {
+    translate.use('pl')
+  }
 }

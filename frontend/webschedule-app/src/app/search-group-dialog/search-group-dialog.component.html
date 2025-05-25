@@ -1,20 +1,39 @@
 <mat-dialog-content class="search-dialog">
-    <mat-form-field *ngIf="translationsLoaded">
-        <mat-label>Tryb</mat-label>
-        <mat-select value="search.filter.all">
-            @for (option of filterOptionsMode; track $index) {
-                <mat-option [value]="option">{{option | translate}}</mat-option>
-            }
-        </mat-select>
-    </mat-form-field>
-    <mat-form-field *ngIf="translationsLoaded">
-        <mat-label>Stopień</mat-label>
-        <mat-select value="search.filter.all">
-            @for (option of filterOptionsLevel; track $index) {
-                <mat-option [value]="option">{{option | translate}}</mat-option>
-            }
-        </mat-select>
-    </mat-form-field>
+    <div class="search-dialog-filters">
+        <mat-form-field>
+            <mat-label>Rok</mat-label>
+            <mat-select 
+                (selectionChange)="applyFilter($event, 'startingYear')"
+                value="all">
+                <mat-option value="all">Wszystkie</mat-option>
+                @for (option of filterOptionsYear; track $index) {
+                    <mat-option [value]="option">{{option}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Stopień</mat-label>
+            <mat-select 
+                (selectionChange)="applyFilter($event, 'studyLevel')"
+                value="all">
+                <mat-option value="all">Wszystkie</mat-option>
+                @for (option of filterOptionsLevel; track $index) {
+                    <mat-option [value]="option">{{option | translate}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Tryb</mat-label>
+            <mat-select 
+                (selectionChange)="applyFilter($event, 'studyMode')"
+                value="all">
+                <mat-option value="all">Wszystkie</mat-option>
+                @for (option of filterOptionsMode; track $index) {
+                    <mat-option [value]="option">{{option | translate}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    </div>
     <div class="search-dialog-list">
         <div *ngIf="isLoading">
             <mat-spinner></mat-spinner>

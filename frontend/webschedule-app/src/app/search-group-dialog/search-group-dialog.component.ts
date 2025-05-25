@@ -8,13 +8,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { GroupInfoResponse } from '../services/group/dtos/groupInfoResponse';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatSelect, MatSelectChange } from '@angular/material/select';
+import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-search-group-dialog',
@@ -22,25 +23,31 @@ import { MatOptionModule } from '@angular/material/core';
     MatTableModule, MatMenuModule, MatIconModule, 
     MatButtonModule, CommonModule, MatProgressSpinnerModule,
     TranslatePipe, MatPaginator, MatPaginatorModule, MatChipsModule,
-    MatFormField, MatSelect, MatLabel, MatOptionModule
+    MatFormFieldModule, MatSelectModule, MatOptionModule
   ],
   templateUrl: './search-group-dialog.component.html',
   styleUrl: './search-group-dialog.component.scss'
 })
 export class SearchGroupDialogComponent {
-
+  translationsLoaded = false;
   isLoading = true;
   noData = false;
   groups?: MatTableDataSource<GroupInfoResponse>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   filterOptionsMode = ['search.filter.all','FullTime', 'PartTime']
+  filterOptionsLevel = ['search.filter.all','Bachelor', 'Master', 'Engineer']
 
   displayedColumns: string[] = [
     'name', 'startingYear', 'studyCourseName', 'studyLevel', 
     'studyMode', 'subgroup', 'membersCount', 'join'];
 
-  constructor(private groupService: GroupRepositoryService) {
+  constructor(private groupService: GroupRepositoryService,
+    private translate: TranslateService
+  ) {
+    this.translate.onDefaultLangChange.pipe(take(1)).subscribe(() => {
+      this.translationsLoaded = true;
+    });
     this.groupService.get$().subscribe({
       next: (groups => {
         this.isLoading = false;

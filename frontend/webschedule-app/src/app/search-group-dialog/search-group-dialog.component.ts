@@ -25,6 +25,7 @@ import { MatChipSelectionChange, MatChipsModule } from '@angular/material/chips'
   styleUrl: './search-group-dialog.component.scss'
 })
 export class SearchGroupDialogComponent {
+
   isLoading = true;
   noData = false;
   groups?: MatTableDataSource<GroupInfoResponse>;
@@ -54,9 +55,20 @@ export class SearchGroupDialogComponent {
   }
 
   handleCandidateJoin(group: GroupInfoResponse, selected: boolean) {
-    if (group.isCandidate === selected) {
-      return
-    }
-    console.log(group, selected);
+    const index = this.getIndex(group.id);
+    if (index == undefined)
+      return;
+    this.groups!.data[index].isCandidate = selected;
+  }
+
+  isCandidate(groupId: number) {
+    const index = this.getIndex(groupId);
+    if (index == undefined)
+      return false;
+    return this.groups!.data[index].isCandidate;
+  }
+
+  private getIndex(groupId: number){
+    return this.groups?.data.findIndex((matGroup) => matGroup.id === groupId);
   }
 }

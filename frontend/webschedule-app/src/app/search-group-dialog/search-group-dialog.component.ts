@@ -25,7 +25,6 @@ import { MatChipSelectionChange, MatChipsModule } from '@angular/material/chips'
   styleUrl: './search-group-dialog.component.scss'
 })
 export class SearchGroupDialogComponent {
-
   isLoading$: Observable<boolean>;
   noData$: Observable<boolean>;
 
@@ -60,7 +59,10 @@ export class SearchGroupDialogComponent {
     return GroupHelper.groupInfoToString(group);
   }
 
-  handleCandidateJoin(groupId: number, selected: boolean) {
-    console.log(groupId, selected);
+  handleCandidateJoin(group: GroupInfoResponse, selected: boolean) {
+    if (group.isCandidate === selected) {
+      return
+    }
+    console.log(group, selected);
   }
 }

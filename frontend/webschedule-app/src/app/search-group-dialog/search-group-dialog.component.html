@@ -39,7 +39,7 @@
                 </ng-container>
                 <ng-container matColumnDef="join">
                     <th mat-header-cell *matHeaderCellDef>  </th>
-                    <td mat-cell *matCellDef="let element"> <mat-chip-option (selectionChange)="handleCandidateJoin(element.id, $event.selected)" [selected]="element.isCandidate">Dołącz</mat-chip-option> </td>
+                    <td mat-cell *matCellDef="let element"> <mat-chip-option (selectionChange)="handleCandidateJoin(element, $event.selected)" [selected]="element.isCandidate">Dołącz</mat-chip-option> </td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

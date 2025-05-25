@@ -1,5 +1,14 @@
 <mat-dialog-content class="search-dialog">
-    <p mat-dialog-title>search-group-dialog works!</p>
+    <mat-form-field appearance="fill">
+        <mat-label>Tryb</mat-label>
+        <mat-select
+            value="search.filter.all"
+            (selectionChange)="applyEmpFilter($event, 'studyMode')">
+            <mat-option *ngFor="let op of filterOptionsMode" [value]="op">
+                {{ op | translate }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
     <div class="search-dialog-list">
         <div *ngIf="isLoading">
             <mat-spinner></mat-spinner>

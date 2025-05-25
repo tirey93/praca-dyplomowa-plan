@@ -27,7 +27,12 @@ namespace WebSchedule.Controllers.Group.Queries
         {
             var groups = _groupRepository.Get()
                 .Where(g => !g.Members.Any(m => m.Id == request.UserId))
-                .OrderByDescending(x => x.MembersCount);
+                .OrderByDescending(x => x.Candidates.Count(m => m.Id == request.UserId))
+                .ThenByDescending(x => x.StartingYear)
+                .ThenBy(x => x.StudyMode)
+                .ThenBy(x => x.StudyLevel)
+                .ThenBy(x => x.StudyCourse.Name)
+                .ThenBy(x => x.Subgroup);
 
             return Task.FromResult(groups.Select(gi => new GroupInfoResponse
             {

@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
-import { distinctUntilChanged, map, Observable, shareReplay, startWith } from 'rxjs';
+import { MatDialogContent } from '@angular/material/dialog';
 import { GroupRepositoryService } from '../services/group/groupRepository.service';
 import { GroupHelper } from '../helpers/groupHelper';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -12,14 +11,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { GroupInfoResponse } from '../services/group/dtos/groupInfoResponse';
-import { MatChipSelectionChange, MatChipsModule } from '@angular/material/chips';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatSelect, MatSelectChange } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-search-group-dialog',
-  imports: [MatDialogContent, MatDialogTitle,
+  imports: [MatDialogContent,
     MatTableModule, MatMenuModule, MatIconModule, 
     MatButtonModule, CommonModule, MatProgressSpinnerModule,
-    TranslatePipe, MatPaginator, MatPaginatorModule, MatChipsModule
+    TranslatePipe, MatPaginator, MatPaginatorModule, MatChipsModule,
+    MatFormField, MatSelect, MatLabel, MatOptionModule
   ],
   templateUrl: './search-group-dialog.component.html',
   styleUrl: './search-group-dialog.component.scss'
@@ -30,6 +33,8 @@ export class SearchGroupDialogComponent {
   noData = false;
   groups?: MatTableDataSource<GroupInfoResponse>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
+  filterOptionsMode = ['search.filter.all','FullTime', 'PartTime']
 
   displayedColumns: string[] = [
     'name', 'startingYear', 'studyCourseName', 'studyLevel', 
@@ -46,6 +51,16 @@ export class SearchGroupDialogComponent {
         this.groups = new MatTableDataSource<GroupInfoResponse>();
         this.groups.data = groups;
         setTimeout(() => this.groups!.paginator = this.paginator);
+        
+        this.groups.filterPredicate = function (record,filter) {
+            var map = new Map(JSON.parse(filter));
+            let isMatch = false;
+            for(let [key,value] of map){
+              isMatch = (value=="search.filter.all") || (record[key as keyof GroupInfoResponse] == value); 
+              if(!isMatch) return false;
+            }
+            return isMatch;
+        }
       })
     })
   }
@@ -55,10 +70,19 @@ export class SearchGroupDialogComponent {
   }
 
   handleCandidateJoin(group: GroupInfoResponse, selected: boolean) {
+    if (group.isCandidate === selected)
+      return;
     const index = this.getIndex(group.id);
     if (index == undefined)
       return;
     this.groups!.data[index].isCandidate = selected;
+  }
+
+  applyEmpFilter(ob:MatSelectChange,empfilter: string) {
+    const filterDictionary= new Map<string,string>();
+    filterDictionary.set(empfilter,ob.value);
+    var jsonString = JSON.stringify(Array.from(filterDictionary.entries()));
+    this.groups!.filter = jsonString;
   }
 
   isCandidate(groupId: number) {

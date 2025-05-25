@@ -1,14 +1,14 @@
 <mat-dialog-content class="search-dialog">
     <p mat-dialog-title>search-group-dialog works!</p>
     <div class="search-dialog-list">
-        <div *ngIf="isLoading$ | async">
+        <div *ngIf="isLoading">
             <mat-spinner></mat-spinner>
         </div>
-        <div *ngIf="noData$ | async">
+        <div *ngIf="noData">
             Brak grup
         </div>
-        <div *ngIf="!(isLoading$ | async) && !(noData$ | async)">
-            <mat-table *ngIf="groups$ |async as groups" [dataSource]="groups">
+        <div *ngIf="!isLoading && !noData">
+            <mat-table [dataSource]="groups!">
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef> Nazwa </th>
                     <td mat-cell *matCellDef="let element"> {{getName(element)}} </td>

@@ -25,10 +25,9 @@ import { MatChipSelectionChange, MatChipsModule } from '@angular/material/chips'
   styleUrl: './search-group-dialog.component.scss'
 })
 export class SearchGroupDialogComponent {
-  isLoading$: Observable<boolean>;
-  noData$: Observable<boolean>;
-
-  groups$: Observable<MatTableDataSource<GroupInfoResponse>>;
+  isLoading = true;
+  noData = false;
+  groups?: MatTableDataSource<GroupInfoResponse>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   displayedColumns: string[] = [
@@ -36,23 +35,18 @@ export class SearchGroupDialogComponent {
     'studyMode', 'subgroup', 'membersCount', 'join'];
 
   constructor(private groupService: GroupRepositoryService) {
-    this.groups$ = this.groupService.get$().pipe(
-      map(groups => {
-        const dataSource = new MatTableDataSource<GroupInfoResponse>();
-        dataSource.data = groups;
-        dataSource.paginator = this.paginator;
-        return dataSource;
-      }),
-    )
-    this.isLoading$ = this.groups$.pipe(
-      map(() => false),
-      startWith(true),
-      distinctUntilChanged()
-    );
-    this.noData$ = this.groups$.pipe(
-      map((x) => x.data.length === 0),
-      distinctUntilChanged()
-    );
+    this.groupService.get$().subscribe({
+      next: (groups => {
+        if (groups.length === 0) {
+          this.noData = true;
+          return;
+        }
+        this.groups = new MatTableDataSource<GroupInfoResponse>();
+        this.groups.data = groups;
+        setTimeout(() => this.groups!.paginator = this.paginator);
+        this.isLoading = false;
+      })
+    })
   }
 
   getName(group: GroupInfoResponse):string {

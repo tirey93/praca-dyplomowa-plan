@@ -1,9 +1,20 @@
 <mat-dialog-content class="search-dialog">
     <div class="search-dialog-filters">
         <mat-form-field>
+            <mat-label>Zajęcia</mat-label>
+            <input type="text" matInput [formControl]="courseFilterControl" [matAutocomplete]="auto">
+            <mat-autocomplete 
+                (optionSelected)="applyFilter($event.option.value, 'studyCourseName')"
+                #auto="matAutocomplete">
+            @for (option of filteredOptionsCourse$ | async; track $index) {
+                <mat-option [value]="option">{{option}}</mat-option>
+            }
+            </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field>
             <mat-label>Rok</mat-label>
             <mat-select 
-                (selectionChange)="applyFilter($event, 'startingYear')"
+                (selectionChange)="applyFilter($event.value, 'startingYear')"
                 value="all">
                 <mat-option value="all">Wszystkie</mat-option>
                 @for (option of filterOptionsYear; track $index) {
@@ -14,7 +25,7 @@
         <mat-form-field>
             <mat-label>Stopień</mat-label>
             <mat-select 
-                (selectionChange)="applyFilter($event, 'studyLevel')"
+                (selectionChange)="applyFilter($event.value, 'studyLevel')"
                 value="all">
                 <mat-option value="all">Wszystkie</mat-option>
                 @for (option of filterOptionsLevel; track $index) {
@@ -25,7 +36,7 @@
         <mat-form-field>
             <mat-label>Tryb</mat-label>
             <mat-select 
-                (selectionChange)="applyFilter($event, 'studyMode')"
+                (selectionChange)="applyFilter($event.value, 'studyMode')"
                 value="all">
                 <mat-option value="all">Wszystkie</mat-option>
                 @for (option of filterOptionsMode; track $index) {
@@ -47,13 +58,13 @@
                     <th mat-header-cell *matHeaderCellDef> Nazwa </th>
                     <td mat-cell *matCellDef="let element"> {{getName(element)}} </td>
                 </ng-container>
-                <ng-container matColumnDef="startingYear">
-                    <th mat-header-cell *matHeaderCellDef> Rok </th>
-                    <td mat-cell *matCellDef="let element"> {{element.startingYear}} </td>
-                </ng-container>
                 <ng-container matColumnDef="studyCourseName">
                     <th mat-header-cell *matHeaderCellDef> Zajęcia </th>
                     <td mat-cell *matCellDef="let element"> {{element.studyCourseName}} </td>
+                </ng-container>
+                <ng-container matColumnDef="startingYear">
+                    <th mat-header-cell *matHeaderCellDef> Rok </th>
+                    <td mat-cell *matCellDef="let element"> {{element.startingYear}} </td>
                 </ng-container>
                 <ng-container matColumnDef="studyLevel">
                     <th mat-header-cell *matHeaderCellDef> Stopień </th>

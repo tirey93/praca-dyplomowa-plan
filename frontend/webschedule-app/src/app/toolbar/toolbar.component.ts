@@ -59,6 +59,7 @@ export class ToolbarComponent {
   onGroupSearch() {
     this.dialog.open(SearchGroupDialogComponent, {
       maxWidth: '100vw',
+      autoFocus: false
     });
   }
 

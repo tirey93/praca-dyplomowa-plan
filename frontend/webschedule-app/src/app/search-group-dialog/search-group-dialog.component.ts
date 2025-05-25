@@ -15,6 +15,10 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatSelectChange, MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { map, Observable, startWith } from 'rxjs';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-search-group-dialog',
@@ -22,7 +26,8 @@ import { MatOptionModule } from '@angular/material/core';
     MatTableModule, MatMenuModule, MatIconModule, 
     MatButtonModule, CommonModule, MatProgressSpinnerModule,
     TranslatePipe, MatPaginator, MatPaginatorModule, MatChipsModule,
-    MatFormFieldModule, MatSelectModule, MatOptionModule
+    MatFormFieldModule, MatSelectModule, MatOptionModule, MatAutocompleteModule,
+    ReactiveFormsModule, MatInputModule
   ],
   templateUrl: './search-group-dialog.component.html',
   styleUrl: './search-group-dialog.component.scss'
@@ -31,12 +36,15 @@ export class SearchGroupDialogComponent {
   isLoading = true;
   noData = false;
   groups?: MatTableDataSource<GroupInfoResponse>;
+  courseFilterControl = new FormControl<string>('')
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   filterDictionary= new Map<string,string>();
   filterOptionsMode = ['FullTime', 'PartTime']
   filterOptionsLevel = ['Bachelor', 'Master', 'Engineer']
   filterOptionsYear?: Set<number>
+  filteredOptionsCourse$: Observable<string[]>;
+  filterOptionsCourse?: Set<string>;
 
   displayedColumns: string[] = [
     'name', 'startingYear', 'studyCourseName', 'studyLevel', 
@@ -44,6 +52,11 @@ export class SearchGroupDialogComponent {
 
   constructor(private groupService: GroupRepositoryService,
   ) {
+    this.filteredOptionsCourse$ = this.courseFilterControl.valueChanges.pipe(
+      map(value => {
+        return value ? this.filterOptionCourse(value) : [...this.filterOptionsCourse!].slice();
+      }),
+    );
     this.groupService.get$().subscribe({
       next: (groups => {
         this.isLoading = false;
@@ -54,6 +67,8 @@ export class SearchGroupDialogComponent {
         this.groups = new MatTableDataSource<GroupInfoResponse>();
         this.groups.data = groups;
         this.filterOptionsYear = new Set(this.groups?.data.map(x => x.startingYear).sort((a, b) => a - b))
+        this.filterOptionsCourse = new Set(this.groups?.data.map(x => x.studyCourseName).sort((a, b) => a > b ? 1 : -1))
+        this.courseFilterControl.setValue('')
         setTimeout(() => this.groups!.paginator = this.paginator);
         
         this.groups.filterPredicate = function (record,filter) {
@@ -82,8 +97,8 @@ export class SearchGroupDialogComponent {
     this.groups!.data[index].isCandidate = selected;
   }
 
-  applyFilter(ob:MatSelectChange,empfilter: string) {
-    this.filterDictionary.set(empfilter,ob.value);
+  applyFilter(option:any, empfilter: string) {
+    this.filterDictionary.set(empfilter, option);
     var jsonString = JSON.stringify(Array.from(this.filterDictionary.entries()));
     this.groups!.filter = jsonString;
   }
@@ -97,5 +112,10 @@ export class SearchGroupDialogComponent {
 
   private getIndex(groupId: number){
     return this.groups?.data.findIndex((matGroup) => matGroup.id === groupId);
+  }
+
+  private filterOptionCourse(name: string): string[] {
+    const filterValue = name.toLowerCase();
+    return [...this.filterOptionsCourse!].filter(option => option.toLowerCase().includes(filterValue));
   }
 }

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatDialogContent } from '@angular/material/dialog';
+import { MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
 import { GroupRepositoryService } from '../services/group/groupRepository.service';
 import { GroupHelper } from '../helpers/groupHelper';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -19,6 +19,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { map, Observable } from 'rxjs';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-search-group-dialog',
@@ -27,7 +28,7 @@ import { MatInputModule } from '@angular/material/input';
     MatButtonModule, CommonModule, MatProgressSpinnerModule,
     TranslatePipe, MatPaginator, MatPaginatorModule, MatChipsModule,
     MatFormFieldModule, MatSelectModule, MatOptionModule, MatAutocompleteModule,
-    ReactiveFormsModule, MatInputModule
+    ReactiveFormsModule, MatInputModule, MatTooltipModule, MatDialogTitle
   ],
   templateUrl: './search-group-dialog.component.html',
   styleUrl: './search-group-dialog.component.scss'

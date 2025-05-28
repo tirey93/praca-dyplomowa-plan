@@ -8,15 +8,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { GroupInfoResponse } from '../services/group/dtos/groupInfoResponse';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
-import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { map, Observable, startWith } from 'rxjs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { map, Observable } from 'rxjs';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 
@@ -36,7 +36,12 @@ export class SearchGroupDialogComponent {
   isLoading = true;
   noData = false;
   groups?: MatTableDataSource<GroupInfoResponse>;
+
   courseFilterControl = new FormControl<string>('')
+  yearFilterControl = new FormControl<string>('all')
+  levelFilterControl = new FormControl<string>('all')
+  modefilterControl = new FormControl<string>('all')
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   filterDictionary= new Map<string,string>();
@@ -45,6 +50,8 @@ export class SearchGroupDialogComponent {
   filterOptionsYear?: Set<number>
   filteredOptionsCourse$: Observable<string[]>;
   filterOptionsCourse?: Set<string>;
+
+
 
   displayedColumns: string[] = [
     'name', 'startingYear', 'studyCourseName', 'studyLevel', 
@@ -101,6 +108,15 @@ export class SearchGroupDialogComponent {
     this.filterDictionary.set(empfilter, option);
     var jsonString = JSON.stringify(Array.from(this.filterDictionary.entries()));
     this.groups!.filter = jsonString;
+  }
+
+  onClearAllFilters() {
+    this.filterDictionary.clear();
+    this.applyFilter(null, '')
+    this.courseFilterControl.setValue('')
+    this.yearFilterControl.setValue('all')
+    this.levelFilterControl.setValue('all')
+    this.modefilterControl.setValue('all')
   }
 
   isCandidate(groupId: number) {

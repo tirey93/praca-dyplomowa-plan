@@ -4,6 +4,7 @@
             <mat-label>Zajęcia</mat-label>
             <input type="text" matInput [formControl]="courseFilterControl" [matAutocomplete]="auto">
             <mat-autocomplete 
+                autoActiveFirstOption 
                 (optionSelected)="applyFilter($event.option.value, 'studyCourseName')"
                 #auto="matAutocomplete">
             @for (option of filteredOptionsCourse$ | async; track $index) {
@@ -14,6 +15,7 @@
         <mat-form-field>
             <mat-label>Rok</mat-label>
             <mat-select 
+                [formControl]="yearFilterControl"
                 (selectionChange)="applyFilter($event.value, 'startingYear')"
                 value="all">
                 <mat-option value="all">Wszystkie</mat-option>
@@ -25,6 +27,7 @@
         <mat-form-field>
             <mat-label>Stopień</mat-label>
             <mat-select 
+                [formControl]="levelFilterControl"
                 (selectionChange)="applyFilter($event.value, 'studyLevel')"
                 value="all">
                 <mat-option value="all">Wszystkie</mat-option>
@@ -36,6 +39,7 @@
         <mat-form-field>
             <mat-label>Tryb</mat-label>
             <mat-select 
+                [formControl]="modefilterControl"
                 (selectionChange)="applyFilter($event.value, 'studyMode')"
                 value="all">
                 <mat-option value="all">Wszystkie</mat-option>
@@ -44,6 +48,9 @@
                 }
             </mat-select>
         </mat-form-field>
+        <button mat-fab (click)="onClearAllFilters()">
+            <mat-icon>clear_all</mat-icon>
+        </button>
     </div>
     <div class="search-dialog-list">
         <div *ngIf="isLoading">
@@ -52,8 +59,8 @@
         <div *ngIf="noData">
             Brak grup
         </div>
-        <div *ngIf="!isLoading && !noData">
-            <mat-table [dataSource]="groups!">
+        <div *ngIf="!isLoading && !noData" >
+            <mat-table [dataSource]="groups!" class="search-dialog-list-table-search">
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef> Nazwa </th>
                     <td mat-cell *matCellDef="let element"> {{getName(element)}} </td>

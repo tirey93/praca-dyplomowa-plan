@@ -2,26 +2,28 @@
     <span>Web Schedule</span>
     <span class="example-spacer"></span>
     @if (isUserLogIn()) {
-      <button mat-icon-button [matMenuTriggerFor]="menu" class="example-icon" aria-label="Example icon-button with share icon">
-        <mat-icon>groups</mat-icon>
-      </button>
+      <div>
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="example-icon" aria-label="Example icon-button with share icon">
+          <mat-icon>groups</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <div class="groups-menu">
+              <div class="groups-menu-header">
+                  <p>Grupy</p>
+                  <button (click)="onGroupSearch()" style="transform: translateY(3px);" mat-icon-button>
+                      <mat-icon>search</mat-icon>
+                  </button>
+              </div>
+              @for (group of groups$|async; track $index; let i = $index) {
+                <mat-card (click)="onGroupSelected(group.id)" role="button" class="groups-menu-list-item">
+                    <mat-card-content>{{group.name}}</mat-card-content>
+                </mat-card>
+              }
+          </div>
+      </mat-menu>
+      </div>
       <button (click)="logout()" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
         <mat-icon>logout</mat-icon>
       </button>
     }
 </mat-toolbar>
-<mat-menu #menu="matMenu">
-    <div class="groups-menu">
-        <div class="groups-menu-header">
-            <p>Grupy</p>
-            <button (click)="onGroupSearch()" style="transform: translateY(3px);" mat-icon-button>
-                <mat-icon>search</mat-icon>
-            </button>
-        </div>
-        @for (group of groups$|async; track $index; let i = $index) {
-          <mat-card (click)="onGroupSelected(group.id)" role="button" class="groups-menu-list-item">
-              <mat-card-content>{{group.name}}</mat-card-content>
-          </mat-card>
-        }
-    </div>
-</mat-menu>

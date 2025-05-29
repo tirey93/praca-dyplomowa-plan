@@ -49,7 +49,7 @@ namespace WebSchedule.Utils
         public static int? GetUserIdFromToken(StringValues authorization)
         {
             var tokenStr = authorization.GetToken();
-            if(string.IsNullOrEmpty(tokenStr)) 
+            if(string.IsNullOrEmpty(tokenStr) || tokenStr.Length < 7) 
                 return null;
             var jwtHandler = new JwtSecurityTokenHandler();
             var token = jwtHandler.ReadJwtToken(tokenStr);

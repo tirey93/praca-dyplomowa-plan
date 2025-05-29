@@ -3,7 +3,10 @@
     <span class="example-spacer"></span>
     @if (loginService.isLoggedIn$ | async) {
       <div>
-        <button mat-icon-button [matMenuTriggerFor]="menu" class="example-icon" aria-label="Example icon-button with share icon">
+        <button 
+          mat-icon-button [matMenuTriggerFor]="menu" 
+          class="example-icon" 
+          matTooltip="Sprawdź swoje grupy">
           <mat-icon>groups</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
@@ -22,7 +25,11 @@
           </div>
       </mat-menu>
       </div>
-      <button (click)="logout()" mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+      <button 
+        (click)="logout()" 
+        mat-icon-button 
+        class="example-icon favorite-icon"
+        matTooltip="Wyloguj">
         <mat-icon>logout</mat-icon>
       </button>
     }

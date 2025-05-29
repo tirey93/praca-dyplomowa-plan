@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ShowGroupDialogComponent } from '../show-group-dialog/show-group-dialog.component';
 import { SearchGroupDialogComponent } from '../search-group-dialog/search-group-dialog.component';
 import { LoginService } from '../services/login/login.service';
+import { MatTooltip } from '@angular/material/tooltip';
 
 export interface GroupSelected {
   id: number;
@@ -24,7 +25,7 @@ export interface GroupSelected {
 @Component({
   selector: 'app-toolbar',
   imports: [MatButtonModule, MatToolbarModule, MatIconModule, 
-    MatMenuModule, AsyncPipe, MatCardModule],
+    MatMenuModule, AsyncPipe, MatCardModule, MatTooltip],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss'
 })

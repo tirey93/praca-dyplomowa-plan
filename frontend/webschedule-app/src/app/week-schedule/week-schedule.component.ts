@@ -62,5 +62,6 @@ export class WeekScheduleComponent {
   constructor(
     private userRepositoryService: UserRepositoryService) {
       this.loggedUser$ = this.userRepositoryService.getLoggedIn$();
+      
     }
 }

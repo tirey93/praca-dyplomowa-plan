@@ -1,7 +1,7 @@
 <mat-toolbar>
     <span>Web Schedule</span>
     <span class="example-spacer"></span>
-    @if (isLogin$ | async) {
+    @if (loginService.isLoggedIn$ | async) {
       <div>
         <button mat-icon-button [matMenuTriggerFor]="menu" class="example-icon" aria-label="Example icon-button with share icon">
           <mat-icon>groups</mat-icon>

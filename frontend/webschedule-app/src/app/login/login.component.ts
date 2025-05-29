@@ -9,6 +9,7 @@ import { UserRepositoryService } from '../services/user/userRepository.service';
 import { Router } from '@angular/router';
 import { JwtService } from '../services/jwt.service';
 import { AuthenticationRepositoryService } from '../services/authentication/authenticationRepository.service';
+import { ToolbarService } from '../services/toolbar/toolbar.service';
 
 
 interface LoginForm {
@@ -26,9 +27,9 @@ export class LoginComponent {
   constructor(
     private cookieService: CookieService, 
     private authenticationRepository: AuthenticationRepositoryService,
-    private userRepositoryService: UserRepositoryService,
     private router: Router,
-    private jwtService: JwtService) {
+    private toolbarService: ToolbarService,
+    jwtService: JwtService) {
       if (jwtService.isTokenValid()) {
         router.navigateByUrl("")
       }  
@@ -60,6 +61,7 @@ export class LoginComponent {
     }).subscribe({
       next: (loginResponse) => {
         this.cookieService.set("token", loginResponse.token);
+        this.toolbarService.setToolbarConfig({isLogin: true})
         this.router.navigateByUrl("/week");
       },
       error: (error) => {

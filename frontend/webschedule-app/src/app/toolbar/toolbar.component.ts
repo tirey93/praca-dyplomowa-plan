@@ -10,12 +10,14 @@ import { GroupHelper } from '../helpers/groupHelper';
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { GroupRepositoryService } from '../services/group/groupRepository.service';
-import { map, Observable } from 'rxjs';
+import { filter, map, Observable, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { ShowGroupDialogComponent } from '../show-group-dialog/show-group-dialog.component';
 import { SearchGroupDialogComponent } from '../search-group-dialog/search-group-dialog.component';
+import { ToolbarService } from '../services/toolbar/toolbar.service';
+import { ToolbarConfig } from '../services/toolbar/toolbar-config';
 
 export interface GroupSelected {
   id: number;
@@ -30,29 +32,37 @@ export interface GroupSelected {
   styleUrl: './toolbar.component.scss'
 })
 export class ToolbarComponent {
-  public groups$: Observable<GroupSelected[]>;
+  isLogin$: Observable<boolean>;
+  groups$: Observable<GroupSelected[]>;
   constructor(
-      private readonly jwtService: JwtService,
+      readonly jwtService: JwtService,
       private readonly groupRepository: GroupRepositoryService,
       private readonly cookieService: CookieService,
       private readonly router: Router,
-      private readonly dialog: MatDialog) {
-    this.groups$ = this.groupRepository.getByLoggedIn$().pipe(
-      map(apiGroups => 
-        apiGroups.map(apiGroup => ({
-          id: apiGroup.id,
-          name: GroupHelper.groupInfoToString(apiGroup),
-        } as GroupSelected))
-      ),
-    );
-  }
-
-  isUserLogIn() : boolean {
-    return this.jwtService.isTokenValid();
+      private readonly dialog: MatDialog,
+      private readonly toolbarService: ToolbarService) {
+    this.isLogin$ = toolbarService.toolbarConfig$.pipe(map(x => x.isLogin));
+    if (jwtService.isTokenValid()) {
+      toolbarService.setToolbarConfig({isLogin: true})
+    }
+    this.groups$ = this.isLogin$.pipe(
+      filter(x => x),
+      switchMap(() => {
+        return this.groupRepository.getByLoggedIn$().pipe(
+          map(apiGroups => 
+            apiGroups.map(apiGroup => ({
+              id: apiGroup.id,
+              name: GroupHelper.groupInfoToString(apiGroup),
+            } as GroupSelected))
+          ),
+        )
+      })
+    )
   }
 
   logout() {
     this.cookieService.delete("token");
+    this.toolbarService.setToolbarConfig({isLogin: false})
     this.router.navigateByUrl("/login");
   }
 

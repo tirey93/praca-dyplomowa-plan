@@ -28,6 +28,11 @@ namespace WebSchedule.Infrastructure.Repositories
             return _dbSet.Any(x => x.Name == userName);
         }
 
+        public bool UserExists(int userId)
+        {
+            return _dbSet.Any(x => x.Id == userId);
+        }
+
         public User TryLoginByPassword(string userName, string hashedPassword)
         {
             return _dbSet.FirstOrDefault(x => x.Name == userName && x.HashedPassword.ToLower() == hashedPassword.ToLower());

@@ -18,5 +18,10 @@ namespace WebSchedule.Infrastructure.Repositories
         {
             await _appDbContext.SaveChangesAsync();
         }
+
+        public void Remove(T entity)
+        {
+            _appDbContext.Remove(entity);
+        }
     }
 }

@@ -1,29 +1,28 @@
 ﻿using MediatR;
 using WebSchedule.Controllers.Responses;
-using WebSchedule.Domain.Dtos;
 using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Controllers.Group.Queries
 {
-    public class GetGroupsInQuery : IRequest<IEnumerable<GroupInfoResponse>>
+    public class GetSearchedGroupsQuery : IRequest<IEnumerable<GroupInfoResponse>>
     {
         public int UserId { get; set; }
     }
 
-    public class GetGroupsInQueryHandler : IRequestHandler<GetGroupsInQuery, IEnumerable<GroupInfoResponse>>
+    public class GetSearchedGroupsQueryHandler : IRequestHandler<GetSearchedGroupsQuery, IEnumerable<GroupInfoResponse>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserInGroupRepository _userInGroupRepository;
         private readonly IGroupRepository _groupRepository;
 
-        public GetGroupsInQueryHandler(IUserRepository userRepository, IUserInGroupRepository userInGroupRepository, IGroupRepository groupRepository)
+        public GetSearchedGroupsQueryHandler(IUserRepository userRepository, IUserInGroupRepository userInGroupRepository, IGroupRepository groupRepository)
         {
             _userRepository = userRepository;
             _userInGroupRepository = userInGroupRepository;
             _groupRepository = groupRepository;
         }
 
-        public Task<IEnumerable<GroupInfoResponse>> Handle(GetGroupsInQuery request, CancellationToken cancellationToken)
+        public Task<IEnumerable<GroupInfoResponse>> Handle(GetSearchedGroupsQuery request, CancellationToken cancellationToken)
         {
             var groups = _groupRepository.Get()
                 .Where(g => !g.Members.Any(m => m.Id == request.UserId))

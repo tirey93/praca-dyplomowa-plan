@@ -159,6 +159,9 @@
 	<data name="ControllerNotFound" xml:space="preserve">
     <value>Not Found: {0}</value>
   </data>
+   <data name="ControllerConflict" xml:space="preserve">
+    <value>Conflict: {0}</value>
+  </data>
   <data name="ExceptionSigningKeyIsMissing" xml:space="preserve">
     <value>JWT signing key is missing.</value>
   </data>

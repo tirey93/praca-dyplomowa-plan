@@ -70,6 +70,15 @@ namespace WebSchedule.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Conflict: {0}.
+        /// </summary>
+        internal static string ControllerConflict {
+            get {
+                return ResourceManager.GetString("ControllerConflict", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Forbidden: {0}.
         /// </summary>
         internal static string ControllerForbidden {

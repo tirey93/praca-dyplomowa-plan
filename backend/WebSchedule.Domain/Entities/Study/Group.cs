@@ -43,7 +43,7 @@ namespace WebSchedule.Domain.Entities.Study
 
         public void AddCandidate(User candidate)
         {
-            if (Candidates.Contains(candidate))
+            if (Members.Contains(candidate) || Candidates.Contains(candidate))
                 throw new CandidateAlreadyInAGroupException(candidate.Id, Id);
             MembersInGroup.Add(new UserInGroup(this, candidate, UserRole.Candidate));
         }

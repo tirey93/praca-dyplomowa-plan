@@ -61,60 +61,6 @@ namespace WebSchedule.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bad Request: {0}.
-        /// </summary>
-        internal static string ControllerBadRequest {
-            get {
-                return ResourceManager.GetString("ControllerBadRequest", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Conflict: {0}.
-        /// </summary>
-        internal static string ControllerConflict {
-            get {
-                return ResourceManager.GetString("ControllerConflict", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Forbidden: {0}.
-        /// </summary>
-        internal static string ControllerForbidden {
-            get {
-                return ResourceManager.GetString("ControllerForbidden", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Internal Server Error: {0}.
-        /// </summary>
-        internal static string ControllerInternalError {
-            get {
-                return ResourceManager.GetString("ControllerInternalError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Method Not Allowed: {0}.
-        /// </summary>
-        internal static string ControllerMethodNotAllowed {
-            get {
-                return ResourceManager.GetString("ControllerMethodNotAllowed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Not Found: {0}.
-        /// </summary>
-        internal static string ControllerNotFound {
-            get {
-                return ResourceManager.GetString("ControllerNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Activity with ID {0} not found..
         /// </summary>
         internal static string ExceptionActivityNotFound {

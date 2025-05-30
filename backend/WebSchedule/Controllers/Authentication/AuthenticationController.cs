@@ -29,7 +29,7 @@ namespace WebSchedule.Controllers.Authentication
 
         [HttpPost("Register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [AllowAnonymous]
         public async Task<ActionResult<UserResponse>> Register([FromBody] RegisterCommand command)
@@ -41,13 +41,11 @@ namespace WebSchedule.Controllers.Authentication
             }
             catch (UserAlreadyExistsException ex)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest,
-                    string.Format(Resource.ControllerBadRequest, ex.Message));
+                return Conflict(new ErrorMessage(ex.Message));
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError,
-                    string.Format(Resource.ControllerInternalError, ex.Message));
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorMessage(ex.Message));
             }
         }
 
@@ -69,19 +67,16 @@ namespace WebSchedule.Controllers.Authentication
             }
             catch (LoginFailedException ex)
             {
-                return StatusCode((int)HttpStatusCode.NotFound,
-                    string.Format(Resource.ControllerNotFound, ex.Message));
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError,
-                    string.Format(Resource.ControllerInternalError, ex.Message));
+                return BadRequest(new ErrorMessage(ex.Message));
             }
         }
 
         [HttpGet("Logout")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 #if !DEBUG
         [Authorize]
@@ -94,8 +89,7 @@ namespace WebSchedule.Controllers.Authentication
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError,
-                    string.Format(Resource.ControllerInternalError, ex.Message));
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorMessage(ex.Message));
             }
         }
 

@@ -20,6 +20,7 @@ import { map, Observable } from 'rxjs';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { UserInGroupService } from '../services/userInGroup/user-in-group.service';
 
 @Component({
   selector: 'app-search-group-dialog',
@@ -58,7 +59,9 @@ export class SearchGroupDialogComponent {
     'name', 'startingYear', 'studyCourseName', 'studyLevel', 
     'studyMode', 'subgroup', 'membersCount', 'join'];
 
-  constructor(private groupService: GroupRepositoryService,
+  constructor(
+    private groupService: GroupRepositoryService,
+    private userInGroupService: UserInGroupService
   ) {
     this.filteredOptionsCourse$ = this.courseFilterControl.valueChanges.pipe(
       map(value => {
@@ -102,7 +105,34 @@ export class SearchGroupDialogComponent {
     const index = this.getIndex(group.id);
     if (index == undefined)
       return;
-    this.groups!.data[index].isCandidate = selected;
+
+    let result: Observable<Object>;
+    if (selected) {
+      result = this.addCandidate(this.groups!.data[index].id);
+    } else {
+      result = this.disenrollUser(this.groups!.data[index].id);
+    }    
+
+    result.subscribe({
+      next: () => {
+        console.log('success');
+        this.groups!.data[index].isCandidate = selected;
+      },
+      error(err) {
+        console.log('error', err);
+      },
+    })
+  }
+
+  private addCandidate(groupId: number) {
+    return this.userInGroupService.addCandidate$({
+      groupId: groupId
+    })
+  }
+  private disenrollUser(groupId: number) {
+    return this.userInGroupService.disenrollFromGroup$({
+      groupId: groupId
+    })
   }
 
   applyFilter(option:any, empfilter: string) {

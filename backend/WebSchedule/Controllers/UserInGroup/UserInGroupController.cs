@@ -48,27 +48,23 @@ namespace WebSchedule.Controllers.User
             }
             catch (UserNotFoundException ex)
             {
-                return StatusCode((int)HttpStatusCode.NotFound,
-                    string.Format(Resource.ControllerNotFound, ex.Message));
+                return NotFound(ex.Message);
             }
             catch (GroupNotFoundException ex)
             {
-                return StatusCode((int)HttpStatusCode.NotFound,
-                    string.Format(Resource.ControllerNotFound, ex.Message));
+                return NotFound(ex.Message);
             }
             catch (CandidateAlreadyInAGroupException ex)
             {
-                return StatusCode((int)HttpStatusCode.Conflict,
-                    string.Format(Resource.ControllerConflict, ex.Message));
+                return Conflict(new ErrorMessage(ex.Message));
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError,
-                    string.Format(Resource.ControllerInternalError, ex.Message));
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorMessage(ex.Message));
             }
         }
 
-        [HttpDelete]
+        [HttpPut("Disenroll")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -76,14 +72,13 @@ namespace WebSchedule.Controllers.User
 #if !DEBUG
         [Authorize]
 #endif
-        public async Task<ActionResult> Delete([FromBody] DeleteFromGroupRequest deleteFromGroupRequest)
+        public async Task<ActionResult> DisenrollFromGroup([FromBody] DisenrollFromGroupRequest deleteFromGroupRequest)
         {
             try
             {
                 var userId = JwtHelper.GetUserIdFromToken(Request.Headers.Authorization)
                     ?? throw new UserNotFoundException();
-
-                await _mediator.Send(new DeleteFromGroupCommand
+                await _mediator.Send(new DisenrollFromGroupCommand
                 {
                     UserId = userId,
                     GroupId = deleteFromGroupRequest.GroupId
@@ -92,23 +87,19 @@ namespace WebSchedule.Controllers.User
             }
             catch (UserNotFoundException ex)
             {
-                return StatusCode((int)HttpStatusCode.NotFound,
-                    string.Format(Resource.ControllerNotFound, ex.Message));
+                return NotFound(ex.Message);
             }
             catch (GroupNotFoundException ex)
             {
-                return StatusCode((int)HttpStatusCode.NotFound,
-                    string.Format(Resource.ControllerNotFound, ex.Message));
+                return NotFound(ex.Message);
             }
             catch (NoSuchMemberInGroupException ex)
             {
-                return StatusCode((int)HttpStatusCode.Conflict,
-                    string.Format(Resource.ControllerConflict, ex.Message));
+                return Conflict(new ErrorMessage(ex.Message));
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError,
-                    string.Format(Resource.ControllerInternalError, ex.Message));
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorMessage(ex.Message));
             }
         }
 

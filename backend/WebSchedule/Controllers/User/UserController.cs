@@ -42,13 +42,11 @@ namespace WebSchedule.Controllers.User
             }
             catch (UserNotFoundException ex)
             {
-                return StatusCode((int)HttpStatusCode.NotFound,
-                    string.Format(Resource.ControllerNotFound, ex.Message));
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError,
-                    string.Format(Resource.ControllerInternalError, ex.Message));
+                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorMessage(ex.Message));
             }
         }
 

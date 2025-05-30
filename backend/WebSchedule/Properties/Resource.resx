@@ -144,24 +144,6 @@
   <data name="ExceptionUserPasswordNotMatch" xml:space="preserve">
     <value>Password for user name {0} not match.</value>
   </data>
-	<data name="ControllerBadRequest" xml:space="preserve">
-    <value>Bad Request: {0}</value>
-  </data>
-	<data name="ControllerForbidden" xml:space="preserve">
-    <value>Forbidden: {0}</value>
-  </data>
-	<data name="ControllerInternalError" xml:space="preserve">
-    <value>Internal Server Error: {0}</value>
-  </data>
-	<data name="ControllerMethodNotAllowed" xml:space="preserve">
-    <value>Method Not Allowed: {0}</value>
-  </data>
-	<data name="ControllerNotFound" xml:space="preserve">
-    <value>Not Found: {0}</value>
-  </data>
-   <data name="ControllerConflict" xml:space="preserve">
-    <value>Conflict: {0}</value>
-  </data>
   <data name="ExceptionSigningKeyIsMissing" xml:space="preserve">
     <value>JWT signing key is missing.</value>
   </data>

@@ -1,6 +1,6 @@
 ﻿namespace WebSchedule.Controllers.UserInGroup.Requests
 {
-    public class DeleteFromGroupRequest : AddCandidateRequest
+    public class DisenrollFromGroupRequest : AddCandidateRequest
     {
     }
 }

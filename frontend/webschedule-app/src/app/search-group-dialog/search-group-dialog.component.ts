@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { GroupInfoResponse } from '../services/group/dtos/groupInfoResponse';
-import { MatChipsModule } from '@angular/material/chips';
+import { MatChipSelectionChange, MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
@@ -99,15 +99,15 @@ export class SearchGroupDialogComponent {
     return GroupHelper.groupInfoToString(group);
   }
 
-  handleCandidateJoin(group: GroupInfoResponse, selected: boolean) {
-    if (group.isCandidate === selected)
+  handleCandidateJoin(group: GroupInfoResponse, $event: MatChipSelectionChange) {
+    if (group.isCandidate === $event.selected)
       return;
     const index = this.getIndex(group.id);
     if (index == undefined)
       return;
 
     let result: Observable<Object>;
-    if (selected) {
+    if ($event.selected) {
       result = this.addCandidate(this.groups!.data[index].id);
     } else {
       result = this.disenrollUser(this.groups!.data[index].id);
@@ -116,10 +116,11 @@ export class SearchGroupDialogComponent {
     result.subscribe({
       next: () => {
         console.log('success');
-        this.groups!.data[index].isCandidate = selected;
+        this.groups!.data[index].isCandidate = $event.selected;
       },
       error(err) {
         console.log('error', err);
+        $event.source.selected = !$event.selected;
       },
     })
   }

@@ -99,40 +99,33 @@ export class SearchGroupDialogComponent {
     return GroupHelper.groupInfoToString(group);
   }
 
-  handleCandidateJoin(group: GroupInfoResponse, $event: MatChipSelectionChange) {
-    if (group.isCandidate === $event.selected)
-      return;
-    const index = this.getIndex(group.id);
-    if (index == undefined)
+  handleCandidateJoin(group: GroupInfoResponse, selected: boolean) {
+    if (group.isCandidate === selected)
       return;
 
-    let result: Observable<Object>;
-    if ($event.selected) {
-      result = this.addCandidate(this.groups!.data[index].id);
-    } else {
-      result = this.disenrollUser(this.groups!.data[index].id);
-    }    
-
+    const result = selected ? this.userInGroupService.addCandidate$({
+        groupId: group.id
+      }) : this.userInGroupService.disenrollFromGroup$({
+        groupId: group.id
+      });
+      
     result.subscribe({
       next: () => {
         console.log('success');
-        this.groups!.data[index].isCandidate = $event.selected;
+        if (!this.groups?.data)
+          return;
+        this.groups.data = this.groups!.data.map(g => 
+          g.id === group.id ? { ...g, isCandidate: selected} : g
+        );
       },
-      error(err) {
+      error:(err) => {
         console.log('error', err);
-        $event.source.selected = !$event.selected;
+        if (!this.groups?.data)
+          return;
+        this.groups.data = this.groups!.data.map(g => 
+          g.id === group.id ? { ...g, isCandidate: !selected} : g
+        );
       },
-    })
-  }
-
-  private addCandidate(groupId: number) {
-    return this.userInGroupService.addCandidate$({
-      groupId: groupId
-    })
-  }
-  private disenrollUser(groupId: number) {
-    return this.userInGroupService.disenrollFromGroup$({
-      groupId: groupId
     })
   }
 
@@ -152,14 +145,9 @@ export class SearchGroupDialogComponent {
   }
 
   isCandidate(groupId: number) {
-    const index = this.getIndex(groupId);
-    if (index == undefined)
-      return false;
-    return this.groups!.data[index].isCandidate;
-  }
-
-  private getIndex(groupId: number){
-    return this.groups?.data.findIndex((matGroup) => matGroup.id === groupId);
+    if (!this.groups?.data)
+          return;
+    return this.groups.data.find(g => g.id === groupId)?.isCandidate;
   }
 
   private filterOptionCourse(name: string): string[] {

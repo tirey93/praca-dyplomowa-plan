@@ -21,6 +21,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserInGroupService } from '../services/userInGroup/user-in-group.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-search-group-dialog',
@@ -61,7 +62,8 @@ export class SearchGroupDialogComponent {
 
   constructor(
     private groupService: GroupRepositoryService,
-    private userInGroupService: UserInGroupService
+    private userInGroupService: UserInGroupService,
+    private snackBar: MatSnackBar
   ) {
     this.filteredOptionsCourse$ = this.courseFilterControl.valueChanges.pipe(
       map(value => {
@@ -120,6 +122,7 @@ export class SearchGroupDialogComponent {
       },
       error:(err) => {
         console.log('error', err);
+        let snackBarRef = this.snackBar.open('Message archived', 'Dismiss');
         if (!this.groups?.data)
           return;
         this.groups.data = this.groups!.data.map(g => 

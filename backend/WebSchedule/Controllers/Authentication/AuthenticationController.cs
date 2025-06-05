@@ -67,7 +67,7 @@ namespace WebSchedule.Controllers.Authentication
             }
             catch (LoginFailedException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ErrorMessage(ex.Message));
             }
             catch (Exception ex)
             {

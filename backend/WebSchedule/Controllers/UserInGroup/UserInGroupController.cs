@@ -48,11 +48,11 @@ namespace WebSchedule.Controllers.User
             }
             catch (UserNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ErrorMessage(ex.Message));
             }
             catch (GroupNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ErrorMessage(ex.Message));
             }
             catch (CandidateAlreadyInAGroupException ex)
             {
@@ -87,11 +87,11 @@ namespace WebSchedule.Controllers.User
             }
             catch (UserNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ErrorMessage(ex.Message));
             }
             catch (GroupNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ErrorMessage(ex.Message));
             }
             catch (NoSuchMemberInGroupException ex)
             {

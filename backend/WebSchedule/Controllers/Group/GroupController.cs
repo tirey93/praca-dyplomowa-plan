@@ -42,7 +42,7 @@ namespace WebSchedule.Controllers.Group
             }
             catch (UserNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ErrorMessage(ex.Message));
             }
             catch (Exception ex)
             {
@@ -71,7 +71,7 @@ namespace WebSchedule.Controllers.Group
             }
             catch (UserNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ErrorMessage(ex.Message));
             }
             catch (Exception ex)
             {
@@ -97,7 +97,7 @@ namespace WebSchedule.Controllers.Group
             }
             catch (GroupNotFoundException ex)
             {
-                return NotFound(ex.Message);
+                return NotFound(new ErrorMessage(ex.Message));
             }
             catch (Exception ex)
             {

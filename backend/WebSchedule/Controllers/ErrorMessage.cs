@@ -2,11 +2,13 @@
 {
     public class ErrorMessage
     {
-        public string Message { get; private set; }
+        public string Code { get; private set; }
+        public List<string> Params { get; private set; }
 
-        public ErrorMessage(string message)
+        public ErrorMessage(string code, List<string> @params = null)
         {
-            Message = message;
+            Code = code;
+            Params = @params;
         }
     }
 }

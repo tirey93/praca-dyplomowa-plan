@@ -2,15 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
 using MediatR;
 using WebSchedule.Controllers.Authentication.Commands;
 using WebSchedule.Controllers.Authentication.Exceptions;
-using WebSchedule.Properties;
 using WebSchedule.Controllers.Authentication.Queries;
 using WebSchedule.Controllers.Responses;
-using WebSchedule.Extensions;
 
 namespace WebSchedule.Controllers.Authentication
 {
@@ -45,7 +41,7 @@ namespace WebSchedule.Controllers.Authentication
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorMessage(ex.Message));
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
             }
         }
 
@@ -71,7 +67,7 @@ namespace WebSchedule.Controllers.Authentication
             }
             catch (Exception ex)
             {
-                return BadRequest(new ErrorMessage(ex.Message));
+                return BadRequest(new { ex.Message });
             }
         }
 
@@ -89,7 +85,7 @@ namespace WebSchedule.Controllers.Authentication
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorMessage(ex.Message));
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
             }
         }
 

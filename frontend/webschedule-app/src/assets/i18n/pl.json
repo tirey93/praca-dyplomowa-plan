@@ -3,5 +3,9 @@
   "Master": "Magister",
   "Engineer": "Inżynier",
   "FullTime": "Stacjonarne",
-  "PartTime": "Niestacjonarne"
+  "PartTime": "Niestacjonarne",
+  "snackbar.dismiss": "Odrzuć",
+  "snackbar.unknown.error": "Nastąpił nieoczekiwany błąd.",
+  "ExceptionUserNotFound": "Użytkownik o id {{0}} nie istnieje.",
+  "ExceptionNoneUserNotFound": "Użytkownik nie istnieje."
 }

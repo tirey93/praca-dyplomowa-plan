@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { GroupInfoResponse } from '../services/group/dtos/groupInfoResponse';
-import { MatChipSelectionChange, MatChipsModule } from '@angular/material/chips';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
@@ -21,7 +21,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserInGroupService } from '../services/userInGroup/user-in-group.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackBarErrorService } from '../services/snack-bar-error-service';
 
 @Component({
   selector: 'app-search-group-dialog',
@@ -63,7 +63,7 @@ export class SearchGroupDialogComponent {
   constructor(
     private groupService: GroupRepositoryService,
     private userInGroupService: UserInGroupService,
-    private snackBar: MatSnackBar
+    private snackBarErrorService: SnackBarErrorService
   ) {
     this.filteredOptionsCourse$ = this.courseFilterControl.valueChanges.pipe(
       map(value => {
@@ -113,7 +113,6 @@ export class SearchGroupDialogComponent {
       
     result.subscribe({
       next: () => {
-        console.log('success');
         if (!this.groups?.data)
           return;
         this.groups.data = this.groups!.data.map(g => 
@@ -121,8 +120,7 @@ export class SearchGroupDialogComponent {
         );
       },
       error:(err) => {
-        console.log('error', err);
-        let snackBarRef = this.snackBar.open('Message archived', 'Dismiss');
+        this.snackBarErrorService.open(err);
         if (!this.groups?.data)
           return;
         this.groups.data = this.groups!.data.map(g => 

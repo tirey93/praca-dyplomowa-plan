@@ -1,11 +1,8 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Net;
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Controllers.User.Exceptions;
 using WebSchedule.Controllers.User.Queries;
-using WebSchedule.Properties;
 using WebSchedule.Utils;
 
 namespace WebSchedule.Controllers.User
@@ -46,7 +43,7 @@ namespace WebSchedule.Controllers.User
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new ErrorMessage(ex.Message));
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
             }
         }
 

@@ -15,5 +15,19 @@
   width: 100%;
 }
 .space {
-  min-width: 8px;
+  margin-left: 8px;
+}
+
+
+.dialog-content-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 10px;
+}
+
+.new-row {
+  grid-column-start: 1;
+}
+.full-row {
+  grid-column: 1 / -1;
 }

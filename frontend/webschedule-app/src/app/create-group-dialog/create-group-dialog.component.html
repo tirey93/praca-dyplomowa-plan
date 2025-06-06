@@ -3,35 +3,34 @@
     <p class="dialog-description">
         Tutaj możesz stworzyć własną grupę. <br>Po jej utworzeniu automatycznie staniesz się jej starostą.
     </p>
-    <form class="create-form">
+    <form [formGroup]="groupForm" class="dialog-content-container">
         <mat-form-field>
             <mat-label>Rok</mat-label>
-            <input type="number" matInput value="Google">
+            <input formControlName="year" required type="number" matInput>
+            <mat-error *ngIf="groupForm.get('year')?.invalid && groupForm.get('year')?.touched">
+                <span *ngIf="groupForm.get('year')?.hasError('required')">Podaj rok założenia.</span>
+            </mat-error>
         </mat-form-field>
-        <table class="dialog-full-width" cellspacing="0">
-            <tr>
-                <td>
-                    <mat-form-field class="dialog-full-width">
-                        <mat-label>Tryb studiów</mat-label>
-                        <input matInput>
-                    </mat-form-field>
-                </td>
-                <td class="space"></td>
-                <td>
-                    <mat-form-field class="dialog-full-width">
-                        <mat-label>Stopień studiów</mat-label>
-                        <input matInput>
-                    </mat-form-field>
-                </td>
-            </tr>
-        </table>
+        <mat-form-field class="dialog-full-width new-row">
+            <mat-label>Tryb studiów</mat-label>
+            <input matInput>
+        </mat-form-field>
         <mat-form-field class="dialog-full-width">
+            <mat-label>Stopień studiów</mat-label>
+            <input matInput>
+        </mat-form-field>
+        <mat-form-field class="dialog-full-width full-row">
             <mat-label>Kierunek</mat-label>
             <input matInput value="Google">
         </mat-form-field>
-        <mat-dialog-actions>
-            <button mat-button>No Thanks</button>
-            <button mat-button type="button" (click)="submit()" cdkFocusInitial>Ok</button>
-        </mat-dialog-actions>
     </form>
+    <mat-dialog-actions>
+        <button mat-button type="button" (click)="onNoClick()">Anuluj</button>
+        <button 
+            mat-button 
+            type="submit" 
+            cdkFocusInitial
+            [disabled]="groupForm.invalid"
+            (click)="submit()">Utwórz</button>
+    </mat-dialog-actions>
 </mat-dialog-content>

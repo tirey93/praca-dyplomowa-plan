@@ -26,6 +26,12 @@
       </mat-menu>
       </div>
       <button 
+        (click)="newGroup()" 
+        mat-icon-button 
+        class="example-icon favorite-icon">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button 
         (click)="logout()" 
         mat-icon-button 
         class="example-icon favorite-icon"

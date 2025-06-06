@@ -16,6 +16,7 @@ import { ShowGroupDialogComponent } from '../show-group-dialog/show-group-dialog
 import { SearchGroupDialogComponent } from '../search-group-dialog/search-group-dialog.component';
 import { LoginService } from '../services/login/login.service';
 import { MatTooltip } from '@angular/material/tooltip';
+import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
 
 export interface GroupSelected {
   id: number;
@@ -30,6 +31,12 @@ export interface GroupSelected {
   styleUrl: './toolbar.component.scss'
 })
 export class ToolbarComponent {
+newGroup() {
+this.dialog.open(CreateGroupDialogComponent, {
+      maxWidth: '100vw',
+      autoFocus: false
+    });
+}
   groups$: Observable<GroupSelected[]>;
   constructor(
       private readonly groupRepository: GroupRepositoryService,

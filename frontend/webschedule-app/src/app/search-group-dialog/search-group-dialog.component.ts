@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
+import { MatDialog, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { GroupRepositoryService } from '../services/group/groupRepository.service';
 import { GroupHelper } from '../helpers/groupHelper';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -22,6 +22,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserInGroupService } from '../services/userInGroup/user-in-group.service';
 import { SnackBarErrorService } from '../services/snack-bar-error-service';
+import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
 
 @Component({
   selector: 'app-search-group-dialog',
@@ -30,7 +31,7 @@ import { SnackBarErrorService } from '../services/snack-bar-error-service';
     MatButtonModule, CommonModule, MatProgressSpinnerModule,
     TranslatePipe, MatPaginator, MatPaginatorModule, MatChipsModule,
     MatFormFieldModule, MatSelectModule, MatOptionModule, MatAutocompleteModule,
-    ReactiveFormsModule, MatInputModule, MatTooltipModule, MatDialogTitle
+    ReactiveFormsModule, MatInputModule, MatTooltipModule, MatDialogTitle,
   ],
   templateUrl: './search-group-dialog.component.html',
   styleUrl: './search-group-dialog.component.scss'
@@ -63,7 +64,9 @@ export class SearchGroupDialogComponent {
   constructor(
     private groupService: GroupRepositoryService,
     private userInGroupService: UserInGroupService,
-    private snackBarErrorService: SnackBarErrorService
+    private snackBarErrorService: SnackBarErrorService,
+    private readonly dialog: MatDialog,
+    private dialogRef: MatDialogRef<SearchGroupDialogComponent>
   ) {
     this.filteredOptionsCourse$ = this.courseFilterControl.valueChanges.pipe(
       map(value => {
@@ -128,6 +131,14 @@ export class SearchGroupDialogComponent {
         );
       },
     })
+  }
+
+  handleCreateNewGroup() {
+    this.dialog.open(CreateGroupDialogComponent, {
+      maxWidth: '100vw',
+      autoFocus: false
+    });
+    this.dialogRef.close()
   }
 
   applyFilter(option:any, empfilter: string) {

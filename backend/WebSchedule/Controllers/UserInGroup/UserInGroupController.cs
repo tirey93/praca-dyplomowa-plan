@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WebSchedule.Controllers.User.Exceptions;
 using WebSchedule.Controllers.UserInGroup.Requests;
 using WebSchedule.Domain;
+using WebSchedule.Domain.Exceptions;
 using WebSchedule.Utils;
 
 namespace WebSchedule.Controllers.User

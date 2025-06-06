@@ -1,11 +1,11 @@
-﻿namespace WebSchedule.Controllers
+﻿namespace WebSchedule
 {
-    public class ApplicationException : Exception
+    public class SystemException : Exception
     {
         public string Code { get; protected set; }
         public List<string> Params { get; protected set; }
 
-        public ApplicationException(string code, params string[] @params) : base()
+        public SystemException(string code, params string[] @params) : base()
         {
             Code = code;
             Params = [.. @params];

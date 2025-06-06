@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using WebSchedule.Controllers.Group.Exceptions;
 using WebSchedule.Controllers.Group.Queries;
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Controllers.User.Exceptions;
+using WebSchedule.Domain;
 using WebSchedule.Utils;
 
 namespace WebSchedule.Controllers.Group
@@ -21,7 +21,7 @@ namespace WebSchedule.Controllers.Group
 
         [HttpGet("ByLoggedIn")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 #if !DEBUG
         [Authorize]
@@ -38,9 +38,13 @@ namespace WebSchedule.Controllers.Group
                     UserId = userId,
                 }));
             }
-            catch (UserNotFoundException ex)
+            catch (ApplicationException ex)
             {
-                return NotFound(new ErrorMessage(ex.Message));
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
             }
             catch (Exception ex)
             {
@@ -50,7 +54,7 @@ namespace WebSchedule.Controllers.Group
 
         [HttpGet()]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 #if !DEBUG
         [Authorize]
@@ -67,9 +71,13 @@ namespace WebSchedule.Controllers.Group
                     UserId = userId,
                 }));
             }
-            catch (UserNotFoundException ex)
+            catch (ApplicationException ex)
             {
-                return NotFound(new ErrorMessage(ex.Message));
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
             }
             catch (Exception ex)
             {
@@ -79,7 +87,7 @@ namespace WebSchedule.Controllers.Group
 
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 #if !DEBUG
         [Authorize]
@@ -93,9 +101,13 @@ namespace WebSchedule.Controllers.Group
                     GroupId = id,
                 }));
             }
-            catch (GroupNotFoundException ex)
+            catch (ApplicationException ex)
             {
-                return NotFound(new ErrorMessage(ex.Message));
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
             }
             catch (Exception ex)
             {

@@ -1,10 +1,8 @@
-﻿using WebSchedule.Properties;
-
-namespace WebSchedule.Controllers.Authentication.Exceptions
+﻿namespace WebSchedule.Controllers.Authentication.Exceptions
 {
-    public class MissingSigningKeyException : Exception
+    public class MissingSigningKeyException : SystemException
     {
-        public MissingSigningKeyException() : base(Resource.ExceptionSigningKeyIsMissing)
+        public MissingSigningKeyException() : base("ExceptionSigningKeyIsMissing")
         {
         }
     }

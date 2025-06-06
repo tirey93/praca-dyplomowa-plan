@@ -1,9 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using WebSchedule.Controllers.Group.Exceptions;
 using WebSchedule.Controllers.User.Exceptions;
 using WebSchedule.Controllers.UserInGroup.Requests;
-using WebSchedule.Domain.Exceptions;
+using WebSchedule.Domain;
 using WebSchedule.Utils;
 
 namespace WebSchedule.Controllers.User
@@ -21,8 +20,7 @@ namespace WebSchedule.Controllers.User
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 #if !DEBUG
         [Authorize]
@@ -41,17 +39,13 @@ namespace WebSchedule.Controllers.User
                 });
                 return NoContent();
             }
-            catch (UserNotFoundException ex)
+            catch (ApplicationException ex)
             {
-                return NotFound(new ErrorMessage(ex.Message));
+                return BadRequest(ex.FromApplicationException());
             }
-            catch (GroupNotFoundException ex)
+            catch (DomainException ex)
             {
-                return NotFound(new ErrorMessage(ex.Message));
-            }
-            catch (CandidateAlreadyInAGroupException ex)
-            {
-                return Conflict(new ErrorMessage(ex.Message));
+                return BadRequest(ex.FromDomainException());
             }
             catch (Exception ex)
             {
@@ -61,8 +55,7 @@ namespace WebSchedule.Controllers.User
 
         [HttpPut("Disenroll")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 #if !DEBUG
         [Authorize]
@@ -80,17 +73,13 @@ namespace WebSchedule.Controllers.User
                 });
                 return NoContent();
             }
-            catch (UserNotFoundException ex)
+            catch (ApplicationException ex)
             {
-                return NotFound(new ErrorMessage(ex.Code, ex.Params));
+                return BadRequest(ex.FromApplicationException());
             }
-            catch (GroupNotFoundException ex)
+            catch (DomainException ex)
             {
-                return NotFound(new ErrorMessage(ex.Message));
-            }
-            catch (NoSuchMemberInGroupException ex)
-            {
-                return Conflict(new ErrorMessage(ex.Message));
+                return BadRequest(ex.FromDomainException());
             }
             catch (Exception ex)
             {

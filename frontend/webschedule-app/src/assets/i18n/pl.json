@@ -6,6 +6,16 @@
   "PartTime": "Niestacjonarne",
   "snackbar.dismiss": "Odrzuć",
   "snackbar.unknown.error": "Nastąpił nieoczekiwany błąd.",
+  //Application exceptions
   "ExceptionUserNotFound": "Użytkownik o id {{0}} nie istnieje.",
-  "ExceptionNoneUserNotFound": "Użytkownik nie istnieje."
+  "ExceptionNoneUserNotFound": "Użytkownik nie istnieje.",
+  "LoginFailedForUser": "Logowanie użytkownika {{0}} nie powiodło się.",
+  "ExceptionUserAlreadyExists": "Użytkownik o nazwie {{0}} już istnieje.",
+  "ExceptionGroupNotFound": "Grupa o id {{0}} nie istnieje.",
+  "ExceptionUserIsNotActive": "Użytkownik od id {{0}} jest nieaktywny.",
+  "ExceptionSigningKeyIsMissing": "Token JWT nie został odnaleziony.",
+  //Domain exceptions
+  "CandidateAlreadyInAGroupException": "Użytkownik o id {{0}} jest już studentem grupy o id {{1}}.",
+  "NoSuchCandidateInGroup": "Użytkownik o id {{0}} nie jest kandydatem w grupie o id {{1}}.",
+  "NoSuchMemberInGroup": "Użytkownik o id {{0}} nie jest członkiem grupy o id {{1}}."
 }

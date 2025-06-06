@@ -7,6 +7,7 @@ using WebSchedule.Controllers.Authentication.Commands;
 using WebSchedule.Controllers.Authentication.Exceptions;
 using WebSchedule.Controllers.Authentication.Queries;
 using WebSchedule.Controllers.Responses;
+using WebSchedule.Domain;
 
 namespace WebSchedule.Controllers.Authentication
 {
@@ -25,7 +26,7 @@ namespace WebSchedule.Controllers.Authentication
 
         [HttpPost("Register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [AllowAnonymous]
         public async Task<ActionResult<UserResponse>> Register([FromBody] RegisterCommand command)
@@ -35,9 +36,13 @@ namespace WebSchedule.Controllers.Authentication
                 await _mediator.Send(command);
                 return Ok();
             }
-            catch (UserAlreadyExistsException ex)
+            catch (ApplicationException ex)
             {
-                return Conflict(new ErrorMessage(ex.Message));
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
             }
             catch (Exception ex)
             {
@@ -47,7 +52,7 @@ namespace WebSchedule.Controllers.Authentication
 
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [AllowAnonymous]
         public async Task<ActionResult<UserResponse>> Login([FromBody] LoginQuery query)
@@ -61,13 +66,21 @@ namespace WebSchedule.Controllers.Authentication
                     Token = GetJwtToken(response)
                 });
             }
-            catch (LoginFailedException ex)
+            catch (ApplicationException ex)
             {
-                return NotFound(new ErrorMessage(ex.Message));
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
+            }
+            catch (SystemException ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.FromSystemException());
             }
             catch (Exception ex)
             {
-                return BadRequest(new { ex.Message });
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
             }
         }
 

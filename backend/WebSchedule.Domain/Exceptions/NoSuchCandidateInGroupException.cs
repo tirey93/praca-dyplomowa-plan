@@ -1,10 +1,8 @@
-﻿using WebSchedule.Domain.Properties;
-
-namespace WebSchedule.Domain.Exceptions
+﻿namespace WebSchedule.Domain.Exceptions
 {
     public class NoSuchCandidateInGroupException : DomainException
     {
-        public NoSuchCandidateInGroupException(int userId, int groupId) : base(string.Format(Resource.NoSuchCandidateInGroup, userId, groupId))
+        public NoSuchCandidateInGroupException(int userId, int groupId) : base("NoSuchCandidateInGroup", userId.ToString(), groupId.ToString())
         {
         }
 

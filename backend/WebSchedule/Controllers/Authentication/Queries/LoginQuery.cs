@@ -1,7 +1,7 @@
-﻿using Domain.Exceptions;
-using MediatR;
+﻿using MediatR;
 using WebSchedule.Controllers.Authentication.Exceptions;
 using WebSchedule.Controllers.Authentication.Queries;
+using WebSchedule.Controllers.Group.Exceptions;
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Domain.Repositories;
 using WebSchedule.Utils;
@@ -24,7 +24,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, LoginResponse>
         _userRepository = userRepository;
     }
 
-    public async Task<LoginResponse> Handle(LoginQuery request, CancellationToken cancellationToken)
+    public Task<LoginResponse> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
         var hash = ShaHelper.QuickHash(request.Password);
         var user = _userRepository.TryLoginByPassword(request.Username, hash)
@@ -33,9 +33,9 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, LoginResponse>
         if (!user.IsActive)
             throw new UserIsNotActiveException(user.Id);
 
-        return new LoginResponse
+        return Task.FromResult(new LoginResponse
         {
             UserId = user.Id,
-        };
+        });
     }
 }

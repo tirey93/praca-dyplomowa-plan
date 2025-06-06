@@ -1,4 +1,6 @@
-﻿namespace WebSchedule.Controllers
+﻿using WebSchedule.Domain;
+
+namespace WebSchedule.Controllers
 {
     public class ErrorMessage
     {
@@ -10,5 +12,15 @@
             Code = code;
             Params = @params;
         }
+    }
+
+    public static class ErrorMessageExtenstions
+    {
+        public static ErrorMessage FromApplicationException(this ApplicationException exception)
+            => new(exception.Code, exception.Params);
+        public static ErrorMessage FromDomainException(this DomainException exception)
+            => new(exception.Code, exception.Params);
+        public static ErrorMessage FromSystemException(this SystemException exception)
+            => new(exception.Code, exception.Params);
     }
 }

@@ -115,6 +115,43 @@ namespace WebSchedule.Controllers.Group
             }
         }
 
+        [HttpGet("subgroup/next")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+#if !DEBUG
+        [Authorize]
+#endif
+        public async Task<ActionResult<UserGroupResponse>> GetNextSubgroup(
+            [FromQuery] int year,
+            [FromQuery] string studyMode,
+            [FromQuery] string studyLevel,
+            [FromQuery] int courseId)
+        {
+            try
+            {
+                return Ok(await _mediator.Send(new GetNextSubGroupQuery
+                {
+                    Year = year,
+                    StudyMode = studyMode,
+                    StudyLevel = studyLevel,
+                    CourseId = courseId
+                }));
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
+            }
+        }
+
     }
 
 }

@@ -35,5 +35,15 @@ namespace WebSchedule.Infrastructure.Repositories
                 .Include(x => x.MembersInGroup).ThenInclude(x => x.User)
                 .FirstOrDefault(x => x.Id == groupId);
         }
+
+        public int? GetNextSubgroup(int year, StudyMode studyMode, StudyLevel studyLevel, int courseId)
+        {
+            var group = _dbSet
+                .Include(x => x.StudyCourse)
+                .Where(x => x.StartingYear == year && x.StudyCourse.Id == courseId && x.StudyMode == studyMode && x.StudyLevel == studyLevel)
+                .OrderByDescending(x => x.Subgroup)
+                .FirstOrDefault();
+            return group?.Subgroup;
+        }
     }
 }

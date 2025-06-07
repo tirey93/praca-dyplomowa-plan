@@ -7,6 +7,7 @@ import { FormGroup, FormControl, ReactiveFormsModule, Validators, FormsModule  }
 import { Router } from '@angular/router';
 import { AuthenticationRepositoryService } from '../../services/authentication/authenticationRepository.service';
 import { LoginService } from '../../services/login.service';
+import { SnackBarErrorService } from '../../services/snack-bar-error-service';
 
 
 interface LoginForm {
@@ -24,7 +25,9 @@ export class LoginComponent {
   constructor(
     private authenticationRepository: AuthenticationRepositoryService,
     private router: Router,
-    private loginService: LoginService) {
+    private loginService: LoginService,
+    private snackBarErrorService: SnackBarErrorService
+  ) {
     }
 
   formLogin: FormGroup<LoginForm> = new FormGroup({
@@ -56,6 +59,7 @@ export class LoginComponent {
         this.router.navigateByUrl("/week");
       },
       error: (error) => {
+        this.snackBarErrorService.open(error);
         this.wrongCredentials = error.status === 404;
         this.noConnection = error.status === 0;
       }

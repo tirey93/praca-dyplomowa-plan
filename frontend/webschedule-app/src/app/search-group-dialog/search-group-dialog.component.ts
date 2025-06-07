@@ -96,7 +96,10 @@ export class SearchGroupDialogComponent {
             }
             return isMatch;
         }
-      })
+      }),
+      error: (err) => {
+        this.snackBarErrorService.open(err);
+      },
     })
   }
 

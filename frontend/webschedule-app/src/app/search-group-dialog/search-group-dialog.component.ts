@@ -23,6 +23,7 @@ import { SnackBarErrorService } from '../../services/snack-bar-error-service';
 import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
 import { GroupRepositoryService } from '../../services/group/groupRepository.service';
 import { GroupHelper } from '../../helpers/groupHelper';
+import { Constants } from '../../helpers/constants';
 
 @Component({
   selector: 'app-search-group-dialog',
@@ -49,8 +50,8 @@ export class SearchGroupDialogComponent {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   filterDictionary= new Map<string,string>();
-  filterOptionsMode = ['FullTime', 'PartTime']
-  filterOptionsLevel = ['Bachelor', 'Master', 'Engineer']
+  filterOptionsMode = Constants.StudyModes;
+  filterOptionsLevel = Constants.StudyLevels;
   filterOptionsYear?: Set<number>
   filteredOptionsCourse$: Observable<string[]>;
   filterOptionsCourse?: Set<string>;
@@ -73,7 +74,7 @@ export class SearchGroupDialogComponent {
         return value ? this.filterOptionCourse(value) : [...this.filterOptionsCourse!].slice();
       }),
     );
-    this.groupService.get$().subscribe({
+    this.groupService.getCandidateGroups$().subscribe({
       next: (groups => {
         this.isLoading = false;
         if (groups.length === 0) {

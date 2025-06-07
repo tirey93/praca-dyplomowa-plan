@@ -4,25 +4,25 @@ using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Controllers.Group.Queries
 {
-    public class GetSearchedGroupsQuery : IRequest<IEnumerable<GroupInfoResponse>>
+    public class GetCandidateGroupsQuery : IRequest<IEnumerable<GroupInfoResponse>>
     {
         public int UserId { get; set; }
     }
 
-    public class GetSearchedGroupsQueryHandler : IRequestHandler<GetSearchedGroupsQuery, IEnumerable<GroupInfoResponse>>
+    public class GetCandidateGroupsQueryHandler : IRequestHandler<GetCandidateGroupsQuery, IEnumerable<GroupInfoResponse>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserInGroupRepository _userInGroupRepository;
         private readonly IGroupRepository _groupRepository;
 
-        public GetSearchedGroupsQueryHandler(IUserRepository userRepository, IUserInGroupRepository userInGroupRepository, IGroupRepository groupRepository)
+        public GetCandidateGroupsQueryHandler(IUserRepository userRepository, IUserInGroupRepository userInGroupRepository, IGroupRepository groupRepository)
         {
             _userRepository = userRepository;
             _userInGroupRepository = userInGroupRepository;
             _groupRepository = groupRepository;
         }
 
-        public Task<IEnumerable<GroupInfoResponse>> Handle(GetSearchedGroupsQuery request, CancellationToken cancellationToken)
+        public Task<IEnumerable<GroupInfoResponse>> Handle(GetCandidateGroupsQuery request, CancellationToken cancellationToken)
         {
             var groups = _groupRepository.Get()
                 .Where(g => !g.Members.Any(m => m.Id == request.UserId))

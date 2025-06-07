@@ -6,7 +6,7 @@
     <form [formGroup]="groupForm">
         <div class="dialog-content-half-container">
             <mat-form-field appearance="outline">
-                <mat-label>Rok</mat-label>
+                <mat-label>Rok utworzenia</mat-label>
                 <input formControlName="year" required type="number" matInput>
                 <mat-error *ngIf="groupForm.get('year')?.invalid && groupForm.get('year')?.touched">
                     <span *ngIf="groupForm.get('year')?.hasError('required')">Podaj rok założenia.</span>
@@ -18,17 +18,33 @@
         <div class="dialog-content-half-container">
             <mat-form-field appearance="outline" class="dialog-full-width">
                 <mat-label>Tryb studiów</mat-label>
-                <input matInput>
+                <mat-select formControlName="mode">
+                    @for (option of studyModes; track $index) {
+                        <mat-option [value]="option">{{option | translate}}</mat-option>
+                    }
+                </mat-select>
             </mat-form-field>
             <mat-form-field appearance="outline" class="dialog-full-width">
                 <mat-label>Stopień studiów</mat-label>
-                <input matInput>
+                <mat-select formControlName="level">
+                    @for (option of studyLevels; track $index) {
+                        <mat-option [value]="option">{{option | translate}}</mat-option>
+                    }
+                </mat-select>
             </mat-form-field>
         </div>
         <div class="dialog-content-flex-container">
             <mat-form-field appearance="outline" class="dialog-full-width">
-                <mat-label>Kierunek</mat-label>
-                <input matInput value="Google">
+                <mat-label>Kierunek studiów</mat-label>
+                <input type="text" matInput formControlName="course" [matAutocomplete]="auto">
+                <mat-autocomplete 
+                    [displayWith]="displayFn"
+                    autoActiveFirstOption 
+                    #auto="matAutocomplete">
+                @for (option of filteredOptionsCourse$ | async; track $index) {
+                    <mat-option [value]="option">{{option.displayText}}</mat-option>
+                }
+                </mat-autocomplete>
             </mat-form-field>
             <button mat-fab type="button">
                 <mat-icon>add</mat-icon>

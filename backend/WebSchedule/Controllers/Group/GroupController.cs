@@ -52,21 +52,21 @@ namespace WebSchedule.Controllers.Group
             }
         }
 
-        [HttpGet()]
+        [HttpGet("candidate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 #if !DEBUG
         [Authorize]
 #endif
-        public async Task<ActionResult<IEnumerable<GroupInfoResponse>>> Get()
+        public async Task<ActionResult<IEnumerable<GroupInfoResponse>>> GetCandidateGroups()
         {
             try
             {
                 var userId = JwtHelper.GetUserIdFromToken(Request.Headers.Authorization)
                     ?? throw new UserNotFoundException();
 
-                return Ok(await _mediator.Send(new GetSearchedGroupsQuery
+                return Ok(await _mediator.Send(new GetCandidateGroupsQuery
                 {
                     UserId = userId,
                 }));

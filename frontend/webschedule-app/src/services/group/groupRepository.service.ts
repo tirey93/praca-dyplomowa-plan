@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
+import { environment } from '../../enviroments/enviroments';
 import { UserGroupResponse } from './dtos/userGroupResponse';
-import { environment } from '../../../enviroments/enviroments';
 import { GroupInfoResponse } from './dtos/groupInfoResponse';
 
 @Injectable({

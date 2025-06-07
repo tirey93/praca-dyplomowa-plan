@@ -4,11 +4,11 @@ import {
   MatDialogContent,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import { GroupRepositoryService } from '../services/group/groupRepository.service';
-import { UserGroupResponse } from '../services/group/dtos/userGroupResponse';
+import { UserGroupResponse } from '../../services/group/dtos/userGroupResponse';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { GroupHelper } from '../helpers/groupHelper';
+import { GroupRepositoryService } from '../../services/group/groupRepository.service';
+import { GroupHelper } from '../../helpers/groupHelper';
 
 @Component({
   selector: 'app-show-group-dialog',

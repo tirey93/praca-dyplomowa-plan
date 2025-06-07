@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
-import { environment } from '../../../enviroments/enviroments';
+import { environment } from '../../enviroments/enviroments';
 import { AddCandidateRequest } from './dtos/add-candidate-request';
 import { DisenrollFromGroupRequest } from './dtos/disenroll-from-group-request';
 

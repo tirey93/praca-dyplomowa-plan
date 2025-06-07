@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LoginRequest } from './dtos/loginRequest';
 import { LoginResponse } from './dtos/loginResponse';
-import { environment } from '../../../enviroments/enviroments';
+import { environment } from '../../enviroments/enviroments';
 
 @Injectable({
     providedIn: 'root'

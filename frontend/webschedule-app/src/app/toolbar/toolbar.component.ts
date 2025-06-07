@@ -5,18 +5,18 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 
 import { MatMenuModule } from '@angular/material/menu';
-import { GroupHelper } from '../helpers/groupHelper';
 import { Router } from '@angular/router';
-import { GroupRepositoryService } from '../services/group/groupRepository.service';
 import { filter, map, Observable, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { ShowGroupDialogComponent } from '../show-group-dialog/show-group-dialog.component';
 import { SearchGroupDialogComponent } from '../search-group-dialog/search-group-dialog.component';
-import { LoginService } from '../services/login/login.service';
+import { LoginService } from '../../services/login.service';
 import { MatTooltip } from '@angular/material/tooltip';
 import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
+import { GroupRepositoryService } from '../../services/group/groupRepository.service';
+import { GroupHelper } from '../../helpers/groupHelper';
 
 export interface GroupSelected {
   id: number;

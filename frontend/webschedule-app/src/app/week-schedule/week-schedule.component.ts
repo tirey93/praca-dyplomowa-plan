@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserRepositoryService } from '../services/user/userRepository.service';
-import { UserResponse } from '../services/user/dtos/userResponse';
+import { UserResponse } from '../../services/user/dtos/userResponse';
 import { Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -49,6 +48,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { UserRepositoryService } from '../../services/user/userRepository.service';
 
 @Component({
   selector: 'app-week-schedule',

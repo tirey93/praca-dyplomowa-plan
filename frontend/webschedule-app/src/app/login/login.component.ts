@@ -5,8 +5,8 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import { FormGroup, FormControl, ReactiveFormsModule, Validators, FormsModule  } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthenticationRepositoryService } from '../services/authentication/authenticationRepository.service';
-import { LoginService } from '../services/login/login.service';
+import { AuthenticationRepositoryService } from '../../services/authentication/authenticationRepository.service';
+import { LoginService } from '../../services/login.service';
 
 
 interface LoginForm {

@@ -1,7 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
-import { GroupRepositoryService } from '../services/group/groupRepository.service';
-import { GroupHelper } from '../helpers/groupHelper';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -10,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { GroupInfoResponse } from '../services/group/dtos/groupInfoResponse';
+import { GroupInfoResponse } from '../../services/group/dtos/groupInfoResponse';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -20,9 +18,11 @@ import { map, Observable } from 'rxjs';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { UserInGroupService } from '../services/userInGroup/user-in-group.service';
-import { SnackBarErrorService } from '../services/snack-bar-error-service';
+import { UserInGroupService } from '../../services/userInGroup/user-in-group.service';
+import { SnackBarErrorService } from '../../services/snack-bar-error-service';
 import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
+import { GroupRepositoryService } from '../../services/group/groupRepository.service';
+import { GroupHelper } from '../../helpers/groupHelper';
 
 @Component({
   selector: 'app-search-group-dialog',

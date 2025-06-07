@@ -3,31 +3,48 @@
     <p class="dialog-description">
         Tutaj możesz stworzyć własną grupę. <br>Po jej utworzeniu automatycznie staniesz się jej starostą.
     </p>
-    <form [formGroup]="groupForm" class="dialog-content-container">
-        <mat-form-field>
-            <mat-label>Rok</mat-label>
-            <input formControlName="year" required type="number" matInput>
-            <mat-error *ngIf="groupForm.get('year')?.invalid && groupForm.get('year')?.touched">
-                <span *ngIf="groupForm.get('year')?.hasError('required')">Podaj rok założenia.</span>
-            </mat-error>
-        </mat-form-field>
-        <mat-form-field class="dialog-full-width new-row">
-            <mat-label>Tryb studiów</mat-label>
-            <input matInput>
-        </mat-form-field>
-        <mat-form-field class="dialog-full-width">
-            <mat-label>Stopień studiów</mat-label>
-            <input matInput>
-        </mat-form-field>
-        <mat-form-field class="dialog-full-width full-row">
-            <mat-label>Kierunek</mat-label>
-            <input matInput value="Google">
-        </mat-form-field>
+    <form [formGroup]="groupForm">
+        <div class="dialog-content-half-container">
+            <mat-form-field appearance="outline">
+                <mat-label>Rok</mat-label>
+                <input formControlName="year" required type="number" matInput>
+                <mat-error *ngIf="groupForm.get('year')?.invalid && groupForm.get('year')?.touched">
+                    <span *ngIf="groupForm.get('year')?.hasError('required')">Podaj rok założenia.</span>
+                    <span *ngIf="groupForm.get('year')?.hasError('min')">Podano za wczesny rok.</span>
+                    <span *ngIf="groupForm.get('year')?.hasError('max')">Podano za późny rok.</span>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="dialog-content-half-container">
+            <mat-form-field appearance="outline" class="dialog-full-width">
+                <mat-label>Tryb studiów</mat-label>
+                <input matInput>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="dialog-full-width">
+                <mat-label>Stopień studiów</mat-label>
+                <input matInput>
+            </mat-form-field>
+        </div>
+        <div class="dialog-content-flex-container">
+            <mat-form-field appearance="outline" class="dialog-full-width">
+                <mat-label>Kierunek</mat-label>
+                <input matInput value="Google">
+            </mat-form-field>
+            <button mat-fab type="button">
+                <mat-icon>add</mat-icon>
+            </button>
+        </div>
+        <div class="dialog-content-half-container">
+            <mat-form-field appearance="outline">
+                <mat-label>Podgrupa</mat-label>
+                <input matInput formControlName="subgroup">
+            </mat-form-field>
+        </div>
     </form>
     <mat-dialog-actions>
-        <button mat-button type="button" (click)="onNoClick()">Anuluj</button>
+        <button mat-raised-button type="button" (click)="onNoClick()">Anuluj</button>
         <button 
-            mat-button 
+            mat-flat-button
             type="submit" 
             cdkFocusInitial
             [disabled]="groupForm.invalid"

@@ -1,39 +1,48 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
-import { MatError, MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-create-group-dialog',
   imports: [ 
     MatDialogContent, MatDialogTitle, MatFormFieldModule, MatLabel, MatInputModule, MatDialogActions, 
-    MatButtonModule, ReactiveFormsModule, CommonModule
+    MatButtonModule, ReactiveFormsModule, CommonModule, MatIconModule
     
   ],
   templateUrl: './create-group-dialog.component.html',
   styleUrl: './create-group-dialog.component.scss'
 })
 export class CreateGroupDialogComponent {
-  groupForm: FormGroup;
+  groupForm = new FormGroup({
+    year: new FormControl(this.getCurrentYear(), { validators: [Validators.min(this.getLowestYear()), Validators.max(this.getHighestYear())] }),
+    subgroup: new FormControl({value: "01", disabled: true}),
+  });
 
   constructor(
     private dialogRef: MatDialogRef<CreateGroupDialogComponent>,
-    fb: FormBuilder
   ) {
-    this.groupForm = fb.group({
-      year: [this.getCurrentYear()]
-    })
   }
 
   onNoClick(): void {
+    console.log(this.groupForm.controls.subgroup.value);
     this.dialogRef.close(false);
   }
 
-  getCurrentYear(): number {
+  private getCurrentYear(): number {
     return (new Date()).getFullYear()
+  }
+
+  private getLowestYear(): number {
+    return this.getCurrentYear() - 20;
+  }
+
+  private getHighestYear(): number {
+    return this.getCurrentYear() + 5;
   }
 
   submit() {

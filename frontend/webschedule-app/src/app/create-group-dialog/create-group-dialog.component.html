@@ -5,7 +5,7 @@
     </p>
     <form [formGroup]="groupForm">
         <div class="dialog-content-half-container">
-            <mat-form-field appearance="outline">
+            <mat-form-field matTooltip="Możesz wybrać wcześniejsze roczniki jak i późniejsze." appearance="outline">
                 <mat-label>Rok utworzenia</mat-label>
                 <input formControlName="year" required type="number" matInput>
                 <mat-error *ngIf="groupForm.get('year')?.invalid && groupForm.get('year')?.touched">
@@ -46,11 +46,12 @@
                 }
                 </mat-autocomplete>
             </mat-form-field>
-            <button mat-fab type="button">
+            <button matTooltip="Brakuje kierunku? Kliknij, aby utworzyć nowy." mat-fab type="button">
                 <mat-icon>add</mat-icon>
             </button>
         </div>
-        <div class="dialog-content-half-container">
+        <div matTooltip="Podgrupa wyliczana jest na podstawie poprzednich grup spełniających podane kryteria." 
+            class="dialog-content-half-container">
             <mat-form-field appearance="outline">
                 <mat-label>Podgrupa</mat-label>
                 <input [value]="nextSubgroup$ | async" matInput formControlName="subgroup">
@@ -59,11 +60,14 @@
     </form>
     <mat-dialog-actions>
         <button mat-raised-button type="button" (click)="onNoClick()">Anuluj</button>
-        <button 
-            mat-flat-button
-            type="submit" 
-            cdkFocusInitial
-            [disabled]="groupForm.invalid"
-            (click)="submit()">Utwórz</button>
+        <div style="margin-left: 15px;" [matTooltip]="groupForm.invalid ? 'Należy podać wszystkie wymagane pola.' : ''">
+            <button 
+                mat-flat-button
+                type="submit" 
+                cdkFocusInitial
+                [disabled]="groupForm.invalid"
+                (click)="submit()">Utwórz
+            </button>
+        </div>
     </mat-dialog-actions>
 </mat-dialog-content>

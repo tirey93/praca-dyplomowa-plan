@@ -9,20 +9,21 @@ import { MatInputModule } from '@angular/material/input';
 import { Constants } from '../../helpers/constants';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { combineLatest, debounceTime, filter, map, Observable, shareReplay, startWith, switchMap } from 'rxjs';
 import { SelectValue } from '../dtos/selectValue';
 import { StudyCourseRepository } from '../../services/study-course/studyCourseRepository.service';
 import { GroupRepositoryService } from '../../services/group/groupRepository.service';
 import { GroupHelper } from '../../helpers/groupHelper';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-create-gro-up-dialog',
   imports: [ 
     MatDialogContent, MatDialogTitle, MatFormFieldModule, MatLabel, MatInputModule, MatDialogActions, 
     MatButtonModule, ReactiveFormsModule, CommonModule, MatIconModule, MatSelectModule, MatOptionModule,
-    TranslatePipe, MatAutocompleteModule
+    TranslatePipe, MatAutocompleteModule, MatTooltipModule
   ],
   templateUrl: './create-group-dialog.component.html',
   styleUrl: './create-group-dialog.component.scss'
@@ -45,6 +46,7 @@ export class CreateGroupDialogComponent {
   constructor(
     private dialogRef: MatDialogRef<CreateGroupDialogComponent>,
     private groupService: GroupRepositoryService,
+    private translate: TranslateService,
     studyCourseService: StudyCourseRepository,
   ) {
     this.allCourses$ = studyCourseService.get$().pipe(
@@ -79,7 +81,6 @@ export class CreateGroupDialogComponent {
       ),
     ]).pipe(
       debounceTime(50),
-
       filter(([year, mode, level, courseId]) => {
         const isFormValid = this.groupForm.valid;
         const areApiParamsReady =

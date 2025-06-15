@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebSchedule.Controllers.Group.Queries;
 using WebSchedule.Controllers.Responses;
+using WebSchedule.Controllers.StudyCourse.Commands;
 using WebSchedule.Controllers.User.Exceptions;
 using WebSchedule.Domain;
 using WebSchedule.Utils;
@@ -152,6 +154,35 @@ namespace WebSchedule.Controllers.Group
             }
         }
 
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [AllowAnonymous]
+        public async Task<ActionResult<GroupResponse>> Create([FromBody] CreateGroupCommand command)
+        {
+            try
+            {
+                var userId = JwtHelper.GetUserIdFromToken(Request.Headers.Authorization)
+                    ?? throw new UserNotFoundException();
+
+                command.UserId = userId;
+                var course = await _mediator.Send(command);
+                return Ok(course);
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
+            }
+        }
     }
 
 }

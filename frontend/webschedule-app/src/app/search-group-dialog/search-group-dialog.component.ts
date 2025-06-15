@@ -141,8 +141,10 @@ export class SearchGroupDialogComponent {
     this.dialog.open(CreateGroupDialogComponent, {
       maxWidth: '100vw',
       autoFocus: false
-    });
-    this.dialogRef.close()
+    }).afterClosed().subscribe((result:boolean) => {
+      if(result)
+        this.dialogRef.close(result);
+    })
   }
 
   applyFilter(option:any, empfilter: string) {

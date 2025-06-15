@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
-import { filter, map, Observable, switchMap } from 'rxjs';
+import { filter, map, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
@@ -31,20 +31,17 @@ export interface GroupSelected {
   styleUrl: './toolbar.component.scss'
 })
 export class ToolbarComponent {
-newGroup() {
-this.dialog.open(CreateGroupDialogComponent, {
-      maxWidth: '100vw',
-      autoFocus: false
-    });
-}
   groups$: Observable<GroupSelected[]>;
+  refeshGroups$ = new Subject<void>();
   constructor(
       private readonly groupRepository: GroupRepositoryService,
       private readonly router: Router,
       private readonly dialog: MatDialog,
       public readonly loginService: LoginService) {
     loginService.refreshLogin();
-    this.groups$ = this.loginService.isLoggedIn$.pipe(
+    this.groups$ = this.refeshGroups$.pipe(
+      startWith(undefined), switchMap(() => {
+      return this.loginService.isLoggedIn$.pipe(
       filter(isLoggedIn => isLoggedIn),
       switchMap(() => {
         return this.groupRepository.getByLoggedIn$().pipe(
@@ -56,7 +53,8 @@ this.dialog.open(CreateGroupDialogComponent, {
           ),
         )
       })
-    )
+      )
+    }))
   }
 
   logout() {
@@ -68,6 +66,11 @@ this.dialog.open(CreateGroupDialogComponent, {
     this.dialog.open(SearchGroupDialogComponent, {
       maxWidth: '100vw',
       autoFocus: false
+    }).afterClosed().subscribe({
+      next:(result:boolean) => {
+        if(result)
+          this.refeshGroups$.next();
+      }
     });
   }
 

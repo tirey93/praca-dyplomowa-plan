@@ -15,6 +15,16 @@ namespace WebSchedule.Infrastructure.Repositories
             return _dbSet;
         }
 
+        public StudyCourse Get(int id)
+        {
+            return _dbSet.FirstOrDefault(x => x.Id == id);
+        }
+
+        public bool Exists(int id)
+        {
+            return _dbSet.Any(x => x.Id == id);
+        }
+
         public bool IsNameExists(string name)
         {
             return _dbSet.Any(x => x.Name == name);

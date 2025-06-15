@@ -21,6 +21,17 @@ namespace WebSchedule.Infrastructure.Repositories
             return _dbSet.Any(x => x.Id == groupId);
         }
 
+        public bool GroupExists(int year, int subgroup, StudyMode studyMode, StudyLevel studyLevel, int courseId)
+        {
+            return _dbSet
+                .Include(x => x.StudyCourse)
+                .Any(x => x.StartingYear == year 
+                    && x.Subgroup == subgroup 
+                    && x.StudyMode == studyMode 
+                    && x.StudyLevel == studyLevel
+                    && x.StudyCourse.Id == courseId);
+        }
+
         public IEnumerable<Group> Get()
         {
             return _dbSet

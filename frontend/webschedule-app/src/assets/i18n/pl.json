@@ -16,6 +16,8 @@
   "ExceptionSigningKeyIsMissing": "Token JWT nie został odnaleziony.",
   "ExceptionStudyCourseNameAlreadyExists": "Podana nazwa kierunku({{0}}) już istnieje.",
   "ExceptionStudyCourseShortNameAlreadyExists": "Podany skrót({{0}}) już istnieje.",
+  "ExceptionGroupAlreadyExists": "Grupa o podanych parametrach już istnieje.",
+  "ExceptionStudyCourseNotExist": "Kierunek o id {{0}} nie istnieje.",
 
   "CandidateAlreadyInAGroupException": "Użytkownik o id {{0}} jest już studentem grupy o id {{1}}.",
   "NoSuchCandidateInGroup": "Użytkownik o id {{0}} nie jest kandydatem w grupie o id {{1}}.",

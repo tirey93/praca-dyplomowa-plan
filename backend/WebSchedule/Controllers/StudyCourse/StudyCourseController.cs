@@ -53,7 +53,7 @@ namespace WebSchedule.Controllers.StudyCourse
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [AllowAnonymous]
-        public async Task<ActionResult<UserResponse>> Create([FromBody] CreateStudyCourseCommand command)
+        public async Task<ActionResult<StudyCourseResponse>> Create([FromBody] CreateStudyCourseCommand command)
         {
             try
             {

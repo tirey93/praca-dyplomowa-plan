@@ -18,6 +18,7 @@ import { GroupRepositoryService } from '../../services/group/groupRepository.ser
 import { GroupHelper } from '../../helpers/groupHelper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CreateCourseDialogComponent } from '../create-course-dialog/create-course-dialog.component';
+import { SnackBarErrorService } from '../../services/snack-bar-error-service';
 
 @Component({
   selector: 'app-create-gro-up-dialog',
@@ -49,6 +50,8 @@ export class CreateGroupDialogComponent {
     private groupService: GroupRepositoryService,
     private readonly dialog: MatDialog,
     private studyCourseService: StudyCourseRepository,
+    private snackBarErrorService: SnackBarErrorService
+    
   ) {
     this.updateStudyCourses(null);
     
@@ -92,7 +95,11 @@ export class CreateGroupDialogComponent {
           mode!,
           level!,
           courseId!
-        ).pipe(map(x => GroupHelper.parseSubgroup(x)));
+        ).pipe(map(x => {
+          const subgroup = GroupHelper.parseSubgroup(x)
+          this.groupForm.controls.subgroup.setValue(subgroup);
+          return subgroup;
+        }));
       }),
     );
   }
@@ -122,7 +129,6 @@ export class CreateGroupDialogComponent {
     });
   }
   onNoClick(): void {
-    console.log(this.groupForm.controls.course.value);
     this.dialogRef.close(false);
   }
   displayFn(value: SelectValue): string {
@@ -141,6 +147,20 @@ export class CreateGroupDialogComponent {
   }
 
   submit() {
-    console.log('submit');
+    this.groupService.create$({ 
+      year: this.groupForm.controls.year.value!, 
+      subgroup: this.groupForm.controls.subgroup.value!,
+      mode: this.groupForm.controls.mode.value!,
+      level: this.groupForm.controls.level.value!,
+      courseId: this.groupForm.controls.course.value!.id,
+    }).subscribe({
+      next: () => {
+        this.dialogRef.close(true);
+      },
+      error: (err) => {
+        this.snackBarErrorService.open(err);
+        this.groupForm.setErrors({'incorrect': true})
+      }
+    })
   }
 }

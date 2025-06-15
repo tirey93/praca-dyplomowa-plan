@@ -4,6 +4,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../../enviroments/enviroments';
 import { UserGroupResponse } from './dtos/userGroupResponse';
 import { GroupInfoResponse } from './dtos/groupInfoResponse';
+import { GroupRequest } from './dtos/groupRequest';
+import { GroupResponse } from './dtos/groupResponse';
 
 @Injectable({
     providedIn: 'root'
@@ -38,6 +40,14 @@ import { GroupInfoResponse } from './dtos/groupInfoResponse';
     }
     getNextSubgroup$(year: number, studyMode: string, studyLevel: string, courseId: number) {
       return this.http.get<number>(`${this.url}/subgroup/next?year=${year}&studyMode=${studyMode}&studyLevel=${studyLevel}&courseId=${courseId}`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
+    create$(groupRequest: GroupRequest) {
+      return this.http.post<GroupResponse>(`${this.url}`, groupRequest, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

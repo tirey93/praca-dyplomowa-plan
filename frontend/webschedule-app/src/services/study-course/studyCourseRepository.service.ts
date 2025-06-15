@@ -22,6 +22,10 @@ import { StudyCourseRequest } from './dtos/studyCourseRequest';
       })
     }
     create$(studyCourseRequest: StudyCourseRequest) {
-      return this.http.post<StudyCourseResponse>(`${this.url}`, studyCourseRequest)
+      return this.http.post<StudyCourseResponse>(`${this.url}`, studyCourseRequest, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
     }
   }

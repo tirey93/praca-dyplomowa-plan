@@ -1,0 +1,31 @@
+<title mat-dialog-title>Zmień dane użytkownika</title>
+<mat-dialog-content>
+    <mat-tab-group>
+        <form [formGroup]="prefForm">
+            <mat-tab label="Login">
+                <mat-form-field style="margin-top: 20px;" appearance="outline" class="dialog-full-width">
+                    <mat-label>Kierunek studiów</mat-label>
+                    <input required type="text" matInput formControlName="login">
+                </mat-form-field>
+            </mat-tab>
+            <mat-tab label="Nazwa">
+                <mat-form-field style="margin-top: 20px;" appearance="outline" class="dialog-full-width">
+                    <mat-label>Kierunek studiów</mat-label>
+                    <input required type="text" matInput formControlName="displayName">
+                </mat-form-field>
+            </mat-tab>
+            <mat-tab label="Hasło"> Content 3 </mat-tab>
+        </form>
+    </mat-tab-group>
+    <mat-dialog-actions>
+        <div style="margin-left: 15px;" [matTooltip]="prefForm.invalid ? 'Należy podać wszystkie wymagane pola.' : ''">
+            <button 
+                mat-flat-button
+                type="submit" 
+                cdkFocusInitial
+                [disabled]="prefForm.invalid"
+                (click)="submit()">Zapisz
+            </button>
+        </div>
+    </mat-dialog-actions>
+</mat-dialog-content>

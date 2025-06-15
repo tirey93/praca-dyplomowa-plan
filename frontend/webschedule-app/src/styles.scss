@@ -12,3 +12,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     padding: 20px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
+
+.dialog-description {
+  margin-bottom: 24px;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.95em;
+  line-height: 1.5;
+  max-width: 600px;
+}
+
+.dialog-full-width {
+  width: 100%;
+}

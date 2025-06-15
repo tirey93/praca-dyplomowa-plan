@@ -17,6 +17,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
 import { GroupRepositoryService } from '../../services/group/groupRepository.service';
 import { GroupHelper } from '../../helpers/groupHelper';
+import { PreferencesComponent } from '../preferences/preferences.component';
 
 export interface GroupSelected {
   id: number;
@@ -41,22 +42,28 @@ export class ToolbarComponent {
     loginService.refreshLogin();
     this.groups$ = this.refeshGroups$.pipe(
       startWith(undefined), switchMap(() => {
-      return this.loginService.isLoggedIn$.pipe(
-      filter(isLoggedIn => isLoggedIn),
-      switchMap(() => {
-        return this.groupRepository.getByLoggedIn$().pipe(
-          map(apiGroups => 
-            apiGroups.map(apiGroup => ({
-              id: apiGroup.id,
-              name: GroupHelper.groupInfoToString(apiGroup),
-            } as GroupSelected))
-          ),
+        return this.loginService.isLoggedIn$.pipe(
+          filter(isLoggedIn => isLoggedIn),
+          switchMap(() => {
+            return this.groupRepository.getByLoggedIn$().pipe(
+              map(apiGroups => 
+                apiGroups.map(apiGroup => ({
+                  id: apiGroup.id,
+                  name: GroupHelper.groupInfoToString(apiGroup),
+                } as GroupSelected))
+              ),
+            )
+          })
         )
       })
-      )
-    }))
+    );
   }
-
+  goToPreferences() {
+    this.dialog.open(PreferencesComponent, {
+      maxWidth: '100vw',
+      autoFocus: false
+    })
+  }
   logout() {
     this.loginService.logout();
     this.router.navigateByUrl("/login");

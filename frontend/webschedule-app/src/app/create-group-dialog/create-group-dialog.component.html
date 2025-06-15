@@ -17,7 +17,7 @@
         </div>
         <div class="dialog-content-half-container">
             <mat-form-field appearance="outline" class="dialog-full-width">
-                <mat-label>Tryb studiów</mat-label>
+                <mat-label>Rodzaj studiów</mat-label>
                 <mat-select required formControlName="mode">
                     @for (option of studyModes; track $index) {
                         <mat-option [value]="option">{{option | translate}}</mat-option>
@@ -46,7 +46,9 @@
                 }
                 </mat-autocomplete>
             </mat-form-field>
-            <button matTooltip="Brakuje kierunku? Kliknij, aby utworzyć nowy." mat-fab type="button">
+            <button matTooltip="Brakuje kierunku? Kliknij, aby utworzyć nowy." 
+                (click)="handleCreateCourse()"
+                mat-fab type="button">
                 <mat-icon>add</mat-icon>
             </button>
         </div>

@@ -2,21 +2,22 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MatDialog, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { Constants } from '../../helpers/constants';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { combineLatest, debounceTime, filter, map, Observable, shareReplay, startWith, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, filter, map, Observable, shareReplay, startWith, Subject, switchMap } from 'rxjs';
 import { SelectValue } from '../dtos/selectValue';
 import { StudyCourseRepository } from '../../services/study-course/studyCourseRepository.service';
 import { GroupRepositoryService } from '../../services/group/groupRepository.service';
 import { GroupHelper } from '../../helpers/groupHelper';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { CreateCourseDialogComponent } from '../create-course-dialog/create-course-dialog.component';
 
 @Component({
   selector: 'app-create-gro-up-dialog',
@@ -34,6 +35,8 @@ export class CreateGroupDialogComponent {
   filteredOptionsCourse$: Observable<SelectValue[]>;
   allCourses$: Observable<SelectValue[]>;
   nextSubgroup$: Observable<string>;
+  refreshCourses$ = new Subject<void>();
+  newObs$ = new Subject<void>();
 
   groupForm = new FormGroup({
     year: new FormControl(this.getCurrentYear(), { validators: [Validators.min(this.getLowestYear()), Validators.max(this.getHighestYear())] }),
@@ -46,30 +49,40 @@ export class CreateGroupDialogComponent {
   constructor(
     private dialogRef: MatDialogRef<CreateGroupDialogComponent>,
     private groupService: GroupRepositoryService,
-    private translate: TranslateService,
+    private readonly dialog: MatDialog,
     studyCourseService: StudyCourseRepository,
   ) {
-    this.allCourses$ = studyCourseService.get$().pipe(
-      map(groupResponses => groupResponses.map(x => ({ 
-        id: x.id, 
-        displayText: x.name
-      }) as SelectValue)),
-      shareReplay()
+     this.allCourses$ = this.refreshCourses$.pipe(
+      startWith(undefined),
+      switchMap(() => {
+        return studyCourseService.get$().pipe(
+          map(groupResponses => groupResponses.map(x => ({ 
+            id: x.id, 
+            displayText: x.name
+          }) as SelectValue)),
+        );
+      }),
+      shareReplay({ bufferSize: 1, refCount: true }), 
     );
-    this.filteredOptionsCourse$ = this.groupForm.controls.course.valueChanges.pipe(
-      startWith(null),
-      switchMap((value: string | SelectValue | null) => {
-        let filterValue = ''
-        if (value) {
-          filterValue = (typeof value === 'string' ? value : value?.displayText || '').toLowerCase();
+    
+    this.filteredOptionsCourse$ = combineLatest([
+      this.groupForm.controls.course.valueChanges.pipe(
+        startWith(this.groupForm.controls.course.value || '')
+      ),
+      this.allCourses$
+    ]).pipe(
+      map(([value, courses]) => {
+        if (!courses) {
+          return [];
         }
-        return value 
-          ? this.allCourses$
-              .pipe(map(x => x
-                .filter(option => option.displayText.toLowerCase().includes(filterValue))))
-          : this.allCourses$
-      })
-    )
+        const filterValue = (typeof value === 'string' ? value : value?.displayText || '').toLowerCase();
+        
+        if (!filterValue.trim()) {
+          return courses.slice();
+        }
+        return courses.filter(course => course.displayText.toLowerCase().includes(filterValue));
+      }),
+    );
 
     this.nextSubgroup$ = combineLatest([
       this.groupForm.controls.year.valueChanges.pipe(startWith(this.groupForm.controls.year.value)),
@@ -102,6 +115,14 @@ export class CreateGroupDialogComponent {
     );
   }
 
+  handleCreateCourse() {
+    this.dialog.open(CreateCourseDialogComponent, {
+      maxWidth: '100vw',
+      autoFocus: false
+    }).afterClosed().subscribe(result => {
+      this.refreshCourses$.next();
+    });
+  }
   onNoClick(): void {
     console.log(this.groupForm.controls.course.value);
     this.dialogRef.close(false);

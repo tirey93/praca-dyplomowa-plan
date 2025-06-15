@@ -1,0 +1,16 @@
+<title mat-dialog-title>Utworzenie Nowego Kierunku</title>
+<mat-dialog-content>
+    <p>create-course-dialog works!</p>
+    <mat-dialog-actions>
+        <button mat-raised-button type="button" (click)="onNoClick()">Anuluj</button>
+        <div style="margin-left: 15px;" [matTooltip]="groupForm.invalid ? 'Należy podać wszystkie wymagane pola.' : ''">
+            <button 
+                mat-flat-button
+                type="submit" 
+                cdkFocusInitial
+                [disabled]="groupForm.invalid"
+                (click)="submit()">Utwórz
+            </button>
+        </div>
+    </mat-dialog-actions>
+</mat-dialog-content>

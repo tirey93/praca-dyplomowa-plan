@@ -1,14 +1,37 @@
 <title mat-dialog-title>Utworzenie Nowego Kierunku</title>
 <mat-dialog-content>
-    <p>create-course-dialog works!</p>
+    <p class="dialog-description">
+        Tutaj możesz stworzyć nowy kierunek. <br>Po utworzeniu pojawi się on na liście wyboru kierunków.
+    </p>
+    <form [formGroup]="courseForm">
+        <mat-form-field appearance="outline">
+            <mat-label>Pełna nazwa</mat-label>
+            <input required type="text" matInput formControlName="name">
+            <mat-error *ngIf="courseForm.get('name')?.invalid && courseForm.get('name')?.touched">
+                <span *ngIf="courseForm.get('name')?.hasError('required')">Podaj pełną nazwę kierunku.</span>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field 
+            matTooltip="Skrót jest używany do oznaczania skróconej nazwy grupy danego kierunku. Powinien mieć od 3 do 5 znaków."
+            style="margin-left: 20px; width: 120px;" 
+            appearance="outline">
+            <mat-label>Skrót</mat-label>
+            <input required type="text" matInput formControlName="shortName">
+            <mat-error *ngIf="courseForm.get('shortName')?.invalid && courseForm.get('shortName')?.touched">
+                <span *ngIf="courseForm.get('shortName')?.hasError('required')">Podaj skrót kierunku.</span>
+                <span *ngIf="courseForm.get('shortName')?.hasError('minlength')">Podano za krótki skrót.</span>
+                <span *ngIf="courseForm.get('shortName')?.hasError('maxlength')">Podano za długi skrót.</span>
+            </mat-error>
+        </mat-form-field>
+    </form>
     <mat-dialog-actions>
         <button mat-raised-button type="button" (click)="onNoClick()">Anuluj</button>
-        <div style="margin-left: 15px;" [matTooltip]="groupForm.invalid ? 'Należy podać wszystkie wymagane pola.' : ''">
+        <div style="margin-left: 15px;" [matTooltip]="courseForm.invalid ? 'Należy podać wszystkie wymagane pola.' : ''">
             <button 
                 mat-flat-button
                 type="submit" 
                 cdkFocusInitial
-                [disabled]="groupForm.invalid"
+                [disabled]="courseForm.invalid"
                 (click)="submit()">Utwórz
             </button>
         </div>

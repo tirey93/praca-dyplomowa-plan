@@ -25,7 +25,7 @@ namespace WebSchedule.Controllers.Authentication
         }
 
         [HttpPost("Register")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [AllowAnonymous]
@@ -34,7 +34,7 @@ namespace WebSchedule.Controllers.Authentication
             try
             {
                 await _mediator.Send(command);
-                return Ok();
+                return NoContent();
             }
             catch (ApplicationException ex)
             {

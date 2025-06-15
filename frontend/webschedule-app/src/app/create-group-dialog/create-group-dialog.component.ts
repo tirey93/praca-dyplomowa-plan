@@ -33,10 +33,8 @@ export class CreateGroupDialogComponent {
   studyModes = Constants.StudyModes;
   studyLevels = Constants.StudyLevels;
   filteredOptionsCourse$: Observable<SelectValue[]>;
-  allCourses$: Observable<SelectValue[]>;
+  allCourses: SelectValue[] = [];
   nextSubgroup$: Observable<string>;
-  refreshCourses$ = new Subject<void>();
-  newObs$ = new Subject<void>();
 
   groupForm = new FormGroup({
     year: new FormControl(this.getCurrentYear(), { validators: [Validators.min(this.getLowestYear()), Validators.max(this.getHighestYear())] }),
@@ -50,37 +48,21 @@ export class CreateGroupDialogComponent {
     private dialogRef: MatDialogRef<CreateGroupDialogComponent>,
     private groupService: GroupRepositoryService,
     private readonly dialog: MatDialog,
-    studyCourseService: StudyCourseRepository,
+    private studyCourseService: StudyCourseRepository,
   ) {
-     this.allCourses$ = this.refreshCourses$.pipe(
-      startWith(undefined),
-      switchMap(() => {
-        return studyCourseService.get$().pipe(
-          map(groupResponses => groupResponses.map(x => ({ 
-            id: x.id, 
-            displayText: x.name
-          }) as SelectValue)),
-        );
-      }),
-      shareReplay({ bufferSize: 1, refCount: true }), 
-    );
+    this.updateStudyCourses(null);
     
-    this.filteredOptionsCourse$ = combineLatest([
-      this.groupForm.controls.course.valueChanges.pipe(
-        startWith(this.groupForm.controls.course.value || '')
-      ),
-      this.allCourses$
-    ]).pipe(
-      map(([value, courses]) => {
-        if (!courses) {
+    this.filteredOptionsCourse$ = this.groupForm.controls.course.valueChanges.pipe(
+      map((value) => {
+        if (!this.allCourses) {
           return [];
         }
         const filterValue = (typeof value === 'string' ? value : value?.displayText || '').toLowerCase();
         
         if (!filterValue.trim()) {
-          return courses.slice();
+          return this.allCourses.slice();
         }
-        return courses.filter(course => course.displayText.toLowerCase().includes(filterValue));
+        return this.allCourses.filter(course => course.displayText.toLowerCase().includes(filterValue));
       }),
     );
 
@@ -115,12 +97,28 @@ export class CreateGroupDialogComponent {
     );
   }
 
+  private updateStudyCourses(studyCourse: SelectValue | null) {
+    this.studyCourseService.get$().pipe(
+      map(groupResponses => groupResponses.map(x => ({
+        id: x.id,
+        displayText: x.name
+      }) as SelectValue))
+    ).subscribe({
+      next: (value) => {
+        this.allCourses = value
+        this.groupForm.controls.course.setValue(studyCourse);
+      }
+    });
+  }
+
   handleCreateCourse() {
     this.dialog.open(CreateCourseDialogComponent, {
       maxWidth: '100vw',
       autoFocus: false
-    }).afterClosed().subscribe(result => {
-      this.refreshCourses$.next();
+    }).afterClosed().subscribe((result:SelectValue | null) => {
+      if(!result)
+        return;
+      this.updateStudyCourses(result);
     });
   }
   onNoClick(): void {

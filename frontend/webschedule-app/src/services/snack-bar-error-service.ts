@@ -13,11 +13,11 @@ import { TranslateService } from '@ngx-translate/core';
         private translate: TranslateService) { }
 
     public open(error: HttpErrorResponse) {
-        if(error.status === 500) {
+        if(error.status === 500 || error.status === 0) {
           this.snackBar.open(
-          this.translate.instant('snackbar.unknown.error'), 
-          this.translate.instant('snackbar.dismiss'),
-          { duration: 10000 });
+            this.translate.instant('snackbar.unknown.error'), 
+            this.translate.instant('snackbar.dismiss'),
+            { duration: 10000 });
           console.error(error.error.message)
         } else{
           this.snackBar.open(

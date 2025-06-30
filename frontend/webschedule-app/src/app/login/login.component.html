@@ -2,14 +2,14 @@
     <form class="login-form" [formGroup]="formLogin" (ngSubmit)="onSubmit()">
         <p>
             <mat-form-field appearance="outline">
-            <mat-label>Login</mat-label>
-            <input formControlName="username" matInput placeholder="login">
+                <mat-label>Login</mat-label>
+                <input formControlName="username" matInput placeholder="Login">
             </mat-form-field>
         </p>
         <p>
             <mat-form-field appearance="outline">
-            <mat-label>Hasło</mat-label>
-            <input formControlName="password" type="password" matInput placeholder="password">
+                <mat-label>Hasło</mat-label>
+                <input formControlName="password" type="password" matInput placeholder="Hasło">
             </mat-form-field>
         </p>
         <button type="submit" mat-fab extended>

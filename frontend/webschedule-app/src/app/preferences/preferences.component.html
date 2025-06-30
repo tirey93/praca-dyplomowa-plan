@@ -1,5 +1,5 @@
 <title mat-dialog-title>Zmień dane użytkownika</title>
-<mat-dialog-content style="max-width: min-content;">
+<mat-dialog-content style="max-width: min-content;" (click)="test()">
     <mat-tab-group>
         <form [formGroup]="prefForm">
             <mat-tab label="Login">
@@ -16,59 +16,27 @@
             </mat-tab>
             <mat-tab  class="form-container" label="Hasło"> 
                 <div>
-                     <mat-form-field class="col-md-6">
-                        <mat-label>New Password</mat-label>
-                        <input type="password" matInput formControlName="newPassword" placeholder="Enter New Password"
-                        [errorStateMatcher]="matcher"
-                        >
-                        <mat-error *ngIf="prefForm.controls.newPassword.hasError('required')">
-                            New Password is <strong>required</strong>
+                    <mat-form-field style="margin-top: 20px;" appearance="outline" class="dialog-full-width">
+                        <mat-label>Nowe hasło</mat-label>
+                        <input required formControlName="newPassword" type="password" matInput>
+                        <mat-error *ngIf="prefForm.get('newPassword')?.errors?.['required']">Hasło jest wymagane</mat-error>
+                        <mat-error *ngIf="prefForm.get('newPassword')?.errors?.['minlength']">
+                            Hasło musi mieć co najmniej 8 znaków
+                        </mat-error>
+                        <mat-error *ngIf="prefForm.get('newPassword')?.errors?.['passwordStrength']">
+                            Hasło musi zawieraćco najmniej jedną wielką literę, małą literę, cyfrę i znak specjalny
                         </mat-error>
                     </mat-form-field>
                 </div>
-                <div class="row mt-3" *ngIf="prefForm.controls.newPassword.hasError('pattern')">
-                    <mat-error *ngIf="prefForm.controls.newPassword.hasError('pattern')">
-                        <span class="danger">Password Must contain below conditions.</span>
-                        <ul>
-                            <li [ngClass]="{'text-success':checkValidations(prefForm.controls.newPassword,'uppercase'), 'danger': !checkValidations(prefForm.controls.newPassword,'uppercase')}">Min 1 Uppercase Letter.</li>
-                            <li [ngClass]="{'text-success':checkValidations(prefForm.controls.newPassword,'lowercase'), 'danger': !checkValidations(prefForm.controls.newPassword,'lowercase')}">Min 1 Lowercase Letter.</li>
-                            <li [ngClass]="{'text-success':checkValidations(prefForm.controls.newPassword,'special-character'), 'danger': !checkValidations(prefForm.controls.newPassword,'special-character')}">Min 1 Special Character.</li>
-                            <li [ngClass]="{'text-success':checkValidations(prefForm.controls.newPassword,'number'), 'danger': !checkValidations(prefForm.controls.newPassword,'number')}">Min 1 Number.</li>
-                            <li [ngClass]="{'text-success':checkValidations(prefForm.controls.newPassword,'length'), 'danger': !checkValidations(prefForm.controls.newPassword,'length')}">Min 8 Characters.</li>
-                            <li [ngClass]="{'text-success':checkValidations(prefForm.controls.newPassword,'length'), 'danger': !checkValidations(prefForm.controls.newPassword,'length')}">Max 16 Characters.</li>
-                        </ul>
-                    </mat-error>
-                </div>
-
                 <div>
-                    <mat-form-field class="col-md-6">
-                        <mat-label>Confirm New Password</mat-label>
-                        <input type="password" matInput formControlName="confirmNewPassword" placeholder="Enter Confirm New Password"
-                        [errorStateMatcher]="matcher"
-                        >
-                        <mat-error *ngIf="prefForm.controls.confirmNewPassword.hasError('required')">
-                            Confirm New Password is <strong>required</strong>
+                    <mat-form-field style="margin-top: 20px;" appearance="outline" class="dialog-full-width">
+                        <mat-label>Powtórz hasło</mat-label>
+                        <input formControlName="repeatPassword" type="password" matInput>
+                          <mat-error>
+                            Hasła nie są identyczne
                         </mat-error>
-                    </mat-form-field>
+                    </mat-form-field> 
                 </div> 
-                <div class="row mt-3" *ngIf="prefForm.controls.confirmNewPassword.hasError('pattern')">
-                    <mat-error *ngIf="prefForm.controls.confirmNewPassword.hasError('pattern')">
-                        <span class="danger">Password Must contain below conditions.</span>
-                        <ul>
-                            <li [ngClass]="{'text-success':checkValidations(prefForm.controls.confirmNewPassword,'uppercase'), 'danger': !checkValidations(prefForm.controls.confirmNewPassword,'uppercase')}">Min 1 Uppercase Letter.</li>
-                            <li [ngClass]="{'text-success':checkValidations(prefForm.controls.confirmNewPassword,'lowercase'), 'danger': !checkValidations(prefForm.controls.confirmNewPassword,'lowercase')}">Min 1 Lowercase Letter.</li>
-                            <li [ngClass]="{'text-success':checkValidations(prefForm.controls.confirmNewPassword,'special-character'), 'danger': !checkValidations(prefForm.controls.confirmNewPassword,'special-character')}">Min 1 Special Character.</li>
-                            <li [ngClass]="{'text-success':checkValidations(prefForm.controls.confirmNewPassword,'number'), 'danger': !checkValidations(prefForm.controls.confirmNewPassword,'number')}">Min 1 Number.</li>
-                            <li [ngClass]="{'text-success':checkValidations(prefForm.controls.confirmNewPassword,'length'), 'danger': !checkValidations(prefForm.controls.confirmNewPassword,'length')}">Min 8 Characters.</li>
-                            <li [ngClass]="{'text-success':checkValidations(prefForm.controls.confirmNewPassword,'length'), 'danger': !checkValidations(prefForm.controls.confirmNewPassword,'length')}">Max 16 Characters.</li>
-                        </ul>
-                    </mat-error>
-                </div>
-                 <div class="row mt-1" *ngIf="prefForm.hasError('notMatched')">
-                    <mat-error *ngIf="prefForm.hasError('notMatched')">
-                        <span class="danger">Passwords are not matched.</span>
-                    </mat-error>
-                </div>
             </mat-tab>
         </form>
     </mat-tab-group>

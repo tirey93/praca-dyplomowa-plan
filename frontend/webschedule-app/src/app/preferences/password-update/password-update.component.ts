@@ -108,6 +108,10 @@ export class PasswordUpdateComponent {
     return result;
   }
 
+  onNoClick() {
+    this.dialogRef.close();
+  }
+
   submit() {
     this.userRepository.updatePassword$({
       currentPassword: this.prefForm.controls.currentPassword.value!, 

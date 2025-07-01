@@ -20,6 +20,7 @@ import { PreferencesComponent } from '../preferences.component';
   styleUrl: './login-update.component.scss'
 })
 export class LoginUpdateComponent {
+
   defaultLogin = '';
   prefForm = new FormGroup({
     login: new FormControl()
@@ -40,6 +41,10 @@ export class LoginUpdateComponent {
         this.prefForm.disable();
       }
     })
+  }
+  
+  onNoClick() {
+    this.dialogRef.close();
   }
 
   submit() {

@@ -42,6 +42,10 @@ export class DisplayNameUpdateComponent {
     })
   }
 
+  onNoClick() {
+    this.dialogRef.close();
+  }
+
   submit() {
     this.userRepository.updateDisplayName$({displayName: this.prefForm.controls.displayName.value}).subscribe({
       next: () => {

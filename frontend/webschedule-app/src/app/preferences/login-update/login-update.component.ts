@@ -7,6 +7,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { UserRepositoryService } from '../../../services/user/userRepository.service';
 import { SnackBarErrorService } from '../../../services/snack-bar-error-service';
+import { MatDialogRef } from '@angular/material/dialog';
+import { PreferencesComponent } from '../preferences.component';
 
 @Component({
   selector: 'app-login-update',
@@ -18,20 +20,15 @@ import { SnackBarErrorService } from '../../../services/snack-bar-error-service'
   styleUrl: './login-update.component.scss'
 })
 export class LoginUpdateComponent {
-submit() {
-throw new Error('Method not implemented.');
-}
-onNoClick() {
-throw new Error('Method not implemented.');
-}
   defaultLogin = '';
   prefForm = new FormGroup({
     login: new FormControl()
   });
 
   constructor(
-    userRepository: UserRepositoryService,
-    private snackBarErrorService: SnackBarErrorService
+    private userRepository: UserRepositoryService,
+    private snackBarErrorService: SnackBarErrorService,
+    private dialogRef: MatDialogRef<PreferencesComponent>,
   ) {
     userRepository.getLoggedIn$().subscribe({
       next: (response) => {
@@ -41,6 +38,18 @@ throw new Error('Method not implemented.');
       error: (err) => {
         this.snackBarErrorService.open(err);
         this.prefForm.disable();
+      }
+    })
+  }
+
+  submit() {
+    this.userRepository.updateLogin$({login: this.prefForm.controls.login.value}).subscribe({
+      next: () => {
+        this.dialogRef.close();
+      },
+      error: (err) => {
+        this.snackBarErrorService.open(err);
+        this.prefForm.setErrors({'incorrect': true})
       }
     })
   }

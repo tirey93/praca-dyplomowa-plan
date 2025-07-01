@@ -34,9 +34,6 @@ export class PasswordUpdateComponent {
 submit() {
 throw new Error('Method not implemented.');
 }
-onNoClick() {
-throw new Error('Method not implemented.');
-}
   matcher = new MyErrorStateMatcher();
   prefForm = new FormGroup({
     oldPassword: new FormControl('', [Validators.required]),

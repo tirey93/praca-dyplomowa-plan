@@ -21,9 +21,6 @@ export class DisplayNameUpdateComponent {
 submit() {
 throw new Error('Method not implemented.');
 }
-onNoClick() {
-throw new Error('Method not implemented.');
-}
   defaultDisplayName = '';
   prefForm = new FormGroup({
     displayName: new FormControl()

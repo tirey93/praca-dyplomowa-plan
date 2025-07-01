@@ -25,7 +25,7 @@ namespace WebSchedule.Infrastructure.Repositories
 
         public bool UserExists(string userName)
         {
-            return _dbSet.Any(x => x.Name == userName);
+            return _dbSet.Any(x => x.Login == userName);
         }
 
         public bool UserExists(int userId)
@@ -35,7 +35,7 @@ namespace WebSchedule.Infrastructure.Repositories
 
         public User TryLoginByPassword(string userName, string hashedPassword)
         {
-            return _dbSet.FirstOrDefault(x => x.Name == userName && x.HashedPassword.ToLower() == hashedPassword.ToLower());
+            return _dbSet.FirstOrDefault(x => x.Login == userName && x.HashedPassword.ToLower() == hashedPassword.ToLower());
         }
     }
 }

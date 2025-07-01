@@ -1,0 +1,15 @@
+<form [formGroup]="prefForm">
+    <mat-form-field style="margin-top: 20px;" appearance="outline" class="dialog-full-width">
+        <mat-label>Nazwa</mat-label>
+        <input required type="text" matInput formControlName="displayName" placeholder="{{defaultDisplayName}}">
+    </mat-form-field>
+</form>
+<div style="margin: 20px 0; direction: rtl;" [matTooltip]="prefForm.invalid ? 'Należy podać wszystkie wymagane pola.' : ''">
+    <button 
+        mat-flat-button
+        type="submit" 
+        cdkFocusInitial
+        [disabled]="prefForm.invalid"
+        (click)="submit()">Zapisz
+    </button>
+</div>

@@ -7,6 +7,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { UserRepositoryService } from '../../../services/user/userRepository.service';
 import { SnackBarErrorService } from '../../../services/snack-bar-error-service';
+import { PreferencesComponent } from '../preferences.component';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-display-name-update',
@@ -18,17 +20,15 @@ import { SnackBarErrorService } from '../../../services/snack-bar-error-service'
   styleUrl: './display-name-update.component.scss'
 })
 export class DisplayNameUpdateComponent {
-submit() {
-throw new Error('Method not implemented.');
-}
   defaultDisplayName = '';
   prefForm = new FormGroup({
     displayName: new FormControl()
   });
 
   constructor(
-    userRepository: UserRepositoryService,
-    private snackBarErrorService: SnackBarErrorService
+    private userRepository: UserRepositoryService,
+    private snackBarErrorService: SnackBarErrorService,
+    private dialogRef: MatDialogRef<PreferencesComponent>,
   ) {
     userRepository.getLoggedIn$().subscribe({
       next: (response) => {
@@ -38,6 +38,18 @@ throw new Error('Method not implemented.');
       error: (err) => {
         this.snackBarErrorService.open(err);
         this.prefForm.disable();
+      }
+    })
+  }
+
+  submit() {
+    this.userRepository.updateDisplayName$({displayName: this.prefForm.controls.displayName.value}).subscribe({
+      next: () => {
+        this.dialogRef.close();
+      },
+      error: (err) => {
+        this.snackBarErrorService.open(err);
+        this.prefForm.setErrors({'incorrect': true})
       }
     })
   }

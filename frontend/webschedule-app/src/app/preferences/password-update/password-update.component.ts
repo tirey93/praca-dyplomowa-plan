@@ -6,6 +6,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { UserRepositoryService } from '../../../services/user/userRepository.service';
+import { PreferencesComponent } from '../preferences.component';
+import { MatDialogRef } from '@angular/material/dialog';
+import { SnackBarErrorService } from '../../../services/snack-bar-error-service';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -31,12 +35,9 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
   styleUrl: './password-update.component.scss'
 })
 export class PasswordUpdateComponent {
-submit() {
-throw new Error('Method not implemented.');
-}
   matcher = new MyErrorStateMatcher();
   prefForm = new FormGroup({
-    oldPassword: new FormControl('', [Validators.required]),
+    currentPassword: new FormControl('', [Validators.required]),
     newPassword: new FormControl('', [
       Validators.required, 
       Validators.minLength(8), 
@@ -47,6 +48,13 @@ throw new Error('Method not implemented.');
     ]),
     repeatPassword: new FormControl('', [Validators.required]),
   }, {validators: [this.passwordMatchValidator]});
+
+  constructor(
+    private userRepository: UserRepositoryService,
+    private snackBarErrorService: SnackBarErrorService,
+    private dialogRef: MatDialogRef<PreferencesComponent>
+  ) {
+  }
 
   upperCaseValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -98,5 +106,20 @@ throw new Error('Method not implemented.');
 
     const result = password === repeatPassword ? null : { passwordMismatch: true }
     return result;
+  }
+
+  submit() {
+    this.userRepository.updatePassword$({
+      currentPassword: this.prefForm.controls.currentPassword.value!, 
+      newPassword: this.prefForm.controls.newPassword.value!
+    }).subscribe({
+      next: () => {
+        this.dialogRef.close();
+      },
+      error: (err) => {
+        this.snackBarErrorService.open(err);
+        this.prefForm.setErrors({'incorrect': true})
+      }
+    })
   }
 }

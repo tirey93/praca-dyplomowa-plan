@@ -4,6 +4,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../../enviroments/enviroments';
 import { UserResponse } from './dtos/userResponse';
 import { UpdateUserLoginRequest } from './dtos/updateUserLoginRequest';
+import { UpdateUserDisplayNameRequest } from './dtos/updateUserDisplayNameRequest';
+import { UpdateUserPasswordRequest } from './dtos/updateUserPasswordRequest';
 
 @Injectable({
     providedIn: 'root'
@@ -23,6 +25,22 @@ import { UpdateUserLoginRequest } from './dtos/updateUserLoginRequest';
 
     updateLogin$(command: UpdateUserLoginRequest) {
       return this.http.put(`${this.url}/Login`, command, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
+    updateDisplayName$(command: UpdateUserDisplayNameRequest) {
+      return this.http.put(`${this.url}/DisplayName`, command, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
+    updatePassword$(command: UpdateUserPasswordRequest) {
+      return this.http.put(`${this.url}/Password`, command, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

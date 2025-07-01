@@ -47,6 +47,7 @@ throw new Error('Method not implemented.');
   prefForm = new FormGroup({
     login: new FormControl(),
     displayName: new FormControl(),
+    oldPassword: new FormControl('', [Validators.required]),
     newPassword: new FormControl('', [
       Validators.required, 
       Validators.minLength(8), 

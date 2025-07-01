@@ -14,34 +14,36 @@
                     <input required type="text" matInput formControlName="displayName" placeholder="{{defaultDisplayName}}">
                 </mat-form-field>
             </mat-tab>
-            <mat-tab  class="form-container" label="Hasło"> 
-                <div>
-                    <mat-form-field style="margin-top: 20px;" appearance="outline" class="dialog-full-width">
-                        <mat-label>Nowe hasło</mat-label>
-                        <input required formControlName="newPassword" type="password" matInput>
-                        <mat-error>
-                            <span class="danger">Nowe hasło musi spełniać każdy z poniższych warunków.</span>
-                            <ul>
-                                <li *ngIf="prefForm.controls.newPassword.errors?.['required']">Hasło jest wymagane</li>
-                                <li *ngIf="prefForm.get('newPassword')?.errors?.['minlength']">Hasło musi mieć co najmniej 8 znaków</li>
-                                <li *ngIf="prefForm.get('newPassword')?.errors?.['passwordUpperCase']">Hasło musi zawierać co najmniej jedną wielką literę</li>
-                                <li *ngIf="prefForm.get('newPassword')?.errors?.['passwordLowerCase']">Hasło musi zawierać co najmniej jedną małą literę</li>
-                                <li *ngIf="prefForm.get('newPassword')?.errors?.['passwordNumeric']">Hasło musi zawierać co najmniej jedną cyfrę</li>
-                                <li *ngIf="prefForm.get('newPassword')?.errors?.['passwordSpecial']">Hasło musi zawierać co najmniej jeden znak specjalny</li>
-                            </ul>
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-
-                <div>
-                    <mat-form-field style="margin-top: 20px;" appearance="outline" class="dialog-full-width">
-                        <mat-label>Powtórz hasło</mat-label>
-                        <input formControlName="repeatPassword" type="password" matInput [errorStateMatcher]="matcher">
-                        <mat-error>
-                            Hasła nie są identyczne
-                        </mat-error>
-                    </mat-form-field> 
-                </div> 
+            <mat-tab  class="form-container" label="Hasło">
+                <mat-form-field style="margin-top: 20px;" appearance="outline" class="dialog-full-width">
+                    <mat-label>Stare hasło</mat-label>
+                    <input formControlName="oldPassword" type="password" matInput>
+                    <mat-error *ngIf="prefForm.controls.oldPassword.errors?.['required']">
+                        Stare hasło jest wymagane
+                    </mat-error>
+                </mat-form-field> 
+                <mat-form-field style="margin-top: 20px;" appearance="outline" class="dialog-full-width">
+                    <mat-label>Nowe hasło</mat-label>
+                    <input required formControlName="newPassword" type="password" matInput>
+                    <mat-error>
+                        <span class="danger">Nowe hasło musi spełniać każdy z poniższych warunków.</span>
+                        <ul>
+                            <li *ngIf="prefForm.controls.newPassword.errors?.['required']">Hasło jest wymagane</li>
+                            <li *ngIf="prefForm.get('newPassword')?.errors?.['minlength']">Hasło musi mieć co najmniej 8 znaków</li>
+                            <li *ngIf="prefForm.get('newPassword')?.errors?.['passwordUpperCase']">Hasło musi zawierać co najmniej jedną wielką literę</li>
+                            <li *ngIf="prefForm.get('newPassword')?.errors?.['passwordLowerCase']">Hasło musi zawierać co najmniej jedną małą literę</li>
+                            <li *ngIf="prefForm.get('newPassword')?.errors?.['passwordNumeric']">Hasło musi zawierać co najmniej jedną cyfrę</li>
+                            <li *ngIf="prefForm.get('newPassword')?.errors?.['passwordSpecial']">Hasło musi zawierać co najmniej jeden znak specjalny</li>
+                        </ul>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field style="margin-top: 20px;" appearance="outline" class="dialog-full-width">
+                    <mat-label>Powtórz hasło</mat-label>
+                    <input formControlName="repeatPassword" type="password" matInput [errorStateMatcher]="matcher">
+                    <mat-error>
+                        Hasła nie są identyczne
+                    </mat-error>
+                </mat-form-field> 
             </mat-tab>
         </form>
     </mat-tab-group>

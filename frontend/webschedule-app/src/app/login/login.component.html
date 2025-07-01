@@ -22,6 +22,9 @@
         @if (noConnection) {
             <mat-error class="login-error">Brak połączenia z serwerem</mat-error>
         }
+        <a style="margin-top: 20px;" (click)="handleCreateNewUser()" class="dialog-description dialog-bottom-text">
+            Nie masz konta? Kliknij, aby je stworzyć.
+        </a>
     </form>
     <button (click)="backdoor()" style="margin-top: 20px;" mat-fab extended>
         <mat-icon>account_circle</mat-icon>

@@ -10,6 +10,7 @@ import { UserRepositoryService } from '../../../services/user/userRepository.ser
 import { PreferencesComponent } from '../preferences.component';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SnackBarErrorService } from '../../../services/snack-bar-error-service';
+import { PasswordValidationHelper } from '../../../helpers/passwordValidationHelper';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -41,71 +42,19 @@ export class PasswordUpdateComponent {
     newPassword: new FormControl('', [
       Validators.required, 
       Validators.minLength(8), 
-      this.upperCaseValidator(),
-      this.lowerCaseValidator(),
-      this.numericValidator(),
-      this.specialValidator(),
+      PasswordValidationHelper.upperCaseValidator(),
+      PasswordValidationHelper.lowerCaseValidator(),
+      PasswordValidationHelper.numericValidator(),
+      PasswordValidationHelper.specialValidator(),
     ]),
     repeatPassword: new FormControl('', [Validators.required]),
-  }, {validators: [this.passwordMatchValidator]});
+  }, {validators: [PasswordValidationHelper.passwordMatchValidator]});
 
   constructor(
     private userRepository: UserRepositoryService,
     private snackBarErrorService: SnackBarErrorService,
     private dialogRef: MatDialogRef<PreferencesComponent>
   ) {
-  }
-
-  upperCaseValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const value = control.value;
-      if (!value) {
-        return null;
-      }
-      const hasUpperCase = /[A-Z]/.test(value);
-      return !hasUpperCase ? { passwordUpperCase: true } : null;
-    };
-  }
-
-  lowerCaseValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const value = control.value;
-      if (!value) {
-        return null;
-      }
-      const hasLowerCase = /[a-z]/.test(value);
-      return !hasLowerCase ? { passwordLowerCase: true } : null;
-    };
-  }
-
-  numericValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const value = control.value;
-      if (!value) {
-        return null;
-      }
-      const hasNumeric = /[0-9]/.test(value);
-      return !hasNumeric ? { passwordNumeric: true } : null;
-    };
-  }
-
-  specialValidator(): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const value = control.value;
-      if (!value) {
-        return null;
-      }
-      const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(value);
-      return !hasSpecial ? { passwordSpecial: true } : null;
-    };
-  }
-
-  passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
-    const password = group.get('newPassword')?.value;
-    const repeatPassword = group.get('repeatPassword')?.value;
-
-    const result = password === repeatPassword ? null : { passwordMismatch: true }
-    return result;
   }
 
   onNoClick() {

@@ -1,0 +1,43 @@
+<title mat-dialog-title>Utwórz Użytkownika</title>
+<mat-dialog-content>
+    <form [formGroup]="userForm">
+        <mat-form-field style="margin-top: 20px;" appearance="outline" class="dialog-full-width">
+            <mat-label>Nowe hasło</mat-label>
+            <input required formControlName="newPassword" type="password" matInput>
+            <mat-error>
+                <span class="danger">Nowe hasło musi spełniać każdy z poniższych warunków.</span>
+                <ul>
+                    <li *ngIf="userForm.controls.newPassword.errors?.['required']">Hasło jest wymagane</li>
+                    <li *ngIf="userForm.get('newPassword')?.errors?.['minlength']">Hasło musi mieć co najmniej 8 znaków</li>
+                    <li *ngIf="userForm.get('newPassword')?.errors?.['passwordUpperCase']">Hasło musi zawierać co najmniej jedną wielką literę</li>
+                    <li *ngIf="userForm.get('newPassword')?.errors?.['passwordLowerCase']">Hasło musi zawierać co najmniej jedną małą literę</li>
+                    <li *ngIf="userForm.get('newPassword')?.errors?.['passwordNumeric']">Hasło musi zawierać co najmniej jedną cyfrę</li>
+                    <li *ngIf="userForm.get('newPassword')?.errors?.['passwordSpecial']">Hasło musi zawierać co najmniej jeden znak specjalny</li>
+                </ul>
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field style="margin-top: 20px;" appearance="outline" class="dialog-full-width">
+            <mat-label>Powtórz hasło</mat-label>
+            <input formControlName="repeatPassword" type="password" matInput [errorStateMatcher]="matcher">
+            <mat-error>
+                Hasła nie są identyczne
+            </mat-error>
+        </mat-form-field> 
+    </form>
+    <mat-dialog-actions>
+        <button 
+            mat-raised-button
+            cdkFocusInitial
+            (click)="onNoClick()">Anuluj
+        </button>
+        <div style="margin-left: 8px; margin-top: 8px;" [matTooltip]="userForm.invalid ? 'Należy podać wszystkie wymagane pola.' : ''">
+            <button
+                mat-flat-button
+                type="submit" 
+                cdkFocusInitial
+                [disabled]="userForm.invalid"
+                (click)="submit()">Utwórz konto
+            </button>
+        </div>
+    </mat-dialog-actions>
+</mat-dialog-content>

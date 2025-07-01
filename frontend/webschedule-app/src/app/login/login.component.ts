@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { AuthenticationRepositoryService } from '../../services/authentication/authenticationRepository.service';
 import { LoginService } from '../../services/login.service';
 import { SnackBarErrorService } from '../../services/snack-bar-error-service';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateUserComponent } from './create-user/create-user.component';
 
 
 interface LoginForm {
@@ -26,7 +28,8 @@ export class LoginComponent {
     private authenticationRepository: AuthenticationRepositoryService,
     private router: Router,
     private loginService: LoginService,
-    private snackBarErrorService: SnackBarErrorService
+    private snackBarErrorService: SnackBarErrorService,
+    private readonly dialog: MatDialog,
   ) {
     }
 
@@ -43,6 +46,13 @@ export class LoginComponent {
 
   backdoor() {
     this.tryLogin('string', 'string');
+  }
+
+  handleCreateNewUser() {
+    this.dialog.open(CreateUserComponent, {
+      maxWidth: '30vw',
+      autoFocus: false
+    })
   }
 
   onSubmit() {

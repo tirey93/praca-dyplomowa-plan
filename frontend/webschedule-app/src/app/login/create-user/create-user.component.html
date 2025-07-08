@@ -1,7 +1,19 @@
 <title mat-dialog-title>Utwórz Użytkownika</title>
 <mat-dialog-content>
     <form [formGroup]="userForm">
-        <mat-form-field style="margin-top: 20px;" appearance="outline" class="dialog-full-width">
+        <div class="dialog-content-half-container">
+            <mat-form-field appearance="outline" class="dialog-full-width"
+                matTooltip='Login, który jest niezbędny do zalogowania się.'>
+                <mat-label>Login</mat-label>
+                <input required formControlName="login" matInput>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="dialog-full-width"
+                matTooltip='Nazwa użytkownika widoczna dla wszystkich.'>
+                <mat-label>Nazwa</mat-label>
+                <input required formControlName="displayName" matInput>
+            </mat-form-field>
+        </div>
+        <mat-form-field style="margin-top: 30px;" appearance="outline" class="dialog-full-width">
             <mat-label>Nowe hasło</mat-label>
             <input required formControlName="newPassword" type="password" matInput>
             <mat-error>

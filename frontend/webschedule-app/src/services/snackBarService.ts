@@ -6,13 +6,13 @@ import { TranslateService } from '@ngx-translate/core';
 @Injectable({
     providedIn: 'root'
   })
-  export class SnackBarErrorService {
+  export class SnackBarService {
 
     constructor(
         private snackBar: MatSnackBar,
         private translate: TranslateService) { }
 
-    public open(error: HttpErrorResponse) {
+    public openError(error: HttpErrorResponse) {
         if(error.status === 500 || error.status === 0) {
           this.snackBar.open(
             this.translate.instant('snackbar.unknown.error'), 
@@ -25,5 +25,12 @@ import { TranslateService } from '@ngx-translate/core';
             this.translate.instant('snackbar.dismiss'),
             { duration: 10000 });
         }
+    }
+    
+    public openMessage(key: string) {
+      this.snackBar.open(
+          this.translate.instant(key), 
+          this.translate.instant('snackbar.dismiss'),
+          { duration: 5000 });
     }
   }

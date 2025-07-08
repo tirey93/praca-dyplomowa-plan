@@ -19,7 +19,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserInGroupService } from '../../services/userInGroup/user-in-group.service';
-import { SnackBarErrorService } from '../../services/snack-bar-error-service';
+import { SnackBarService } from '../../services/snackBarService';
 import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
 import { GroupRepositoryService } from '../../services/group/groupRepository.service';
 import { GroupHelper } from '../../helpers/groupHelper';
@@ -65,7 +65,7 @@ export class SearchGroupDialogComponent {
   constructor(
     private groupService: GroupRepositoryService,
     private userInGroupService: UserInGroupService,
-    private snackBarErrorService: SnackBarErrorService,
+    private snackBarService: SnackBarService,
     private readonly dialog: MatDialog,
     private dialogRef: MatDialogRef<SearchGroupDialogComponent>
   ) {
@@ -99,7 +99,7 @@ export class SearchGroupDialogComponent {
         }
       }),
       error: (err) => {
-        this.snackBarErrorService.open(err);
+        this.snackBarService.openError(err);
       },
     })
   }
@@ -127,7 +127,7 @@ export class SearchGroupDialogComponent {
         );
       },
       error:(err) => {
-        this.snackBarErrorService.open(err);
+        this.snackBarService.openError(err);
         if (!this.groups?.data)
           return;
         this.groups.data = this.groups!.data.map(g => 

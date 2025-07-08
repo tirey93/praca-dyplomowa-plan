@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CommonModule } from '@angular/common';
 import { UserRepositoryService } from '../../../services/user/userRepository.service';
-import { SnackBarErrorService } from '../../../services/snack-bar-error-service';
+import { SnackBarService } from '../../../services/snackBarService';
 import { MatDialogRef } from '@angular/material/dialog';
 import { PreferencesComponent } from '../preferences.component';
 
@@ -28,7 +28,7 @@ export class LoginUpdateComponent {
 
   constructor(
     private userRepository: UserRepositoryService,
-    private snackBarErrorService: SnackBarErrorService,
+    private snackBarService: SnackBarService,
     private dialogRef: MatDialogRef<PreferencesComponent>,
   ) {
     userRepository.getLoggedIn$().subscribe({
@@ -37,7 +37,7 @@ export class LoginUpdateComponent {
         this.prefForm.controls.login.setValue(response.name)
       },
       error: (err) => {
-        this.snackBarErrorService.open(err);
+        this.snackBarService.openError(err);
         this.prefForm.disable();
       }
     })
@@ -53,7 +53,7 @@ export class LoginUpdateComponent {
         this.dialogRef.close();
       },
       error: (err) => {
-        this.snackBarErrorService.open(err);
+        this.snackBarService.openError(err);
         this.prefForm.setErrors({'incorrect': true})
       }
     })

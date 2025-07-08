@@ -29,7 +29,7 @@ namespace WebSchedule.Controllers.Authentication
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [AllowAnonymous]
-        public async Task<ActionResult<UserResponse>> Register([FromBody] RegisterCommand command)
+        public async Task<ActionResult> Register([FromBody] RegisterCommand command)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace WebSchedule.Controllers.Authentication
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [AllowAnonymous]
-        public async Task<ActionResult<UserResponse>> Login([FromBody] LoginQuery query)
+        public async Task<ActionResult> Login([FromBody] LoginQuery query)
         {
             try
             {

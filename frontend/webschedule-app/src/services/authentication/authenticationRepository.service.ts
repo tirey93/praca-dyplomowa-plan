@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { LoginRequest } from './dtos/loginRequest';
 import { LoginResponse } from './dtos/loginResponse';
 import { environment } from '../../enviroments/enviroments';
+import { RegisterRequest } from './dtos/registerRequest';
 
 @Injectable({
     providedIn: 'root'
@@ -14,5 +15,9 @@ import { environment } from '../../enviroments/enviroments';
 
     tryLogin$(loginRequest: LoginRequest) {
       return this.http.post<LoginResponse>(`${this.url}/Login`, loginRequest)
+    }
+
+    register$(registerRequest: RegisterRequest) {
+      return this.http.post(`${this.url}/Register`, registerRequest)
     }
   }

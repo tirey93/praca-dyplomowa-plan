@@ -33,9 +33,9 @@ namespace WebSchedule.Infrastructure.Repositories
             return _dbSet.Any(x => x.Id == userId);
         }
 
-        public User TryLoginByPassword(string userName, string hashedPassword)
+        public User TryLoginByPassword(string login, string hashedPassword)
         {
-            return _dbSet.FirstOrDefault(x => x.Login == userName && x.HashedPassword.ToLower() == hashedPassword.ToLower());
+            return _dbSet.FirstOrDefault(x => x.Login == login && x.HashedPassword.ToLower() == hashedPassword.ToLower());
         }
     }
 }

@@ -7,13 +7,13 @@ import { FormGroup, FormControl, ReactiveFormsModule, Validators, FormsModule  }
 import { Router } from '@angular/router';
 import { AuthenticationRepositoryService } from '../../services/authentication/authenticationRepository.service';
 import { LoginService } from '../../services/login.service';
-import { SnackBarErrorService } from '../../services/snack-bar-error-service';
+import { SnackBarService } from '../../services/snackBarService';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateUserComponent } from './create-user/create-user.component';
 
 
 interface LoginForm {
-  username: FormControl<string | null>;
+  login: FormControl<string | null>;
   password: FormControl<string | null>;
 }
 
@@ -28,13 +28,13 @@ export class LoginComponent {
     private authenticationRepository: AuthenticationRepositoryService,
     private router: Router,
     private loginService: LoginService,
-    private snackBarErrorService: SnackBarErrorService,
+    private snackBarService: SnackBarService,
     private readonly dialog: MatDialog,
   ) {
     }
 
   formLogin: FormGroup<LoginForm> = new FormGroup({
-    username: new FormControl('', [
+    login: new FormControl('', [
       Validators.required
     ]),
     password: new FormControl('', [
@@ -56,12 +56,12 @@ export class LoginComponent {
   }
 
   onSubmit() {
-    this.tryLogin(this.formLogin.controls.username.value!, this.formLogin.controls.password.value!);
+    this.tryLogin(this.formLogin.controls.login.value!, this.formLogin.controls.password.value!);
   }
 
-  private tryLogin(userName:string, password:string) {
+  private tryLogin(login:string, password:string) {
     this.authenticationRepository.tryLogin$({
-      userName: userName,
+      login: login,
       password: password
     }).subscribe({
       next: (loginResponse) => {
@@ -69,7 +69,7 @@ export class LoginComponent {
         this.router.navigateByUrl("/week");
       },
       error: (error) => {
-        this.snackBarErrorService.open(error);
+        this.snackBarService.openError(error);
         this.wrongCredentials = error.status === 404;
         this.noConnection = error.status === 0;
       }

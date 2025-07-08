@@ -8,8 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MyErrorStateMatcher } from '../../preferences/password-update/password-update.component';
 import { PasswordValidationHelper } from '../../../helpers/passwordValidationHelper';
-import { UserRepositoryService } from '../../../services/user/userRepository.service';
-import { SnackBarErrorService } from '../../../services/snack-bar-error-service';
+import { AuthenticationRepositoryService } from '../../../services/authentication/authenticationRepository.service';
+import { SnackBarService } from '../../../services/snackBarService';
 
 @Component({
   selector: 'app-create-user',
@@ -32,6 +32,8 @@ export class CreateUserComponent {
   matcher = new MyErrorStateMatcher();
 
   userForm = new FormGroup({
+    login: new FormControl('', [Validators.required]),
+    displayName: new FormControl('', [Validators.required]),
     newPassword: new FormControl('', [
       Validators.required, 
       Validators.minLength(8), 
@@ -44,8 +46,8 @@ export class CreateUserComponent {
   }, {validators: [PasswordValidationHelper.passwordMatchValidator]});
 
   constructor(
-    private userRepository: UserRepositoryService,
-    private snackBarErrorService: SnackBarErrorService,
+    private authenticationRepository: AuthenticationRepositoryService,
+    private snackBarService: SnackBarService,
     private dialogRef: MatDialogRef<CreateUserComponent>
   ) {
   }
@@ -55,16 +57,19 @@ export class CreateUserComponent {
   }
 
   submit() {
-    // this.userRepository.updatePassword$({
-    //   newPassword: this.userForm.controls.newPassword.value!
-    // }).subscribe({
-    //   next: () => {
-    //     this.dialogRef.close();
-    //   },
-    //   error: (err) => {
-    //     this.snackBarErrorService.open(err);
-    //     this.userForm.setErrors({'incorrect': true})
-    //   }
-    // })
+    this.authenticationRepository.register$({
+      login: this.userForm.controls.login.value!,
+      password: this.userForm.controls.newPassword.value!,
+      displayName: this.userForm.controls.displayName.value!
+    }).subscribe({
+      next: () => {
+        this.dialogRef.close();
+        this.snackBarService.openMessage('UserWasCreated');
+      },
+      error: (err) => {
+        this.snackBarService.openError(err);
+        this.userForm.setErrors({'incorrect': true})
+      }
+    })
   }
 }

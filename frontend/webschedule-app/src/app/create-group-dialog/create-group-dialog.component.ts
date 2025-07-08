@@ -18,7 +18,7 @@ import { GroupRepositoryService } from '../../services/group/groupRepository.ser
 import { GroupHelper } from '../../helpers/groupHelper';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CreateCourseDialogComponent } from '../create-course-dialog/create-course-dialog.component';
-import { SnackBarErrorService } from '../../services/snack-bar-error-service';
+import { SnackBarService } from '../../services/snackBarService';
 
 @Component({
   selector: 'app-create-gro-up-dialog',
@@ -50,7 +50,7 @@ export class CreateGroupDialogComponent {
     private groupService: GroupRepositoryService,
     private readonly dialog: MatDialog,
     private studyCourseService: StudyCourseRepository,
-    private snackBarErrorService: SnackBarErrorService
+    private snackBarService: SnackBarService
     
   ) {
     this.updateStudyCourses(null);
@@ -158,7 +158,7 @@ export class CreateGroupDialogComponent {
         this.dialogRef.close(true);
       },
       error: (err) => {
-        this.snackBarErrorService.open(err);
+        this.snackBarService.openError(err);
         this.groupForm.setErrors({'incorrect': true})
       }
     })

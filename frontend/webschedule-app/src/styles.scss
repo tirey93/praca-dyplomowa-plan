@@ -29,3 +29,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   cursor: pointer;
   text-decoration: underline;
 }
+
+.dialog-content-half-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 20px;
+  margin: 8px 0;
+}

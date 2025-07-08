@@ -9,7 +9,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { UserRepositoryService } from '../../../services/user/userRepository.service';
 import { PreferencesComponent } from '../preferences.component';
 import { MatDialogRef } from '@angular/material/dialog';
-import { SnackBarErrorService } from '../../../services/snack-bar-error-service';
+import { SnackBarService } from '../../../services/snackBarService';
 import { PasswordValidationHelper } from '../../../helpers/passwordValidationHelper';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -52,7 +52,7 @@ export class PasswordUpdateComponent {
 
   constructor(
     private userRepository: UserRepositoryService,
-    private snackBarErrorService: SnackBarErrorService,
+    private snackBarService: SnackBarService,
     private dialogRef: MatDialogRef<PreferencesComponent>
   ) {
   }
@@ -70,7 +70,7 @@ export class PasswordUpdateComponent {
         this.dialogRef.close();
       },
       error: (err) => {
-        this.snackBarErrorService.open(err);
+        this.snackBarService.openError(err);
         this.prefForm.setErrors({'incorrect': true})
       }
     })

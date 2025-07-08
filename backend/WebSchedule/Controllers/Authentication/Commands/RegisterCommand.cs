@@ -9,7 +9,7 @@ namespace WebSchedule.Controllers.Authentication.Commands
 {
     public class RegisterCommand : IRequest
     {
-        public string Username { get; set; }
+        public string Login { get; set; }
         public string DisplayName { get; set; }
         public string Password { get; set; }
     }
@@ -27,15 +27,15 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand>
 
     public async Task Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var userExists = _userRepository.UserExists(request.Username);
+        var userExists = _userRepository.UserExists(request.Login);
         if (userExists) 
-            throw new UserAlreadyExistsException(request.Username);
+            throw new UserAlreadyExistsException(request.Login);
 
         await _userRepository.RegisterUserAsync(new User
         {
             DisplayName = request.DisplayName,
             HashedPassword = ShaHelper.QuickHash(request.Password),
-            Login = request.Username,
+            Login = request.Login,
             IsActive = true,
         });
 

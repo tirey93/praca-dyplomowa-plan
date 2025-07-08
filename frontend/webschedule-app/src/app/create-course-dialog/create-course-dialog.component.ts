@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { StudyCourseRepository } from '../../services/study-course/studyCourseRepository.service';
-import { SnackBarErrorService } from '../../services/snack-bar-error-service';
+import { SnackBarService } from '../../services/snackBarService';
 
 @Component({
   selector: 'app-create-course-dialog',
@@ -28,7 +28,7 @@ export class CreateCourseDialogComponent {
   constructor(
     private dialogRef: MatDialogRef<CreateCourseDialogComponent>,
     private studyCourseService: StudyCourseRepository,
-    private snackBarErrorService: SnackBarErrorService
+    private snackBarService: SnackBarService
   ) {
     
   }
@@ -45,7 +45,7 @@ export class CreateCourseDialogComponent {
         this.dialogRef.close({displayText: courseResponse.name, id: courseResponse.id} as SelectValue);
       },
       error: (err) => {
-        this.snackBarErrorService.open(err);
+        this.snackBarService.openError(err);
         this.courseForm.setErrors({'incorrect': true})
       }
     })

@@ -1,0 +1,5 @@
+@if (loggedUser$ |async; as loggedUser) {
+    <app-week-schedule></app-week-schedule>
+} @else {
+    <app-group-chooser></app-group-chooser>
+}

@@ -66,6 +66,10 @@ export class ToolbarComponent {
   }
   logout() {
     this.loginService.logout();
+    this.login();
+  }
+
+  login() {
     this.router.navigateByUrl("/login");
   }
 

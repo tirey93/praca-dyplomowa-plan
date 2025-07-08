@@ -66,7 +66,7 @@ export class LoginComponent {
     }).subscribe({
       next: (loginResponse) => {
         this.loginService.login(loginResponse.token)
-        this.router.navigateByUrl("/week");
+        this.router.navigateByUrl("");
       },
       error: (error) => {
         this.snackBarService.openError(error);

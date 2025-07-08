@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { UserResponse } from '../../services/user/dtos/userResponse';
+import { UserResponse } from '../../../services/user/dtos/userResponse';
 import { Observable } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
 import { AsyncPipe } from '@angular/common';
-import { UserRepositoryService } from '../../services/user/userRepository.service';
+import { UserRepositoryService } from '../../../services/user/userRepository.service';
 
 @Component({
   selector: 'app-week-schedule',

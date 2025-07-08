@@ -23,24 +23,24 @@ import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-
 import { GroupRepositoryService } from '../../services/group/groupRepository.service';
 import { GroupHelper } from '../../helpers/groupHelper';
 import { Constants } from '../../helpers/constants';
-import { CandidateGroupInfoResponse } from '../../services/group/dtos/candidateGroupInfoResponse';
+import { GroupInfoResponse } from '../../services/group/dtos/groupInfoResponse';
 
 @Component({
-  selector: 'app-search-group-dialog',
-  imports: [MatDialogContent,
+  selector: 'app-search-group',
+  imports: [
     MatTableModule, MatMenuModule, MatIconModule, 
     MatButtonModule, CommonModule, MatProgressSpinnerModule,
     TranslatePipe, MatPaginator, MatPaginatorModule, MatChipsModule,
     MatFormFieldModule, MatSelectModule, MatOptionModule, MatAutocompleteModule,
-    ReactiveFormsModule, MatInputModule, MatTooltipModule, MatDialogTitle,
+    ReactiveFormsModule, MatInputModule, MatTooltipModule,
   ],
-  templateUrl: './search-group-dialog.component.html',
-  styleUrl: './search-group-dialog.component.scss'
+  templateUrl: './search-group.component.html',
+  styleUrl: './search-group.component.scss'
 })
-export class SearchGroupDialogComponent {
+export class SearchGroupComponent {
   isLoading = true;
   noData = false;
-  groups?: MatTableDataSource<CandidateGroupInfoResponse>;
+  groups?: MatTableDataSource<GroupInfoResponse>;
 
   courseFilterControl = new FormControl<string>('')
   yearFilterControl = new FormControl<string>('all')
@@ -60,39 +60,35 @@ export class SearchGroupDialogComponent {
 
   displayedColumns: string[] = [
     'name', 'startingYear', 'studyCourseName', 'studyLevel', 
-    'studyMode', 'subgroup', 'membersCount', 'join'];
+    'studyMode', 'subgroup', 'membersCount', 'link'];
 
   constructor(
     private groupService: GroupRepositoryService,
-    private userInGroupService: UserInGroupService,
     private snackBarService: SnackBarService,
-    private readonly dialog: MatDialog,
-    private dialogRef: MatDialogRef<SearchGroupDialogComponent>
   ) {
     this.filteredOptionsCourse$ = this.courseFilterControl.valueChanges.pipe(
       map(value => {
         return value ? this.filterOptionCourse(value) : [...this.filterOptionsCourse!].slice();
       }),
     );
-    this.groupService.getCandidateGroups$().subscribe({
+    this.groupService.getGroups$().subscribe({
       next: (groups => {
         this.isLoading = false;
         if (groups.length === 0) {
           this.noData = true;
           return;
         }
-        this.groups = new MatTableDataSource<CandidateGroupInfoResponse>();
+        this.groups = new MatTableDataSource<GroupInfoResponse>();
         this.groups.data = groups;
         this.filterOptionsYear = new Set(this.groups?.data.map(x => x.startingYear).sort((a, b) => a - b))
         this.filterOptionsCourse = new Set(this.groups?.data.map(x => x.studyCourseName).sort((a, b) => a > b ? 1 : -1))
         this.courseFilterControl.setValue('')
         setTimeout(() => this.groups!.paginator = this.paginator);
-        
         this.groups.filterPredicate = function (record,filter) {
             var map = new Map(JSON.parse(filter));
             let isMatch = false;
             for(let [key,value] of map){
-              isMatch = (value=="all") || (record[key as keyof CandidateGroupInfoResponse] == value); 
+              isMatch = (value=="all") || (record[key as keyof GroupInfoResponse] == value); 
               if(!isMatch) return false;
             }
             return isMatch;
@@ -104,47 +100,8 @@ export class SearchGroupDialogComponent {
     })
   }
 
-  getName(group: CandidateGroupInfoResponse):string {
+  getName(group: GroupInfoResponse):string {
     return GroupHelper.groupInfoToString(group);
-  }
-
-  handleCandidateJoin(group: CandidateGroupInfoResponse, selected: boolean) {
-    if (group.isCandidate === selected)
-      return;
-
-    const result = selected ? this.userInGroupService.addCandidate$({
-        groupId: group.id
-      }) : this.userInGroupService.disenrollFromGroup$({
-        groupId: group.id
-      });
-      
-    result.subscribe({
-      next: () => {
-        if (!this.groups?.data)
-          return;
-        this.groups.data = this.groups!.data.map(g => 
-          g.id === group.id ? { ...g, isCandidate: selected} : g
-        );
-      },
-      error:(err) => {
-        this.snackBarService.openError(err);
-        if (!this.groups?.data)
-          return;
-        this.groups.data = this.groups!.data.map(g => 
-          g.id === group.id ? { ...g, isCandidate: !selected} : g
-        );
-      },
-    })
-  }
-
-  handleCreateNewGroup() {
-    this.dialog.open(CreateGroupDialogComponent, {
-      maxWidth: '100vw',
-      autoFocus: false
-    }).afterClosed().subscribe((result:boolean) => {
-      if(result)
-        this.dialogRef.close(result);
-    })
   }
 
   applyFilter(option:any, empfilter: string) {
@@ -160,12 +117,6 @@ export class SearchGroupDialogComponent {
     this.yearFilterControl.setValue('all')
     this.levelFilterControl.setValue('all')
     this.modefilterControl.setValue('all')
-  }
-
-  isCandidate(groupId: number) {
-    if (!this.groups?.data)
-          return;
-    return this.groups.data.find(g => g.id === groupId)?.isCandidate;
   }
 
   private filterOptionCourse(name: string): string[] {

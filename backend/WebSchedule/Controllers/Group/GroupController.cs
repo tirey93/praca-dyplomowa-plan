@@ -61,7 +61,7 @@ namespace WebSchedule.Controllers.Group
 #if !DEBUG
         [Authorize]
 #endif
-        public async Task<ActionResult<IEnumerable<GroupInfoResponse>>> GetCandidateGroups()
+        public async Task<ActionResult<IEnumerable<CandidateGroupInfoResponse>>> GetCandidateGroups()
         {
             try
             {
@@ -71,6 +71,35 @@ namespace WebSchedule.Controllers.Group
                 return Ok(await _mediator.Send(new GetCandidateGroupsQuery
                 {
                     UserId = userId,
+                }));
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
+            }
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+#if !DEBUG
+        [Authorize]
+#endif
+        public async Task<ActionResult<IEnumerable<GroupInfoResponse>>> GetGroups()
+        {
+            try
+            {
+                return Ok(await _mediator.Send(new GetGroupsQuery
+                {
                 }));
             }
             catch (ApplicationException ex)

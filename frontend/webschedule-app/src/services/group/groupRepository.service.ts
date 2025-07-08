@@ -3,9 +3,10 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../../enviroments/enviroments';
 import { UserGroupResponse } from './dtos/userGroupResponse';
-import { GroupInfoResponse } from './dtos/groupInfoResponse';
 import { GroupRequest } from './dtos/groupRequest';
 import { GroupResponse } from './dtos/groupResponse';
+import { CandidateGroupInfoResponse } from './dtos/candidateGroupInfoResponse';
+import { GroupInfoResponse } from './dtos/groupInfoResponse';
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +25,15 @@ import { GroupResponse } from './dtos/groupResponse';
     }
 
     getCandidateGroups$() {
-      return this.http.get<GroupInfoResponse[]>(`${this.url}/Candidate`, {
+      return this.http.get<CandidateGroupInfoResponse[]>(`${this.url}/Candidate`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
+    getGroups$() {
+      return this.http.get<GroupInfoResponse[]>(`${this.url}`, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

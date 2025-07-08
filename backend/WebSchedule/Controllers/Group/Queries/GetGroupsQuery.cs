@@ -4,36 +4,33 @@ using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Controllers.Group.Queries
 {
-    public class GetCandidateGroupsQuery : IRequest<IEnumerable<CandidateGroupInfoResponse>>
+    public class GetGroupsQuery : IRequest<IEnumerable<GroupInfoResponse>>
     {
-        public int UserId { get; set; }
     }
 
-    public class GetCandidateGroupsQueryHandler : IRequestHandler<GetCandidateGroupsQuery, IEnumerable<CandidateGroupInfoResponse>>
+    public class GetGroupsQueryHandler : IRequestHandler<GetGroupsQuery, IEnumerable<GroupInfoResponse>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserInGroupRepository _userInGroupRepository;
         private readonly IGroupRepository _groupRepository;
 
-        public GetCandidateGroupsQueryHandler(IUserRepository userRepository, IUserInGroupRepository userInGroupRepository, IGroupRepository groupRepository)
+        public GetGroupsQueryHandler(IUserRepository userRepository, IUserInGroupRepository userInGroupRepository, IGroupRepository groupRepository)
         {
             _userRepository = userRepository;
             _userInGroupRepository = userInGroupRepository;
             _groupRepository = groupRepository;
         }
 
-        public Task<IEnumerable<CandidateGroupInfoResponse>> Handle(GetCandidateGroupsQuery request, CancellationToken cancellationToken)
+        public Task<IEnumerable<GroupInfoResponse>> Handle(GetGroupsQuery request, CancellationToken cancellationToken)
         {
             var groups = _groupRepository.Get()
-                .Where(g => !g.Members.Any(m => m.Id == request.UserId))
-                .OrderByDescending(x => x.Candidates.Count(m => m.Id == request.UserId))
-                .ThenByDescending(x => x.StartingYear)
+                .OrderByDescending(x => x.StartingYear)
                 .ThenBy(x => x.StudyMode)
                 .ThenBy(x => x.StudyLevel)
                 .ThenBy(x => x.StudyCourse.Name)
                 .ThenBy(x => x.Subgroup);
 
-            return Task.FromResult(groups.Select(gi => new CandidateGroupInfoResponse
+            return Task.FromResult(groups.Select(gi => new GroupInfoResponse
             {
                 Id = gi.Id,
                 StartingYear = gi.StartingYear,
@@ -43,7 +40,6 @@ namespace WebSchedule.Controllers.Group.Queries
                 StudyMode = gi.StudyMode.ToString(),
                 Subgroup = gi.Subgroup,
                 MembersCount = gi.MembersCount,
-                IsCandidate = gi.Candidates.Any(m => m.Id == request.UserId),
             }));
         }
     }

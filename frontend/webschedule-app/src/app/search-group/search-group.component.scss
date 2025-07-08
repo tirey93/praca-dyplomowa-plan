@@ -1,0 +1,16 @@
+.mat-mdc-row .mat-mdc-cell {
+  border-bottom: 1px solid transparent;
+  border-top: 1px solid transparent;
+}
+.mat-mdc-header-row {
+  height: 35px;
+}
+.search-dialog-filters {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.search-dialog-list-table-search {
+  width: 100%;
+  display: table;
+}

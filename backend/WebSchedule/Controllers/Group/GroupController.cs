@@ -54,7 +54,7 @@ namespace WebSchedule.Controllers.Group
             }
         }
 
-        [HttpGet("candidate")]
+        [HttpGet("Candidate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

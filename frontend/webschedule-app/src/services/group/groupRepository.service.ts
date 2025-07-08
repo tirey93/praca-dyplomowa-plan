@@ -24,7 +24,7 @@ import { GroupResponse } from './dtos/groupResponse';
     }
 
     getCandidateGroups$() {
-      return this.http.get<GroupInfoResponse[]>(`${this.url}/candidate`, {
+      return this.http.get<GroupInfoResponse[]>(`${this.url}/Candidate`, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

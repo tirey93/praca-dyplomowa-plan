@@ -72,6 +72,9 @@ export class ToolbarComponent {
   login() {
     this.router.navigateByUrl("/login");
   }
+  onHomeClick() {
+    this.router.navigateByUrl("");
+  }
 
   onGroupSearch() {
     this.dialog.open(SearchGroupDialogComponent, {

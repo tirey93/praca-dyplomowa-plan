@@ -13,4 +13,12 @@ export const routes: Routes = [
         path: "",
         component: MainComponent,
     },
+    {
+        path: "group/:groupName",
+        component: MainComponent
+    },
+    {
+        path: "**",
+        redirectTo: ""
+    }
 ];

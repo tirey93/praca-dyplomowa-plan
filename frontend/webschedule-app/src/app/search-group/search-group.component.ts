@@ -38,6 +38,7 @@ import { GroupInfoResponse } from '../../services/group/dtos/groupInfoResponse';
   styleUrl: './search-group.component.scss'
 })
 export class SearchGroupComponent {
+
   isLoading = true;
   noData = false;
   groups?: MatTableDataSource<GroupInfoResponse>;
@@ -60,7 +61,7 @@ export class SearchGroupComponent {
 
   displayedColumns: string[] = [
     'name', 'startingYear', 'studyCourseName', 'studyLevel', 
-    'studyMode', 'subgroup', 'membersCount', 'link'];
+    'studyMode', 'subgroup', 'membersCount'];
 
   constructor(
     private groupService: GroupRepositoryService,
@@ -102,6 +103,10 @@ export class SearchGroupComponent {
 
   getName(group: GroupInfoResponse):string {
     return GroupHelper.groupInfoToString(group);
+  }
+  getLink(group: GroupInfoResponse) {
+    const name = this.getName(group);
+    return `/group/${name}`;
   }
 
   applyFilter(option:any, empfilter: string) {

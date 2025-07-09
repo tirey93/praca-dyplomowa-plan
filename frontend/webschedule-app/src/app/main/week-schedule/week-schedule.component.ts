@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { UserResponse } from '../../../services/user/dtos/userResponse';
 import { Observable } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,11 +12,10 @@ import { UserRepositoryService } from '../../../services/user/userRepository.ser
   styleUrl: './week-schedule.component.scss'
 })
 export class WeekScheduleComponent {
-  loggedUser$: Observable<UserResponse>;
+  @Input() groupName?: string;
   
   constructor(
     private userRepositoryService: UserRepositoryService) {
-      this.loggedUser$ = this.userRepositoryService.getLoggedIn$();
       
     }
 }

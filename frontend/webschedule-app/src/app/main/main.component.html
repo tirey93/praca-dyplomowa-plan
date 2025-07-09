@@ -1,8 +1,7 @@
 
-@if (loggedUser$ |async; as loggedUser) {
-    <app-week-schedule [groupName]="groupName"></app-week-schedule>
-} @else if (groupName) {
-    <app-week-schedule [groupName]="groupName"></app-week-schedule>
-} @else {
+@if (shouldShowGroupList$ |async) {
     <app-search-group></app-search-group>
+} @else {
+    SHOULD SHOW CALENDAR
+    <app-week-schedule [loggedUser$]="loggedUser$" [userGroups$]="userGroups$" [groupFromUrl$]="groupFromUrl$"></app-week-schedule>
 }

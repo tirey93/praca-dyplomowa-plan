@@ -105,8 +105,7 @@ export class SearchGroupComponent {
     return GroupHelper.groupInfoToString(group);
   }
   getLink(group: GroupInfoResponse) {
-    const name = this.getName(group);
-    return `/group/${name}`;
+    return `/group/${group.id}`;
   }
 
   applyFilter(option:any, empfilter: string) {

@@ -14,7 +14,7 @@ export const routes: Routes = [
         component: MainComponent,
     },
     {
-        path: "group/:groupName",
+        path: "group/:groupId",
         component: MainComponent
     },
     {

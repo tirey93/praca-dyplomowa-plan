@@ -15,7 +15,6 @@ import { GroupHelper } from '../../../helpers/groupHelper';
   styleUrl: './week-schedule.component.scss'
 })
 export class WeekScheduleComponent implements OnInit{
-  @Input() loggedUser$!: Observable<boolean>;
   @Input() userGroups$!: Observable<number[]>;
   @Input() groupFromUrl$!: Observable<number | null>;
     
@@ -29,23 +28,14 @@ export class WeekScheduleComponent implements OnInit{
 
   ngOnInit(): void {
     this.groupsToDisplay$ = combineLatest([
-      this.loggedUser$,
       this.groupFromUrl$,
       this.userGroups$,
     ]).pipe(
-      map(([isLoggedIn, groupFromUrl, userGroups]) => {
-          if (isLoggedIn) {
-            if (groupFromUrl) {
-              return [groupFromUrl];
-            } else {
-              return [...userGroups];
-            }
-          } else {
-            if (groupFromUrl) {
-              return [groupFromUrl];
-            }
+      map(([groupFromUrl, userGroups]) => {
+          if (groupFromUrl) {
+            return [groupFromUrl];
           }
-          return [];
+          return [...userGroups];
         })
     )
 

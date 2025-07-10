@@ -13,7 +13,6 @@ import { GroupRepositoryService } from '../../services/group/groupRepository.ser
   styleUrl: './main.component.scss'
 })
 export class MainComponent implements OnInit{
-  loggedUser$: Observable<boolean>;
   userGroups$: Observable<number[]>;
   groupFromUrl$: Observable<number | null> = of(null);
 
@@ -21,11 +20,11 @@ export class MainComponent implements OnInit{
   @Input() groupId?: number;
 
   constructor(
-    loginService: LoginService,
+    private loginService: LoginService,
     private groupRepository: GroupRepositoryService
     ) {
-      this.loggedUser$ = loginService.isLoggedIn$;
-      this.userGroups$ = this.loggedUser$.pipe(
+      const loggedUser$ = loginService.isLoggedIn$;
+      this.userGroups$ = loggedUser$.pipe(
         filter(isLoggedIn => isLoggedIn),
         switchMap(x => 
           groupRepository.getByLoggedIn$().pipe(
@@ -42,12 +41,11 @@ export class MainComponent implements OnInit{
     )
 
     this.shouldShowGroupList$ = combineLatest([
-          this.loggedUser$.pipe(startWith(false)),
           this.groupFromUrl$.pipe(startWith(null)),
           this.userGroups$.pipe(startWith([])),
       ]).pipe(
-        map(([isLoggedIn, groupFromUrl, userGroups]) => {
-          return groupFromUrl == null && (!isLoggedIn || (isLoggedIn && userGroups.length === 0))
+        map(([groupFromUrl, userGroups]) => {
+          return groupFromUrl == null && userGroups.length === 0
         })
       );
   }

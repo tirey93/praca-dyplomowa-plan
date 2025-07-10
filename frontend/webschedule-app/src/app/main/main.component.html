@@ -3,5 +3,5 @@
     <app-search-group></app-search-group>
 } @else {
     SHOULD SHOW CALENDAR
-    <app-week-schedule [loggedUser$]="loggedUser$" [userGroups$]="userGroups$" [groupFromUrl$]="groupFromUrl$"></app-week-schedule>
+    <app-week-schedule [userGroups$]="userGroups$" [groupFromUrl$]="groupFromUrl$"></app-week-schedule>
 }

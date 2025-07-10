@@ -47,6 +47,15 @@ import { GroupInfoResponse } from './dtos/groupInfoResponse';
         }
       })
     }
+
+    isGroupExists$(groupId: number | undefined) {
+      return this.http.get<boolean>(`${this.url}/${groupId}/Exists`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
     getNextSubgroup$(year: number, studyMode: string, studyLevel: string, courseId: number) {
       return this.http.get<number>(`${this.url}/subgroup/next?year=${year}&studyMode=${studyMode}&studyLevel=${studyLevel}&courseId=${courseId}`, {
         headers: {

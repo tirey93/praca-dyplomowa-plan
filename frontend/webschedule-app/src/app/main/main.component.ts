@@ -35,9 +35,13 @@ export class MainComponent implements OnInit{
       );
   }
   ngOnInit(): void {
-    this.groupFromUrl$ = this.groupRepository.getById$(this.groupId).pipe(
-      map(userGroupResponse => userGroupResponse.id),
-      catchError(() => of(null)),
+    this.groupFromUrl$ = this.groupRepository.isGroupExists$(this.groupId == undefined ? -1 : this.groupId).pipe(
+      switchMap(exist => {
+        if (exist) {
+          return this.groupRepository.getById$(this.groupId).pipe(map(userGroupResponse => userGroupResponse.id))
+        }
+        return of(null);
+      })
     )
 
     this.shouldShowGroupList$ = combineLatest([

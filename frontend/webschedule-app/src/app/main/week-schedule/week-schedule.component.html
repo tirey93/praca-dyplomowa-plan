@@ -1,1 +1,3 @@
-{{group}}
+@if (groupsToDisplay$|async; as groups) {
+    {{groups}}
+}

@@ -15,11 +15,11 @@ import { GroupHelper } from '../../../helpers/groupHelper';
   styleUrl: './week-schedule.component.scss'
 })
 export class WeekScheduleComponent implements OnInit{
-  @Input() loggedUser$: Observable<boolean> = of(false);
-  @Input() userGroups$: Observable<number[]> = of([]);
-  @Input() groupFromUrl$: Observable<number | null> = of(null);
+  @Input() loggedUser$!: Observable<boolean>;
+  @Input() userGroups$!: Observable<number[]>;
+  @Input() groupFromUrl$!: Observable<number | null>;
     
-  group:number | null = null;
+  groupsToDisplay$: Observable<number[]> = of([])
   constructor(
     private groupRepository: GroupRepositoryService,
     private loginService: LoginService
@@ -28,15 +28,47 @@ export class WeekScheduleComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    combineLatest([
+    this.groupsToDisplay$ = combineLatest([
       this.loggedUser$,
       this.groupFromUrl$,
       this.userGroups$,
-    ]).subscribe({
-      next: ([isLoggedIn, groupFromUrl, userGroups]) => {
-        console.log('week', isLoggedIn, groupFromUrl, userGroups)
-        this.group = groupFromUrl;
-      }
-    })
+    ]).pipe(
+      map(([isLoggedIn, groupFromUrl, userGroups]) => {
+          if (isLoggedIn) {
+            if (groupFromUrl) {
+              return [groupFromUrl];
+            } else {
+              return [...userGroups];
+            }
+          } else {
+            if (groupFromUrl) {
+              return [groupFromUrl];
+            }
+          }
+          return [];
+        })
+    )
+
+    // this.groupsToDisplay$ = combineLatest([
+    //   this.loggedUser$,
+    //   this.groupFromUrl$,
+    //   this.userGroups$,
+    // ]).pipe(
+    //   tap(([isLoggedIn, groupFromUrl, userGroups]) => console.log('week', isLoggedIn, groupFromUrl, userGroups)),
+    //   map(([isLoggedIn, groupFromUrl, userGroups]) => {
+    //       if (isLoggedIn) {
+    //         if (groupFromUrl) {
+    //           return [groupFromUrl];
+    //         } else {
+    //           return [...userGroups];
+    //         }
+    //       } else {
+    //         if (groupFromUrl) {
+    //           return [groupFromUrl];
+    //         }
+    //       }
+    //       return [];
+    //     })
+    // )
   }
 }

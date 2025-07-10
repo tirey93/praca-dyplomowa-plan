@@ -32,6 +32,7 @@ export class MainComponent implements OnInit{
             map(userGroupResponse => userGroupResponse.map(y => y.id))
           )
         ),
+        startWith([])
       );
   }
   ngOnInit(): void {
@@ -45,7 +46,6 @@ export class MainComponent implements OnInit{
           this.groupFromUrl$.pipe(startWith(null)),
           this.userGroups$.pipe(startWith([])),
       ]).pipe(
-        tap(([isLoggedIn, groupFromUrl, userGroups]) => console.log('main', isLoggedIn, groupFromUrl, userGroups)),
         map(([isLoggedIn, groupFromUrl, userGroups]) => {
           return groupFromUrl == null && (!isLoggedIn || (isLoggedIn && userGroups.length === 0))
         })

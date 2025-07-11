@@ -7,6 +7,7 @@ import { UserRepositoryService } from '../../../services/user/userRepository.ser
 import { GroupRepositoryService } from '../../../services/group/groupRepository.service';
 import { LoginService } from '../../../services/login.service';
 import { GroupHelper } from '../../../helpers/groupHelper';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-week-schedule',
@@ -20,11 +21,28 @@ export class WeekScheduleComponent implements OnInit{
 
   groupsToDisplay: number[] = []
   constructor(
+    private groupRepository: GroupRepositoryService,
+    private router: Router,
   ) {  
     
   }
 
   ngOnInit(): void {
-    this.groupsToDisplay = this.groupId ? [this.groupId] : [...this.userGroups];    
+    if (this.groupId) {
+      this.groupRepository.isGroupExists$(this.groupId).subscribe({
+        next: (exist) => {
+          if (exist) {
+            this.groupsToDisplay = [this.groupId!]
+          } else {
+            this.router.navigateByUrl("");
+          }
+        },
+        error: () => {
+          this.router.navigateByUrl("");
+        }
+      })
+    } else {
+      this.groupsToDisplay = [...this.userGroups]
+    }
   }
 }

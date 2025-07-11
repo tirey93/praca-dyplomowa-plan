@@ -16,8 +16,8 @@ import { GroupHelper } from '../../../helpers/groupHelper';
 })
 export class WeekScheduleComponent implements OnInit{
   @Input() userGroups$!: Observable<number[]>;
-  @Input() groupFromUrl$!: Observable<number | null>;
-    
+  @Input() groupId?: number;
+
   groupsToDisplay$: Observable<number[]> = of([])
   constructor(
     private groupRepository: GroupRepositoryService,
@@ -27,38 +27,13 @@ export class WeekScheduleComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.groupsToDisplay$ = combineLatest([
-      this.groupFromUrl$,
-      this.userGroups$,
-    ]).pipe(
-      map(([groupFromUrl, userGroups]) => {
-          if (groupFromUrl) {
-            return [groupFromUrl];
+    this.groupsToDisplay$ = this.userGroups$.pipe(
+      map((userGroups) => {
+          if (this.groupId) {
+            return [this.groupId];
           }
           return [...userGroups];
         })
     )
-
-    // this.groupsToDisplay$ = combineLatest([
-    //   this.loggedUser$,
-    //   this.groupFromUrl$,
-    //   this.userGroups$,
-    // ]).pipe(
-    //   tap(([isLoggedIn, groupFromUrl, userGroups]) => console.log('week', isLoggedIn, groupFromUrl, userGroups)),
-    //   map(([isLoggedIn, groupFromUrl, userGroups]) => {
-    //       if (isLoggedIn) {
-    //         if (groupFromUrl) {
-    //           return [groupFromUrl];
-    //         } else {
-    //           return [...userGroups];
-    //         }
-    //       } else {
-    //         if (groupFromUrl) {
-    //           return [groupFromUrl];
-    //         }
-    //       }
-    //       return [];
-    //     })
-    // )
   }
 }

@@ -1,56 +1,63 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { WeekScheduleComponent } from "./week-schedule/week-schedule.component";
-import { catchError, combineLatest, filter, map, Observable, of, startWith, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, filter, finalize, map, merge, Observable, of, pipe, skip, startWith, switchMap, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { LoginService } from '../../services/login.service';
 import { SearchGroupComponent } from "../search-group/search-group.component";
 import { GroupRepositoryService } from '../../services/group/groupRepository.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-main',
-  imports: [WeekScheduleComponent, AsyncPipe, SearchGroupComponent],
+  imports: [WeekScheduleComponent, AsyncPipe, SearchGroupComponent, MatProgressSpinnerModule],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss'
 })
 export class MainComponent implements OnInit{
   userGroups$: Observable<number[]>;
-  groupFromUrl$: Observable<number | null> = of(null);
-
-  shouldShowGroupList$!: Observable<boolean>;
+  isLoading$: Observable<boolean>;
+  shouldShowGroupList$: Observable<boolean> = of(false);
   @Input() groupId?: number;
 
   constructor(
-    private loginService: LoginService,
-    private groupRepository: GroupRepositoryService
+    loginService: LoginService,
+    groupRepository: GroupRepositoryService
     ) {
       const loggedUser$ = loginService.isLoggedIn$;
       this.userGroups$ = loggedUser$.pipe(
         filter(isLoggedIn => isLoggedIn),
         switchMap(x => 
           groupRepository.getByLoggedIn$().pipe(
-            map(userGroupResponse => userGroupResponse.map(y => y.id))
+            map(userGroupResponse => userGroupResponse.map(y => y.id)),
           )
         ),
-        startWith([])
+        startWith([]),
+      );
+      this.isLoading$ = merge(
+        // Emituj true gdy zaczyna się ładowanie
+        loggedUser$.pipe(
+          map(() => false)
+        ),
+        // Emituj false gdy ładowanie się zakończy
+        this.userGroups$.pipe(
+          map(() => false)
+        )
+      ).pipe(
+        startWith(true) // Początkowy stan
       );
   }
   ngOnInit(): void {
-    this.groupFromUrl$ = this.groupRepository.isGroupExists$(this.groupId == undefined ? -1 : this.groupId).pipe(
-      switchMap(exist => {
-        if (exist) {
-          return this.groupRepository.getById$(this.groupId).pipe(map(userGroupResponse => userGroupResponse.id))
+    this.shouldShowGroupList$ = this.isLoading$.pipe(
+      switchMap((loading) => {
+        if (!loading) {
+          return this.userGroups$.pipe(
+            map((userGroups) => {
+              return this.groupId == undefined && userGroups.length === 0
+            }),
+          )
         }
-        return of(null);
+        return of(false)
       })
-    )
-
-    this.shouldShowGroupList$ = combineLatest([
-          this.groupFromUrl$.pipe(startWith(null)),
-          this.userGroups$.pipe(startWith([])),
-      ]).pipe(
-        map(([groupFromUrl, userGroups]) => {
-          return groupFromUrl == null && userGroups.length === 0
-        })
-      );
+    );
   }
 }

@@ -1,7 +1,9 @@
 
-@if (shouldShowGroupList$ |async) {
+@if (isLoading$ |async) {
+    <mat-spinner></mat-spinner>
+} @else if (shouldShowGroupList$ |async) {
     <app-search-group></app-search-group>
 } @else {
     SHOULD SHOW CALENDAR
-    <app-week-schedule [userGroups$]="userGroups$" [groupFromUrl$]="groupFromUrl$"></app-week-schedule>
+    <app-week-schedule [userGroups$]="userGroups$" [groupId]="groupId"></app-week-schedule>
 }

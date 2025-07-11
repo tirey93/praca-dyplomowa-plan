@@ -10,30 +10,21 @@ import { GroupHelper } from '../../../helpers/groupHelper';
 
 @Component({
   selector: 'app-week-schedule',
-  imports: [MatButtonModule, AsyncPipe],
+  imports: [MatButtonModule],
   templateUrl: './week-schedule.component.html',
   styleUrl: './week-schedule.component.scss'
 })
 export class WeekScheduleComponent implements OnInit{
-  @Input() userGroups$!: Observable<number[]>;
+  @Input() userGroups: number[] = [];
   @Input() groupId?: number;
 
-  groupsToDisplay$: Observable<number[]> = of([])
+  groupsToDisplay: number[] = []
   constructor(
-    private groupRepository: GroupRepositoryService,
-    private loginService: LoginService
   ) {  
     
   }
 
   ngOnInit(): void {
-    this.groupsToDisplay$ = this.userGroups$.pipe(
-      map((userGroups) => {
-          if (this.groupId) {
-            return [this.groupId];
-          }
-          return [...userGroups];
-        })
-    )
+    this.groupsToDisplay = this.groupId ? [this.groupId] : [...this.userGroups];    
   }
 }

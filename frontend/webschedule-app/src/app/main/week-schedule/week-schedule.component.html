@@ -1,7 +1,7 @@
 <mat-drawer-container class="week-drawer-container">
     <mat-drawer class="week-drawer" mode="side" position="end" [opened]="sidenavOpened$ | async">
         <div class="week-drawer-close">
-            <button mat-icon-button (click)="closeSidenav()"><mat-icon>close</mat-icon></button>
+            <button matTooltip="Zamknij" mat-icon-button (click)="closeSidenav()"><mat-icon>close</mat-icon></button>
         </div>
         <app-group-details></app-group-details>
     </mat-drawer>

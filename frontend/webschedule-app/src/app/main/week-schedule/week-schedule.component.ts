@@ -8,10 +8,14 @@ import { filter, map, Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { GroupDetailsComponent } from "../../group-details/group-details.component";
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-week-schedule',
-  imports: [MatButtonModule, MatSidenavModule, AsyncPipe, MatIconModule, GroupDetailsComponent],
+  imports: [
+    MatButtonModule, MatSidenavModule, AsyncPipe, MatIconModule, GroupDetailsComponent,
+    MatTooltipModule
+  ],
   templateUrl: './week-schedule.component.html',
   styleUrl: './week-schedule.component.scss'
 })

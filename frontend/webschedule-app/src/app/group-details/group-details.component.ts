@@ -5,11 +5,15 @@ import { filter, Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { GroupHelper } from '../../helpers/groupHelper';
 import { AsyncPipe } from '@angular/common';
 import { SidenavService } from '../../services/sidenav.service';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { TranslatePipe } from '@ngx-translate/core';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-group-details',
   imports: [
-    AsyncPipe
+    MatCardModule, MatChipsModule, TranslatePipe, MatTabsModule
   ],
   templateUrl: './group-details.component.html',
   styleUrl: './group-details.component.scss'
@@ -33,7 +37,7 @@ export class GroupDetailsComponent implements OnDestroy{
       }
     })
   }
-  
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

@@ -1,3 +1,23 @@
 @if (group) {
-    <h2 >Hello {{getGroupName(group)}}</h2>
+    <mat-card style="margin: 20px" appearance="outlined">
+        <mat-card-header>
+            <mat-card-title>Grupa <b>{{getGroupName(group)}}</b></mat-card-title>
+        </mat-card-header>
+        <mat-card-footer style="padding: 16px;">
+            <mat-chip-set>
+                <mat-chip>{{group.startingYear}}</mat-chip>
+                <mat-chip>{{group.studyMode | translate}}</mat-chip>
+                <mat-chip>{{group.studyLevel | translate}}</mat-chip>
+                <mat-chip>{{group.studyCourseName}}</mat-chip>
+            </mat-chip-set>
+        </mat-card-footer>
+    </mat-card>
+    <mat-tab-group>
+        <mat-tab label="Czat">
+        </mat-tab>
+        <mat-tab label="Wydarzenia">
+        </mat-tab>
+        <mat-tab label="Preferencje">
+        </mat-tab>
+    </mat-tab-group>
 }

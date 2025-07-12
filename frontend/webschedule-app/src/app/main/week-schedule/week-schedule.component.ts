@@ -9,12 +9,15 @@ import { AsyncPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { GroupDetailsComponent } from "../../group-details/group-details.component";
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDialog } from '@angular/material/dialog';
+import { LeaveGroupDialogComponent } from './leave-group-dialog/leave-group-dialog.component';
 
 @Component({
   selector: 'app-week-schedule',
   imports: [
     MatButtonModule, MatSidenavModule, AsyncPipe, MatIconModule, GroupDetailsComponent,
-    MatTooltipModule
+    MatTooltipModule, MatMenuModule
   ],
   templateUrl: './week-schedule.component.html',
   styleUrl: './week-schedule.component.scss'
@@ -29,7 +32,8 @@ export class WeekScheduleComponent implements OnInit{
   constructor(
     private groupRepository: GroupRepositoryService,
     private router: Router,
-    private sidenavService: SidenavService
+    private sidenavService: SidenavService,
+    private readonly dialog: MatDialog,
   ) {  
     this.sidenavOpened$ = sidenavService.groupSelected$;
     this.sidenavGroupId$ = sidenavService.groupId$;
@@ -56,5 +60,9 @@ export class WeekScheduleComponent implements OnInit{
 
   closeSidenav() {
     this.sidenavService.unselectGroup();
+  }
+
+  leaveGroup() {
+    this.dialog.open(LeaveGroupDialogComponent)
   }
 }

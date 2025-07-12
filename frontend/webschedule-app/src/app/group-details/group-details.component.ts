@@ -14,7 +14,7 @@ import { MatTabsModule } from '@angular/material/tabs';
   selector: 'app-group-details',
   imports: [
     MatCardModule, MatChipsModule, TranslatePipe, MatTabsModule
-  ],
+],
   templateUrl: './group-details.component.html',
   styleUrl: './group-details.component.scss'
 })

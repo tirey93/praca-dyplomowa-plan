@@ -1,1 +1,14 @@
-{{groupsToDisplay}}
+<mat-drawer-container class="week-drawer-container">
+  <mat-drawer class="week-drawer" #drawer mode="side" position="end">
+    <p>Auto-resizing sidenav</p>
+    <p>Lorem, ipsum dolor sit amet consectetur. Lorem, ipsum dolor sit amet consectetur Lorem, ipsum dolor sit amet consectetur</p>
+  </mat-drawer>
+
+  <div class="week-content">
+    <button type="button" matButton (click)="drawer.toggle()">
+      Toggle sidenav
+    </button>
+    {{groupsToDisplay}}
+  </div>
+
+</mat-drawer-container>

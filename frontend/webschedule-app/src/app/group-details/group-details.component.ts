@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GroupRepositoryService } from '../../services/group/groupRepository.service';
 import { UserGroupResponse } from '../../services/group/dtos/userGroupResponse';
-import { filter, Observable, switchMap } from 'rxjs';
+import { filter, Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { GroupHelper } from '../../helpers/groupHelper';
 import { AsyncPipe } from '@angular/common';
 import { SidenavService } from '../../services/sidenav.service';
@@ -14,17 +14,29 @@ import { SidenavService } from '../../services/sidenav.service';
   templateUrl: './group-details.component.html',
   styleUrl: './group-details.component.scss'
 })
-export class GroupDetailsComponent{
-  group$: Observable<UserGroupResponse>;
+export class GroupDetailsComponent implements OnDestroy{
+  group?: UserGroupResponse;
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private groupRepository: GroupRepositoryService,
     sidenavService: SidenavService
   ) {
-    this.group$ = sidenavService.groupId$.pipe(
+    sidenavService.groupId$.pipe(
+      takeUntil(this.destroy$),
       filter(groupId => groupId != null),
       switchMap((groupId) => this.groupRepository.getById$(groupId))
-    )
+    ).subscribe({
+      next: (userGroupResponse) => {
+        this.group = userGroupResponse;
+      }
+    })
+  }
+  
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   getGroupName(group: UserGroupResponse): string { return GroupHelper.groupInfoToString(group)}

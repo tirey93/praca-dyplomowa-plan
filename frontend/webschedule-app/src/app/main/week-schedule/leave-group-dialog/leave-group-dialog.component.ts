@@ -8,6 +8,8 @@ import { GroupRepositoryService } from '../../../../services/group/groupReposito
 import { GroupHelper } from '../../../../helpers/groupHelper';
 import { AsyncPipe } from '@angular/common';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
+import { UserInGroupService } from '../../../../services/userInGroup/user-in-group.service';
+import { SnackBarService } from '../../../../services/snackBarService';
 
 @Component({
   selector: 'app-leave-group-dialog',
@@ -24,7 +26,9 @@ export class LeaveGroupDialogComponent {
 
   constructor(
     private groupRepository: GroupRepositoryService,
+    private userInGroupRepository: UserInGroupService,
     private dialogRef: MatDialogRef<LeaveGroupDialogComponent>,
+    private snackBarService: SnackBarService
   ) {
     this.canLeave$ = groupRepository.canLeaveGroup$(this.group.id)
   }
@@ -34,7 +38,15 @@ export class LeaveGroupDialogComponent {
   }
 
   leave() {
-    throw new Error('Method not implemented.');
+    this.userInGroupRepository.disenrollFromGroup$({ groupId: this.group.id }).subscribe({
+      next: () => {
+        this.snackBarService.openMessage('LeaveGroupSuccess');
+        this.dialogRef.close();
+      },
+      error: (err) => {
+        this.snackBarService.openError(err);
+      }
+    })
   }
 
   getGroupName(group: UserGroupResponse): string { return GroupHelper.groupInfoToString(group)}

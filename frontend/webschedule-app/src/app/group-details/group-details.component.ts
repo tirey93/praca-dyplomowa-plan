@@ -57,7 +57,7 @@ export class GroupDetailsComponent implements OnDestroy{
     this.dialog.open(LeaveGroupDialogComponent, {
       data: {
         group: this.group
-      }
+      },
     })
   }
 

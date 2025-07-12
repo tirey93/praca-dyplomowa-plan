@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { SidenavService } from '../../../../services/sidenav.service';
 import { MatDialogModule, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,6 +7,7 @@ import { filter, map, Observable, switchMap } from 'rxjs';
 import { GroupRepositoryService } from '../../../../services/group/groupRepository.service';
 import { GroupHelper } from '../../../../helpers/groupHelper';
 import { AsyncPipe } from '@angular/common';
+import { DIALOG_DATA } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'app-leave-group-dialog',
@@ -17,18 +18,15 @@ import { AsyncPipe } from '@angular/common';
   styleUrl: './leave-group-dialog.component.scss'
 })
 export class LeaveGroupDialogComponent {
-  groupName$: Observable<string>;
+  data = inject(DIALOG_DATA);
+  group: UserGroupResponse = this.data.group;
+  canLeave$: Observable<boolean>;
 
   constructor(
-    private sidenavService: SidenavService,
     private groupRepository: GroupRepositoryService,
     private dialogRef: MatDialogRef<LeaveGroupDialogComponent>,
   ) {
-    this.groupName$ = sidenavService.groupId$.pipe(
-        filter(groupId => groupId != null),
-        switchMap((groupId) => this.groupRepository.getById$(groupId)),
-        map((response) => GroupHelper.groupInfoToString(response))
-      )
+    this.canLeave$ = groupRepository.canLeaveGroup$(this.group.id)
   }
 
   onNoClick() {
@@ -38,4 +36,6 @@ export class LeaveGroupDialogComponent {
   leave() {
     throw new Error('Method not implemented.');
   }
+
+  getGroupName(group: UserGroupResponse): string { return GroupHelper.groupInfoToString(group)}
 }

@@ -11,6 +11,14 @@ namespace WebSchedule.Infrastructure.Repositories
             : base(appDbContext, appDbContext.UserInGroups)
         {
         }
+
+        public IEnumerable<UserInGroup> GetAdminsForGroup(int groupId)
+        {
+            return _dbSet
+                .Include(g => g.User)
+                .Where(x => x.UserRole == UserRole.Admin && x.GroupId == groupId);
+        }
+
         public IEnumerable<UserGroupDto> GetUserGroups(int userId)
         {
             return _dbSet

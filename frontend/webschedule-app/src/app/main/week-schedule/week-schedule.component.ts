@@ -16,8 +16,8 @@ import { LeaveGroupDialogComponent } from './leave-group-dialog/leave-group-dial
 @Component({
   selector: 'app-week-schedule',
   imports: [
-    MatButtonModule, MatSidenavModule, AsyncPipe, MatIconModule, GroupDetailsComponent,
-    MatTooltipModule, MatMenuModule
+    MatButtonModule, MatSidenavModule, AsyncPipe, GroupDetailsComponent,
+    MatTooltipModule
   ],
   templateUrl: './week-schedule.component.html',
   styleUrl: './week-schedule.component.scss'
@@ -33,7 +33,6 @@ export class WeekScheduleComponent implements OnInit{
     private groupRepository: GroupRepositoryService,
     private router: Router,
     private sidenavService: SidenavService,
-    private readonly dialog: MatDialog,
   ) {  
     this.sidenavOpened$ = sidenavService.groupSelected$;
     this.sidenavGroupId$ = sidenavService.groupId$;
@@ -58,11 +57,4 @@ export class WeekScheduleComponent implements OnInit{
     }
   }
 
-  closeSidenav() {
-    this.sidenavService.unselectGroup();
-  }
-
-  leaveGroup() {
-    this.dialog.open(LeaveGroupDialogComponent)
-  }
 }

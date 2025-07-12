@@ -1,15 +1,5 @@
 <mat-drawer-container class="week-drawer-container">
     <mat-drawer class="week-drawer" mode="side" position="end" [opened]="sidenavOpened$ | async">
-        <div class="week-drawer-close">
-            <button matTooltip="Ustawienia" mat-icon-button [matMenuTriggerFor]="settings"> <mat-icon>more_vert</mat-icon></button>
-            <mat-menu #settings="matMenu">
-                <button mat-menu-item (click)="leaveGroup()">
-                    <mat-icon>group_remove</mat-icon>
-                    Opuść grupę
-                </button>
-            </mat-menu>
-            <button matTooltip="Zamknij" mat-icon-button (click)="closeSidenav()"><mat-icon>close</mat-icon></button>
-        </div>
         <app-group-details></app-group-details>
     </mat-drawer>
 

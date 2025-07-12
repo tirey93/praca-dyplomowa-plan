@@ -1,16 +1,24 @@
 <title mat-dialog-title>Opuszczenie Grupy</title>
 <mat-dialog-content>
-    <div class="dialog-description">
-        Zamierzasz właśnie opuścić grupę <b>{{groupName$ | async}}.</b>
-        <br>
-        Czy na pewno chcesz kontynuować?
-    </div>
+    @if (canLeave$ | async) {
+        <div class="dialog-description">
+            Zamierzasz właśnie opuścić grupę <b>{{getGroupName(group)}}</b>.
+            <br>
+            Czy na pewno chcesz kontynuować?
+        </div>
+    } @else {
+        <div class="dialog-description">
+            Nie możesz opuścić grupy <b>{{getGroupName(group)}}</b> ponieważ jesteś jej jedynym administratorem.
+            <br>
+            Nadaj swoje uprawnienie innemu członkowi grupy, aby kontynuować.
+        </div>
+    }
     <mat-dialog-actions>
         <button mat-raised-button type="button" (click)="onNoClick()">Anuluj</button>
         <button style="background-color: darkred; margin-left: 15px;"
             mat-flat-button
             type="submit" 
-            cdkFocusInitial
+            [disabled]="!(canLeave$ | async)"
             (click)="leave()">Opuść
         </button>
     </mat-dialog-actions>

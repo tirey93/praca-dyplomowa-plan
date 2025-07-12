@@ -24,6 +24,14 @@ import { GroupInfoResponse } from './dtos/groupInfoResponse';
       })
     }
 
+    canLeaveGroup$(groupId: number) {
+      return this.http.get<boolean>(`${this.url}/${groupId}/LoggedUserCanLeave`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
     getCandidateGroups$() {
       return this.http.get<CandidateGroupInfoResponse[]>(`${this.url}/Candidate`, {
         headers: {

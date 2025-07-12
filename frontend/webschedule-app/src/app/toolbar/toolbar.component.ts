@@ -10,11 +10,9 @@ import { filter, map, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
-import { ShowGroupDialogComponent } from '../show-group-dialog/show-group-dialog.component';
 import { SearchGroupDialogComponent } from '../search-group-dialog/search-group-dialog.component';
 import { LoginService } from '../../services/login.service';
 import { MatTooltip } from '@angular/material/tooltip';
-import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
 import { GroupRepositoryService } from '../../services/group/groupRepository.service';
 import { GroupHelper } from '../../helpers/groupHelper';
 import { PreferencesComponent } from '../preferences/preferences.component';
@@ -92,7 +90,6 @@ export class ToolbarComponent {
   }
 
   onGroupSelected(id: number) {
-    // this.dialog.open<ShowGroupDialogComponent, number>(ShowGroupDialogComponent, { data: id });
     this.sidenavService.selectGroup(id);
   }
 }

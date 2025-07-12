@@ -4,13 +4,14 @@ import { GroupRepositoryService } from '../../../services/group/groupRepository.
 import { Router } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SidenavService } from '../../../services/sidenav.service';
-import { Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { GroupDetailsComponent } from "../../group-details/group-details.component";
 
 @Component({
   selector: 'app-week-schedule',
-  imports: [MatButtonModule, MatSidenavModule, AsyncPipe, MatIconModule],
+  imports: [MatButtonModule, MatSidenavModule, AsyncPipe, MatIconModule, GroupDetailsComponent],
   templateUrl: './week-schedule.component.html',
   styleUrl: './week-schedule.component.scss'
 })
@@ -18,6 +19,7 @@ export class WeekScheduleComponent implements OnInit{
   @Input() userGroups: number[] = [];
   @Input() groupId?: number;
   sidenavOpened$: Observable<boolean>;
+  sidenavGroupId$: Observable<number | null>;
 
   groupsToDisplay: number[] = []
   constructor(
@@ -26,6 +28,7 @@ export class WeekScheduleComponent implements OnInit{
     private sidenavService: SidenavService
   ) {  
     this.sidenavOpened$ = sidenavService.groupSelected$;
+    this.sidenavGroupId$ = sidenavService.groupId$;
   }
 
   ngOnInit(): void {

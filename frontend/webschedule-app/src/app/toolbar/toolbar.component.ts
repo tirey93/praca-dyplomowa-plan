@@ -18,6 +18,7 @@ import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-
 import { GroupRepositoryService } from '../../services/group/groupRepository.service';
 import { GroupHelper } from '../../helpers/groupHelper';
 import { PreferencesComponent } from '../preferences/preferences.component';
+import { SidenavService } from '../../services/sidenav.service';
 
 export interface GroupSelected {
   id: number;
@@ -38,7 +39,9 @@ export class ToolbarComponent {
       private readonly groupRepository: GroupRepositoryService,
       private readonly router: Router,
       private readonly dialog: MatDialog,
-      public readonly loginService: LoginService) {
+      public readonly loginService: LoginService,
+      private sidenavService: SidenavService
+    ) {
     loginService.refreshLogin();
     this.groups$ = this.refeshGroups$.pipe(
       startWith(undefined), switchMap(() => {
@@ -89,6 +92,7 @@ export class ToolbarComponent {
   }
 
   onGroupSelected(id: number) {
-    this.dialog.open<ShowGroupDialogComponent, number>(ShowGroupDialogComponent, { data: id });
+    // this.dialog.open<ShowGroupDialogComponent, number>(ShowGroupDialogComponent, { data: id });
+    this.sidenavService.selectGroup(id);
   }
 }

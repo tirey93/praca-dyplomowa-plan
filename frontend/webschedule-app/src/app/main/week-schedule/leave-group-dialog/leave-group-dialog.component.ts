@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { SidenavService } from '../../../../services/sidenav.service';
 import { MatDialogModule, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { UserGroupResponse } from '../../../../services/group/dtos/userGroupResponse';
+import { UserGroupResponse } from '../../../../services/userInGroup/dtos/userGroupResponse';
 import { filter, map, Observable, switchMap } from 'rxjs';
 import { GroupRepositoryService } from '../../../../services/group/groupRepository.service';
 import { GroupHelper } from '../../../../helpers/groupHelper';

@@ -13,10 +13,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { SearchGroupDialogComponent } from '../search-group-dialog/search-group-dialog.component';
 import { LoginService } from '../../services/login.service';
 import { MatTooltip } from '@angular/material/tooltip';
-import { GroupRepositoryService } from '../../services/group/groupRepository.service';
 import { GroupHelper } from '../../helpers/groupHelper';
 import { PreferencesComponent } from '../preferences/preferences.component';
 import { SidenavService } from '../../services/sidenav.service';
+import { UserInGroupService } from '../../services/userInGroup/user-in-group.service';
 
 export interface GroupSelected {
   id: number;
@@ -32,21 +32,21 @@ export interface GroupSelected {
 })
 export class ToolbarComponent {
   groups$: Observable<GroupSelected[]>;
-  refeshGroups$ = new Subject<void>();
+  refreshGroups$ = new Subject<void>();
   constructor(
-      private readonly groupRepository: GroupRepositoryService,
+      private readonly userInGroupRepository: UserInGroupService,
       private readonly router: Router,
       private readonly dialog: MatDialog,
       public readonly loginService: LoginService,
       private sidenavService: SidenavService
     ) {
     loginService.refreshLogin();
-    this.groups$ = this.refeshGroups$.pipe(
+    this.groups$ = this.refreshGroups$.pipe(
       startWith(undefined), switchMap(() => {
         return this.loginService.isLoggedIn$.pipe(
           filter(isLoggedIn => isLoggedIn),
           switchMap(() => {
-            return this.groupRepository.getByLoggedIn$().pipe(
+            return this.userInGroupRepository.getByLoggedIn$().pipe(
               map(apiGroups => 
                 apiGroups.map(apiGroup => ({
                   id: apiGroup.id,
@@ -84,7 +84,7 @@ export class ToolbarComponent {
     }).afterClosed().subscribe({
       next:(result:boolean) => {
         if(result)
-          this.refeshGroups$.next();
+          this.refreshGroups$.next();
       }
     });
   }

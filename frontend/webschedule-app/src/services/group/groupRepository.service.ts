@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../../enviroments/enviroments';
-import { UserGroupResponse } from './dtos/userGroupResponse';
 import { GroupRequest } from './dtos/groupRequest';
 import { GroupResponse } from './dtos/groupResponse';
 import { CandidateGroupInfoResponse } from './dtos/candidateGroupInfoResponse';
@@ -15,14 +14,6 @@ import { GroupInfoResponse } from './dtos/groupInfoResponse';
     protected url = `${environment.host}:${environment.port}/Group`
 
     constructor(private http: HttpClient, private cookieService: CookieService) { }
-
-    getByLoggedIn$() {
-      return this.http.get<UserGroupResponse[]>(`${this.url}/ByLoggedIn`, {
-        headers: {
-          authorization: `Bearer ${this.cookieService.get("token")}`
-        }
-      })
-    }
 
     canLeaveGroup$(groupId: number) {
       return this.http.get<boolean>(`${this.url}/${groupId}/LoggedUserCanLeave`, {
@@ -42,14 +33,6 @@ import { GroupInfoResponse } from './dtos/groupInfoResponse';
 
     getGroups$() {
       return this.http.get<GroupInfoResponse[]>(`${this.url}`, {
-        headers: {
-          authorization: `Bearer ${this.cookieService.get("token")}`
-        }
-      })
-    }
-
-    getById$(groupId: number | undefined) {
-      return this.http.get<UserGroupResponse>(`${this.url}/${groupId}`, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

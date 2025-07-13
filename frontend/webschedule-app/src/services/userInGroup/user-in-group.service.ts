@@ -4,6 +4,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../../enviroments/enviroments';
 import { AddCandidateRequest } from './dtos/add-candidate-request';
 import { DisenrollFromGroupRequest } from './dtos/disenroll-from-group-request';
+import { UserGroupResponse } from './dtos/userGroupResponse';
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +14,22 @@ import { DisenrollFromGroupRequest } from './dtos/disenroll-from-group-request';
 
     constructor(private http: HttpClient, private cookieService: CookieService) { }
 
+    getByLoggedIn$() {
+      return this.http.get<UserGroupResponse[]>(`${this.url}/ByLoggedIn`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
+    getLoggedInByGroup$(groupId: number | undefined) {
+      return this.http.get<UserGroupResponse>(`${this.url}/Group/${groupId}/ByLoggedIn`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+    
     addCandidate$(request: AddCandidateRequest) {
       return this.http.post(`${this.url}`, request, {
         headers: {

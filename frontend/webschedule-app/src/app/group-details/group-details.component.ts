@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GroupRepositoryService } from '../../services/group/groupRepository.service';
-import { UserGroupResponse } from '../../services/group/dtos/userGroupResponse';
+import { UserGroupResponse } from '../../services/userInGroup/dtos/userGroupResponse';
 import { filter, Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { GroupHelper } from '../../helpers/groupHelper';
 import { AsyncPipe } from '@angular/common';
@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { LeaveGroupDialogComponent } from '../main/week-schedule/leave-group-dialog/leave-group-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
 import { RemoveGroupDialogComponent } from '../main/week-schedule/remove-group-dialog/remove-group-dialog.component';
+import { UserInGroupService } from '../../services/userInGroup/user-in-group.service';
 
 @Component({
   selector: 'app-group-details',
@@ -30,14 +31,14 @@ export class GroupDetailsComponent implements OnDestroy{
   private destroy$ = new Subject<void>();
 
   constructor(
-    private groupRepository: GroupRepositoryService,
+    private userInGroupRepository: UserInGroupService,
     private sidenavService: SidenavService,
     private readonly dialog: MatDialog,
   ) {
     sidenavService.groupId$.pipe(
       takeUntil(this.destroy$),
       filter(groupId => groupId != null),
-      switchMap((groupId) => this.groupRepository.getById$(groupId))
+      switchMap((groupId) => this.userInGroupRepository.getLoggedInByGroup$(groupId))
     ).subscribe({
       next: (userGroupResponse) => {
         this.group = userGroupResponse;

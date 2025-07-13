@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using WebSchedule.Controllers.Group.Exceptions;
 using WebSchedule.Controllers.Responses;
+using WebSchedule.Controllers.UserInGroup.Exceptions;
 using WebSchedule.Domain.Repositories;
 
-namespace WebSchedule.Controllers.Group.Queries
+namespace WebSchedule.Controllers.UserInGroup.Queries
 {
     public class GetGroupByIdQuery : IRequest<UserGroupResponse>
     {
@@ -25,7 +25,7 @@ namespace WebSchedule.Controllers.Group.Queries
         public Task<UserGroupResponse> Handle(GetGroupByIdQuery request, CancellationToken cancellationToken)
         {
             var userGroup = _userInGroupRepository.GetUserGroups(request.UserId).FirstOrDefault(x => x.Id == request.GroupId)
-                ?? throw new GroupNotFoundException(request.GroupId);
+                ?? throw new UserInGroupNotFoundException(request.UserId, request.GroupId);
             return Task.FromResult(new UserGroupResponse
             {
                 Id = userGroup.Id,

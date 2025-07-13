@@ -1,6 +1,6 @@
 import { DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, inject } from '@angular/core';
-import { UserGroupResponse } from '../../../../services/group/dtos/userGroupResponse';
+import { UserGroupResponse } from '../../../../services/userInGroup/dtos/userGroupResponse';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { GroupHelper } from '../../../../helpers/groupHelper';

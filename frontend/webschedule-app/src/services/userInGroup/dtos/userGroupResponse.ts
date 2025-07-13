@@ -1,4 +1,4 @@
-import { GroupResponse } from "./groupResponse";
+import { GroupResponse } from "../../group/dtos/groupResponse";
 
 export interface UserGroupResponse extends GroupResponse {
     isAdmin: boolean

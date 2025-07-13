@@ -1,11 +1,10 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { WeekScheduleComponent } from "./week-schedule/week-schedule.component";
-import { BehaviorSubject, catchError, combineLatest, filter, finalize, lastValueFrom, map, merge, Observable, of, pipe, skip, startWith, Subject, switchMap, takeUntil, tap } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
+import { of, Subject, switchMap, takeUntil } from 'rxjs';
 import { LoginService } from '../../services/login.service';
 import { SearchGroupComponent } from "../search-group/search-group.component";
-import { GroupRepositoryService } from '../../services/group/groupRepository.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { UserInGroupService } from '../../services/userInGroup/user-in-group.service';
 
 @Component({
   selector: 'app-main',
@@ -23,7 +22,7 @@ export class MainComponent implements OnInit, OnDestroy{
 
   constructor(
     private loginService: LoginService,
-    private groupRepository: GroupRepositoryService
+    private userInGroupRepository: UserInGroupService
     ) {
 
   }
@@ -31,7 +30,7 @@ export class MainComponent implements OnInit, OnDestroy{
   ngOnInit(): void {
     this.loginService.isLoggedIn$.pipe(
         takeUntil(this.destroy$),
-        switchMap((isLogged) => isLogged ? this.groupRepository.getByLoggedIn$() : of([])),
+        switchMap((isLogged) => isLogged ? this.userInGroupRepository.getByLoggedIn$() : of([])),
       ).subscribe({
         next: (userGroupResponses) => {
           this.userGroups = userGroupResponses.map(y => y.id)

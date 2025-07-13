@@ -13,7 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { LeaveGroupDialogComponent } from '../main/week-schedule/leave-group-dialog/leave-group-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
 import { RemoveGroupDialogComponent } from '../main/week-schedule/remove-group-dialog/remove-group-dialog.component';
-import { UserInGroupService } from '../../services/userInGroup/user-in-group.service';
+import { UserInGroupService } from '../../services/userInGroup/userInGroup.service';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import { SnackBarService } from '../../services/snackBarService';
 import { environment } from '../../enviroments/enviroments';

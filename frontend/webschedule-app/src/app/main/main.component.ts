@@ -4,7 +4,7 @@ import { of, Subject, switchMap, takeUntil } from 'rxjs';
 import { LoginService } from '../../services/login.service';
 import { SearchGroupComponent } from "../search-group/search-group.component";
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { UserInGroupService } from '../../services/userInGroup/user-in-group.service';
+import { UserInGroupService } from '../../services/userInGroup/userInGroup.service';
 
 @Component({
   selector: 'app-main',

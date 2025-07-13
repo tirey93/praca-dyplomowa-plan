@@ -24,6 +24,11 @@ namespace WebSchedule.Controllers.UserInGroup.Queries
         public Task<IEnumerable<UserGroupResponse>> Handle(GetUserGroupsByGroupQuery request, CancellationToken cancellationToken)
         {
             var userGroups = _userInGroupRepository.GetUserGroupsByGroup(request.GroupId);
+
+            if (request.ExceptUserId != null)
+            {
+                userGroups = userGroups.Where(x => x.User.Id != request.ExceptUserId);
+            }
             return Task.FromResult(userGroups.Select(userGroup => new UserGroupResponse
             {
                 Group = new GroupResponse

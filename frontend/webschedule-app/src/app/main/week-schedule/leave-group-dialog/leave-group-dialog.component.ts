@@ -8,7 +8,7 @@ import { GroupRepositoryService } from '../../../../services/group/groupReposito
 import { GroupHelper } from '../../../../helpers/groupHelper';
 import { AsyncPipe } from '@angular/common';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
-import { UserInGroupService } from '../../../../services/userInGroup/user-in-group.service';
+import { UserInGroupService } from '../../../../services/userInGroup/userInGroup.service';
 import { SnackBarService } from '../../../../services/snackBarService';
 
 @Component({

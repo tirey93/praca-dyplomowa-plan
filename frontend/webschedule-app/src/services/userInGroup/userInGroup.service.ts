@@ -30,8 +30,8 @@ import { UserGroupResponse } from './dtos/userGroupResponse';
       })
     }
 
-    getByGroup$(groupId: number | undefined) {
-      return this.http.get<UserGroupResponse[]>(`${this.url}/Group/${groupId}`, {
+    getByGroup$(groupId: number | undefined, exceptLoggedIn: boolean = false) {
+      return this.http.get<UserGroupResponse[]>(`${this.url}/Group/${groupId}?exceptLoggedIn=${exceptLoggedIn}`, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

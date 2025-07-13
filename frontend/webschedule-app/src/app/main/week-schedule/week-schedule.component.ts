@@ -12,7 +12,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { LeaveGroupDialogComponent } from './leave-group-dialog/leave-group-dialog.component';
-import { UserInGroupService } from '../../../services/userInGroup/user-in-group.service';
+import { UserInGroupService } from '../../../services/userInGroup/userInGroup.service';
 
 @Component({
   selector: 'app-week-schedule',

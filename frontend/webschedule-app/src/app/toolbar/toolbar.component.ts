@@ -16,7 +16,7 @@ import { MatTooltip } from '@angular/material/tooltip';
 import { GroupHelper } from '../../helpers/groupHelper';
 import { PreferencesComponent } from '../preferences/preferences.component';
 import { GroupSyncService } from '../../services/groupSync.service';
-import { UserInGroupService } from '../../services/userInGroup/user-in-group.service';
+import { UserInGroupService } from '../../services/userInGroup/userInGroup.service';
 
 export interface GroupSelected {
   id: number;

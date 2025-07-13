@@ -7,7 +7,7 @@ import { GroupHelper } from '../../../../helpers/groupHelper';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { UserInGroupService } from '../../../../services/userInGroup/user-in-group.service';
+import { UserInGroupService } from '../../../../services/userInGroup/userInGroup.service';
 import { GroupRepositoryService } from '../../../../services/group/groupRepository.service';
 import { SnackBarService } from '../../../../services/snackBarService';
 import { Router } from '@angular/router';

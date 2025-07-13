@@ -17,7 +17,7 @@ import { map, Observable } from 'rxjs';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { UserInGroupService } from '../../services/userInGroup/user-in-group.service';
+import { UserInGroupService } from '../../services/userInGroup/userInGroup.service';
 import { SnackBarService } from '../../services/snackBarService';
 import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
 import { GroupRepositoryService } from '../../services/group/groupRepository.service';

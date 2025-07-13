@@ -7,6 +7,7 @@ namespace WebSchedule.Controllers.UserInGroup.Queries
     public class GetUserGroupsByGroupQuery : IRequest<IEnumerable<UserGroupResponse>>
     {
         public int GroupId { get; set; }
+        public int? ExceptUserId { get; set; }
     }
 
     public class GetUserGroupsByGroupQueryHandler : IRequestHandler<GetUserGroupsByGroupQuery, IEnumerable<UserGroupResponse>>

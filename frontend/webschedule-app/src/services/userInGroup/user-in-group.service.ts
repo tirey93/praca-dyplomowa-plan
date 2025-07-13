@@ -30,7 +30,7 @@ import { UserGroupResponse } from './dtos/userGroupResponse';
       })
     }
 
-    geByGroup$(groupId: number | undefined) {
+    getByGroup$(groupId: number | undefined) {
       return this.http.get<UserGroupResponse[]>(`${this.url}/Group/${groupId}`, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`

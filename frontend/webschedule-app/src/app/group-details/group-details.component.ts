@@ -17,13 +17,15 @@ import { UserInGroupService } from '../../services/userInGroup/user-in-group.ser
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import { SnackBarService } from '../../services/snackBarService';
 import { environment } from '../../enviroments/enviroments';
+import { GroupMembersComponent } from "./group-members/group-members.component";
 
 
 @Component({
   selector: 'app-group-details',
   imports: [
     MatCardModule, MatChipsModule, TranslatePipe, MatTabsModule, MatIconModule, MatMenuModule, MatButtonModule,
-    ClipboardModule
+    ClipboardModule,
+    GroupMembersComponent
 ],
   templateUrl: './group-details.component.html',
   styleUrl: './group-details.component.scss'

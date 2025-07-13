@@ -35,7 +35,7 @@ export class RemoveGroupDialogComponent {
     private groupRepository: GroupRepositoryService,
     private snackBarService: SnackBarService,
   ) {
-    userInGroupRepository.geByGroup$(this.group.id).subscribe({
+    userInGroupRepository.getByGroup$(this.group.id).subscribe({
       next: (userGroupResponses) => {
         this.realMembersCount = userGroupResponses.filter(x => !x.isCandidate).length;
       }

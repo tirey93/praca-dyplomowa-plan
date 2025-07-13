@@ -94,13 +94,15 @@ namespace WebSchedule.Controllers.User
 #if !DEBUG
         [Authorize]
 #endif
-        public async Task<ActionResult<IEnumerable<UserGroupResponse>>> GetByGroupId(int id)
+        public async Task<ActionResult<IEnumerable<UserGroupResponse>>> GetByGroupId(int id, [FromQuery] bool exceptLoggedIn = false)
         {
             try
             {
+                int? userId = exceptLoggedIn ? JwtHelper.GetUserIdFromToken(Request.Headers.Authorization) : null;
                 return Ok(await _mediator.Send(new GetUserGroupsByGroupQuery
                 {
                     GroupId = id,
+                    ExceptUserId = userId
                 }));
             }
             catch (ApplicationException ex)

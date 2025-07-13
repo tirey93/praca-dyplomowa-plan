@@ -1,10 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { GroupRepositoryService } from '../../../services/group/groupRepository.service';
 import { Router } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SidenavService } from '../../../services/sidenav.service';
-import { filter, map, Observable } from 'rxjs';
+import { filter, map, Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { GroupDetailsComponent } from "../../group-details/group-details.component";
@@ -12,6 +12,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { LeaveGroupDialogComponent } from './leave-group-dialog/leave-group-dialog.component';
+import { UserInGroupService } from '../../../services/userInGroup/user-in-group.service';
 
 @Component({
   selector: 'app-week-schedule',
@@ -22,21 +23,35 @@ import { LeaveGroupDialogComponent } from './leave-group-dialog/leave-group-dial
   templateUrl: './week-schedule.component.html',
   styleUrl: './week-schedule.component.scss'
 })
-export class WeekScheduleComponent implements OnInit{
+export class WeekScheduleComponent implements OnInit, OnDestroy{
   @Input() userGroups: number[] = [];
   @Input() groupId?: number;
   sidenavOpened$: Observable<boolean>;
   sidenavGroupId$: Observable<number | null>;
 
   groupsToDisplay: number[] = []
+
+  private destroy$ = new Subject<void>();
+  
   constructor(
     private groupRepository: GroupRepositoryService,
+    userInGroupRepository: UserInGroupService,
     private router: Router,
     private sidenavService: SidenavService,
   ) {  
     this.sidenavOpened$ = sidenavService.groupSelected$;
     this.sidenavGroupId$ = sidenavService.groupId$;
+
+    sidenavService.refreshGroups$.pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => userInGroupRepository.getByLoggedIn$())
+    ).subscribe({
+      next: (userGroupsResponses) => {
+        this.groupsToDisplay = userGroupsResponses.map(x => x.id)
+      }
+    })
   }
+
 
   ngOnInit(): void {
     if (this.groupId) {
@@ -57,4 +72,8 @@ export class WeekScheduleComponent implements OnInit{
     }
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

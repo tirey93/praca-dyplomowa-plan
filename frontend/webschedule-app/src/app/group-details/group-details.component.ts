@@ -16,6 +16,7 @@ import { LeaveGroupDialogComponent } from '../main/week-schedule/leave-group-dia
 import { MatButtonModule } from '@angular/material/button';
 import { RemoveGroupDialogComponent } from '../main/week-schedule/remove-group-dialog/remove-group-dialog.component';
 import { UserInGroupService } from '../../services/userInGroup/user-in-group.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-group-details',
@@ -34,6 +35,7 @@ export class GroupDetailsComponent implements OnDestroy{
     private userInGroupRepository: UserInGroupService,
     private sidenavService: SidenavService,
     private readonly dialog: MatDialog,
+    private router: Router
   ) {
     sidenavService.groupId$.pipe(
       takeUntil(this.destroy$),
@@ -68,6 +70,11 @@ export class GroupDetailsComponent implements OnDestroy{
       data: {
         group: this.group
       },
+    }).afterClosed().subscribe((result:boolean) => {
+      if (result) {
+        this.closeSidenav();
+        this.sidenavService.refreshGroups$.next();
+      }
     })
   }
 

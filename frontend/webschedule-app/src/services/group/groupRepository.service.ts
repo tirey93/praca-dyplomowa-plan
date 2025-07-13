@@ -62,4 +62,12 @@ import { GroupInfoResponse } from './dtos/groupInfoResponse';
         }
       })
     }
+
+    remove$(groupId: number) {
+      return this.http.delete(`${this.url}/${groupId}`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
   }

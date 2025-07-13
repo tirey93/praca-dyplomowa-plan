@@ -22,7 +22,7 @@ export class MainComponent implements OnInit, OnDestroy{
 
   constructor(
     private loginService: LoginService,
-    private userInGroupRepository: UserInGroupService
+    private userInGroupRepository: UserInGroupService,
     ) {
 
   }

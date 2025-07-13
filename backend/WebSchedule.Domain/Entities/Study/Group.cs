@@ -75,5 +75,10 @@ namespace WebSchedule.Domain.Entities.Study
             var userInGroup = MembersInGroup.First(x => x.User == member);
             MembersInGroup.Remove(userInGroup);
         }
+
+        public void RemoveAllMembers()
+        {
+            MembersInGroup.Clear();
+        }
     }
 }

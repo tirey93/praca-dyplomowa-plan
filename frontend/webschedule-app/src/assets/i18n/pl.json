@@ -26,6 +26,7 @@
   "NoSuchMemberInGroup": "Użytkownik o id {{0}} nie jest członkiem grupy o id {{1}}.",
 
   "LeaveGroupSuccess": "Grupę opuszczono z powodzeniem.",
+  "RemoveGroupSuccess": "Grupę usunięto z powodzeniem.",
 
   "UserWasCreated": "Użytkownik został utworzony."
 }

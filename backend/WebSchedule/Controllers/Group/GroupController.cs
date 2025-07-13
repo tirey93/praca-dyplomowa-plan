@@ -188,7 +188,9 @@ namespace WebSchedule.Controllers.Group
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [AllowAnonymous]
+#if !DEBUG
+        [Authorize]
+#endif
         public async Task<ActionResult<GroupResponse>> Create([FromBody] CreateGroupCommand command)
         {
             try
@@ -199,6 +201,38 @@ namespace WebSchedule.Controllers.Group
                 command.UserId = userId;
                 var course = await _mediator.Send(command);
                 return Ok(course);
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+#if !DEBUG
+        [Authorize]
+#endif
+        public async Task<ActionResult<GroupResponse>> Delete(int id)
+        {
+            try
+            {
+                
+                await _mediator.Send(new DeleteGroupCommand
+                {
+                    GroupId = id
+                });
+                return NoContent();
             }
             catch (ApplicationException ex)
             {

@@ -32,7 +32,7 @@ export interface GroupSelected {
 })
 export class ToolbarComponent {
   groups$: Observable<GroupSelected[]>;
-  refreshGroups$ = new Subject<void>();
+  
   constructor(
       private readonly userInGroupRepository: UserInGroupService,
       private readonly router: Router,
@@ -41,7 +41,7 @@ export class ToolbarComponent {
       private sidenavService: SidenavService
     ) {
     loginService.refreshLogin();
-    this.groups$ = this.refreshGroups$.pipe(
+    this.groups$ = this.sidenavService.refreshGroups$.pipe(
       startWith(undefined), switchMap(() => {
         return this.loginService.isLoggedIn$.pipe(
           filter(isLoggedIn => isLoggedIn),
@@ -84,7 +84,7 @@ export class ToolbarComponent {
     }).afterClosed().subscribe({
       next:(result:boolean) => {
         if(result)
-          this.refreshGroups$.next();
+          this.sidenavService.refreshGroups$.next();
       }
     });
   }

@@ -8,6 +8,9 @@ import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, Validator
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { UserInGroupService } from '../../../../services/userInGroup/user-in-group.service';
+import { GroupRepositoryService } from '../../../../services/group/groupRepository.service';
+import { SnackBarService } from '../../../../services/snackBarService';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-remove-group-dialog',
@@ -28,11 +31,13 @@ export class RemoveGroupDialogComponent {
 
   constructor(
     private dialogRef: MatDialogRef<RemoveGroupDialogComponent>,
-    private userInGroupRepository: UserInGroupService
+    private userInGroupRepository: UserInGroupService,
+    private groupRepository: GroupRepositoryService,
+    private snackBarService: SnackBarService,
   ) {
     userInGroupRepository.geByGroup$(this.group.id).subscribe({
       next: (userGroupResponses) => {
-        this.realMembersCount = userGroupResponses.length;
+        this.realMembersCount = userGroupResponses.filter(x => !x.isCandidate).length;
       }
     })
   }
@@ -44,11 +49,20 @@ export class RemoveGroupDialogComponent {
     };
   }
   onNoClick() {
-    this.dialogRef.close();
+    this.dialogRef.close(false);
   }
 
   remove() {
-    
+    this.groupRepository.remove$(this.group.id).subscribe({
+      next: () => {
+        this.snackBarService.openMessage('RemoveGroupSuccess');
+        this.dialogRef.close(true);
+      },
+      error: (err) => {
+        this.snackBarService.openError(err);
+        this.form.setErrors({'incorrect': true})
+      }
+    })
   }
 
   getGroupName(group: UserGroupResponse): string { return GroupHelper.groupInfoToString(group)}

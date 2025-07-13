@@ -15,7 +15,7 @@ import { LoginService } from '../../services/login.service';
 import { MatTooltip } from '@angular/material/tooltip';
 import { GroupHelper } from '../../helpers/groupHelper';
 import { PreferencesComponent } from '../preferences/preferences.component';
-import { SidenavService } from '../../services/sidenav.service';
+import { GroupSyncService } from '../../services/groupSync.service';
 import { UserInGroupService } from '../../services/userInGroup/user-in-group.service';
 
 export interface GroupSelected {
@@ -38,10 +38,10 @@ export class ToolbarComponent {
       private readonly router: Router,
       private readonly dialog: MatDialog,
       public readonly loginService: LoginService,
-      private sidenavService: SidenavService
+      private groupSyncService: GroupSyncService
     ) {
     loginService.refreshLogin();
-    this.groups$ = this.sidenavService.refreshGroups$.pipe(
+    this.groups$ = this.groupSyncService.refreshGroups$.pipe(
       startWith(undefined), switchMap(() => {
         return this.loginService.isLoggedIn$.pipe(
           filter(isLoggedIn => isLoggedIn),
@@ -84,12 +84,12 @@ export class ToolbarComponent {
     }).afterClosed().subscribe({
       next:(result:boolean) => {
         if(result)
-          this.sidenavService.refreshGroups$.next();
+          this.groupSyncService.refreshGroups$.next();
       }
     });
   }
 
   onGroupSelected(id: number) {
-    this.sidenavService.selectGroup(id);
+    this.groupSyncService.selectGroup(id);
   }
 }

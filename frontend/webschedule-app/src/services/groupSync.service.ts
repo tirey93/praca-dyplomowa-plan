@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, of, Subject, switchMap } from "rxjs";
 @Injectable({
     providedIn: 'root'
   })
-  export class SidenavService {
+  export class GroupSyncService {
     private _groupId = new BehaviorSubject<number | null>(null);
     groupId$: Observable<number | null> = this._groupId.asObservable();
     groupSelected$: Observable<boolean> = this.groupId$.pipe(

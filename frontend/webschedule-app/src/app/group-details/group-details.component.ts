@@ -4,7 +4,7 @@ import { UserGroupResponse } from '../../services/userInGroup/dtos/userGroupResp
 import { filter, Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { GroupHelper } from '../../helpers/groupHelper';
 import { AsyncPipe } from '@angular/common';
-import { SidenavService } from '../../services/sidenav.service';
+import { GroupSyncService } from '../../services/groupSync.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -33,11 +33,11 @@ export class GroupDetailsComponent implements OnDestroy{
 
   constructor(
     private userInGroupRepository: UserInGroupService,
-    private sidenavService: SidenavService,
+    private groupSyncService: GroupSyncService,
     private readonly dialog: MatDialog,
     private router: Router
   ) {
-    sidenavService.groupId$.pipe(
+    groupSyncService.groupId$.pipe(
       takeUntil(this.destroy$),
       filter(groupId => groupId != null),
       switchMap((groupId) => this.userInGroupRepository.getLoggedInByGroup$(groupId))
@@ -54,7 +54,7 @@ export class GroupDetailsComponent implements OnDestroy{
   }
 
   closeSidenav() {
-    this.sidenavService.unselectGroup();
+    this.groupSyncService.unselectGroup();
   }
 
   leaveGroup() {
@@ -73,7 +73,7 @@ export class GroupDetailsComponent implements OnDestroy{
     }).afterClosed().subscribe((result:boolean) => {
       if (result) {
         this.closeSidenav();
-        this.sidenavService.refreshGroups$.next();
+        this.groupSyncService.refreshGroups$.next();
       }
     })
   }

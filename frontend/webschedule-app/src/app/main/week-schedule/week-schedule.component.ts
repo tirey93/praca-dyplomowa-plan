@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { GroupRepositoryService } from '../../../services/group/groupRepository.service';
 import { Router } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { SidenavService } from '../../../services/sidenav.service';
+import { GroupSyncService } from '../../../services/groupSync.service';
 import { filter, map, Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -37,12 +37,12 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     private groupRepository: GroupRepositoryService,
     userInGroupRepository: UserInGroupService,
     private router: Router,
-    private sidenavService: SidenavService,
+    private groupSyncService: GroupSyncService,
   ) {  
-    this.sidenavOpened$ = sidenavService.groupSelected$;
-    this.sidenavGroupId$ = sidenavService.groupId$;
+    this.sidenavOpened$ = groupSyncService.groupSelected$;
+    this.sidenavGroupId$ = groupSyncService.groupId$;
 
-    sidenavService.refreshGroups$.pipe(
+    groupSyncService.refreshGroups$.pipe(
       takeUntil(this.destroy$),
       switchMap(() => userInGroupRepository.getByLoggedIn$())
     ).subscribe({

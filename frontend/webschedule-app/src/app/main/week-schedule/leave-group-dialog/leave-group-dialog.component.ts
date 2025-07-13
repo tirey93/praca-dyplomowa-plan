@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { SidenavService } from '../../../../services/sidenav.service';
+import { GroupSyncService } from '../../../../services/groupSync.service';
 import { MatDialogModule, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { UserGroupResponse } from '../../../../services/userInGroup/dtos/userGroupResponse';

@@ -1,12 +1,9 @@
 import { Component, inject } from '@angular/core';
-import { GroupSyncService } from '../../../../services/groupSync.service';
 import { MatDialogModule, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { UserGroupResponse } from '../../../../services/userInGroup/dtos/userGroupResponse';
-import { filter, map, Observable, switchMap } from 'rxjs';
 import { GroupRepositoryService } from '../../../../services/group/groupRepository.service';
 import { GroupHelper } from '../../../../helpers/groupHelper';
-import { AsyncPipe } from '@angular/common';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
 import { UserInGroupService } from '../../../../services/userInGroup/userInGroup.service';
 import { SnackBarService } from '../../../../services/snackBarService';

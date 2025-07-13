@@ -8,6 +8,8 @@ import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import { SyncService } from '../../../services/sync.service';
+import { startWith, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-group-members',
@@ -31,29 +33,36 @@ export class GroupMembersComponent implements OnInit {
 
   constructor(
     private userInGroupRepository: UserInGroupService,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private syncService: SyncService
   ) {
     
   }
   ngOnInit(): void {
-    this.userInGroupRepository.getByGroup$(this.userGroup?.group.id, true).subscribe({
+    this.syncService.groupId$.pipe(
+      startWith(this.userGroup?.group.id),
+      switchMap((groupId) => this.userInGroupRepository.getByGroup$(groupId!, true))
+    ).subscribe({
       next: (userGroupsResponse => {
         this.isLoading = false;
         if (userGroupsResponse.length === 0) {
           this.noData = true;
           return;
         }
-        this.users = new MatTableDataSource<UserGroupResponse>();
-        this.users.data = userGroupsResponse.filter(x => !x.isCandidate);
-        this.users!.sortingDataAccessor = (item, property) => {
-          switch (property) {
-            case 'displayName': return item.user.displayName;
-            case 'role': return item.isAdmin ? 1 : 0;
-            default: return 0
+        if (!this.users) {
+          this.users = new MatTableDataSource<UserGroupResponse>();
+          this.users!.sortingDataAccessor = (item, property) => {
+            switch (property) {
+              case 'displayName': return item.user.displayName;
+              case 'role': return item.isAdmin ? 1 : 0;
+              default: return 0
+            }
           }
+          setTimeout(() => this.users!.paginator = this.paginator);
+          setTimeout(() => this.users!.sort = this.sort!);
         }
-        setTimeout(() => this.users!.paginator = this.paginator);
-        setTimeout(() => this.users!.sort = this.sort!);
+        this.users.data = userGroupsResponse.filter(x => !x.isCandidate);
+        this.noData = false;
       }),
       error: (err) => {
         this.snackBarService.openError(err);

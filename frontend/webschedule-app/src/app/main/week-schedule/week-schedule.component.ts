@@ -3,15 +3,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { GroupRepositoryService } from '../../../services/group/groupRepository.service';
 import { Router } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { GroupSyncService } from '../../../services/groupSync.service';
-import { filter, map, Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import { SyncService } from '../../../services/sync.service';
+import { Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
 import { GroupDetailsComponent } from "../../group-details/group-details.component";
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatDialog } from '@angular/material/dialog';
-import { LeaveGroupDialogComponent } from './leave-group-dialog/leave-group-dialog.component';
 import { UserInGroupService } from '../../../services/userInGroup/userInGroup.service';
 
 @Component({
@@ -37,12 +33,12 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     private groupRepository: GroupRepositoryService,
     userInGroupRepository: UserInGroupService,
     private router: Router,
-    private groupSyncService: GroupSyncService,
+    private syncService: SyncService,
   ) {  
-    this.sidenavOpened$ = groupSyncService.groupSelected$;
-    this.sidenavGroupId$ = groupSyncService.groupId$;
+    this.sidenavOpened$ = syncService.groupSelected$;
+    this.sidenavGroupId$ = syncService.groupId$;
 
-    groupSyncService.refreshGroups$.pipe(
+    syncService.refreshGroups$.pipe(
       takeUntil(this.destroy$),
       switchMap(() => userInGroupRepository.getByLoggedIn$())
     ).subscribe({

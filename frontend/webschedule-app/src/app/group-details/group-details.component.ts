@@ -2,11 +2,11 @@ import { Component, OnDestroy } from '@angular/core';
 import { UserGroupResponse } from '../../services/userInGroup/dtos/userGroupResponse';
 import { filter, Subject, switchMap, takeUntil } from 'rxjs';
 import { GroupHelper } from '../../helpers/groupHelper';
-import { GroupSyncService } from '../../services/groupSync.service';
+import { SyncService } from '../../services/sync.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { TranslatePipe } from '@ngx-translate/core';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
@@ -37,11 +37,11 @@ export class GroupDetailsComponent implements OnDestroy{
 
   constructor(
     private userInGroupRepository: UserInGroupService,
-    private groupSyncService: GroupSyncService,
+    private syncService: SyncService,
     private readonly dialog: MatDialog,
     public snackBarService: SnackBarService,
   ) {
-    groupSyncService.groupId$.pipe(
+    syncService.groupId$.pipe(
       takeUntil(this.destroy$),
       filter(groupId => groupId != null),
       switchMap((groupId) => this.userInGroupRepository.getLoggedInByGroup$(groupId))
@@ -58,7 +58,7 @@ export class GroupDetailsComponent implements OnDestroy{
   }
 
   closeSidenav() {
-    this.groupSyncService.unselectGroup();
+    this.syncService.unselectGroup();
   }
 
   leaveGroup() {
@@ -77,9 +77,15 @@ export class GroupDetailsComponent implements OnDestroy{
     }).afterClosed().subscribe((result:boolean) => {
       if (result) {
         this.closeSidenav();
-        this.groupSyncService.refreshGroups$.next();
+        this.syncService.refreshGroups$.next();
       }
     })
+  }
+
+  onTabIndexChange(index: number) {
+    if (index === 2) {
+      this.syncService.selectGroup(this.userGroup?.group.id!)
+    }
   }
 
   getGroupName(userGroup: UserGroupResponse): string { return GroupHelper.groupInfoToString(userGroup.group)}

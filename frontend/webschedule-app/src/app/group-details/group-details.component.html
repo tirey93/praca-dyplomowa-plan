@@ -33,7 +33,7 @@
             </mat-chip-set>
         </mat-card-footer>
     </mat-card>
-    <mat-tab-group>
+    <mat-tab-group (selectedIndexChange)="onTabIndexChange($event)">
         <mat-tab label="Czat">
         </mat-tab>
         <mat-tab label="Wydarzenia">

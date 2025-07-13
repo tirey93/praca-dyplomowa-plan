@@ -5,13 +5,13 @@ using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Controllers.UserInGroup.Queries
 {
-    public class GetGroupByIdQuery : IRequest<UserGroupResponse>
+    public class GetUserGroupByGroupAndUserQuery : IRequest<UserGroupResponse>
     {
         public int GroupId { get; set; }
         public int UserId { get; set; }
     }
 
-    public class GetGroupByIdQueryHandler : IRequestHandler<GetGroupByIdQuery, UserGroupResponse>
+    public class GetGroupByIdQueryHandler : IRequestHandler<GetUserGroupByGroupAndUserQuery, UserGroupResponse>
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserInGroupRepository _userInGroupRepository;
@@ -22,9 +22,9 @@ namespace WebSchedule.Controllers.UserInGroup.Queries
             _userInGroupRepository = userInGroupRepository;
         }
 
-        public Task<UserGroupResponse> Handle(GetGroupByIdQuery request, CancellationToken cancellationToken)
+        public Task<UserGroupResponse> Handle(GetUserGroupByGroupAndUserQuery request, CancellationToken cancellationToken)
         {
-            var userGroup = _userInGroupRepository.GetUserGroups(request.UserId).FirstOrDefault(x => x.Id == request.GroupId)
+            var userGroup = _userInGroupRepository.GetUserGroupsByUser(request.UserId).FirstOrDefault(x => x.Id == request.GroupId)
                 ?? throw new UserInGroupNotFoundException(request.UserId, request.GroupId);
             return Task.FromResult(new UserGroupResponse
             {

@@ -26,7 +26,7 @@ namespace WebSchedule.Controllers.User.Queries
             var user = _userRepository.Get(request.UserId)
                     ?? throw new UserNotFoundException(request.UserId.ToString());
 
-            var userGroups = _userInGroupRepository.GetUserGroups(request.UserId);
+            var userGroups = _userInGroupRepository.GetUserGroupsByUser(request.UserId);
             return Task.FromResult(new UserResponse
             {
                 Id = user.Id,

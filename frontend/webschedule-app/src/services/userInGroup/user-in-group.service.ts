@@ -29,6 +29,14 @@ import { UserGroupResponse } from './dtos/userGroupResponse';
         }
       })
     }
+
+    geByGroup$(groupId: number | undefined) {
+      return this.http.get<UserGroupResponse[]>(`${this.url}/Group/${groupId}`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
     
     addCandidate$(request: AddCandidateRequest) {
       return this.http.post(`${this.url}`, request, {

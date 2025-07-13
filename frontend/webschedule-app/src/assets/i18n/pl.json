@@ -28,5 +28,6 @@
   "LeaveGroupSuccess": "Grupę opuszczono z powodzeniem.",
   "RemoveGroupSuccess": "Grupę usunięto z powodzeniem.",
 
-  "UserWasCreated": "Użytkownik został utworzony."
+  "UserWasCreated": "Użytkownik został utworzony.",
+  "LinkCopied": "Link do grupy został skopiowany."
 }

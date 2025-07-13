@@ -1,9 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { GroupRepositoryService } from '../../services/group/groupRepository.service';
+import { Component, OnDestroy } from '@angular/core';
 import { UserGroupResponse } from '../../services/userInGroup/dtos/userGroupResponse';
-import { filter, Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import { filter, Subject, switchMap, takeUntil } from 'rxjs';
 import { GroupHelper } from '../../helpers/groupHelper';
-import { AsyncPipe } from '@angular/common';
 import { GroupSyncService } from '../../services/groupSync.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -16,12 +14,16 @@ import { LeaveGroupDialogComponent } from '../main/week-schedule/leave-group-dia
 import { MatButtonModule } from '@angular/material/button';
 import { RemoveGroupDialogComponent } from '../main/week-schedule/remove-group-dialog/remove-group-dialog.component';
 import { UserInGroupService } from '../../services/userInGroup/user-in-group.service';
-import { Router } from '@angular/router';
+import {ClipboardModule} from '@angular/cdk/clipboard';
+import { SnackBarService } from '../../services/snackBarService';
+import { environment } from '../../enviroments/enviroments';
+
 
 @Component({
   selector: 'app-group-details',
   imports: [
-    MatCardModule, MatChipsModule, TranslatePipe, MatTabsModule, MatIconModule, MatMenuModule, MatButtonModule
+    MatCardModule, MatChipsModule, TranslatePipe, MatTabsModule, MatIconModule, MatMenuModule, MatButtonModule,
+    ClipboardModule
 ],
   templateUrl: './group-details.component.html',
   styleUrl: './group-details.component.scss'
@@ -35,7 +37,7 @@ export class GroupDetailsComponent implements OnDestroy{
     private userInGroupRepository: UserInGroupService,
     private groupSyncService: GroupSyncService,
     private readonly dialog: MatDialog,
-    private router: Router
+    public snackBarService: SnackBarService,
   ) {
     groupSyncService.groupId$.pipe(
       takeUntil(this.destroy$),
@@ -79,4 +81,8 @@ export class GroupDetailsComponent implements OnDestroy{
   }
 
   getGroupName(group: UserGroupResponse): string { return GroupHelper.groupInfoToString(group)}
+
+  getLinkToGroup(): string {
+    return `${environment.host}:${environment.webPort}/group/${this.group?.id}`;
+  }
 }

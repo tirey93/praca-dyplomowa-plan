@@ -17,7 +17,12 @@
     </div>
     <mat-card style="margin: 20px" appearance="outlined">
         <mat-card-header>
-            <mat-card-title>Grupa <b>{{getGroupName(group)}}</b></mat-card-title>
+             <mat-card-title-group>
+                <mat-card-title>Grupa <b>{{getGroupName(group)}}</b></mat-card-title>
+                <button [cdkCopyToClipboard]="getLinkToGroup()" (click)="snackBarService.openMessage('LinkCopied', 1000)" mat-icon-button>
+                    <mat-icon>content_copy</mat-icon>
+                </button>
+            </mat-card-title-group>
         </mat-card-header>
         <mat-card-footer style="padding: 16px;">
             <mat-chip-set>

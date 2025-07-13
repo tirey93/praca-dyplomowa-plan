@@ -27,10 +27,10 @@ import { TranslateService } from '@ngx-translate/core';
         }
     }
     
-    public openMessage(key: string) {
+    public openMessage(key: string, duration: number = 5000) {
       this.snackBar.open(
           this.translate.instant(key), 
           this.translate.instant('snackbar.dismiss'),
-          { duration: 5000 });
+          { duration: duration });
     }
   }

@@ -1,6 +1,6 @@
 <title mat-dialog-title>Opuszczenie Grupy</title>
 <mat-dialog-content>
-    @if (canLeave$ | async) {
+    @if (canLeave) {
         <div class="dialog-description">
             Zamierzasz właśnie opuścić grupę <b>{{getGroupName(group)}}</b>.
             <br>
@@ -18,7 +18,7 @@
         <button style="background-color: darkred; margin-left: 15px;"
             mat-flat-button
             type="submit" 
-            [disabled]="!(canLeave$ | async)"
+            [disabled]="!canLeave"
             (click)="leave()">Opuść
         </button>
     </mat-dialog-actions>

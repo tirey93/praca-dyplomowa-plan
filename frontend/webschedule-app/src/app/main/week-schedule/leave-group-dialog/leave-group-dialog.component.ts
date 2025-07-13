@@ -14,7 +14,7 @@ import { SnackBarService } from '../../../../services/snackBarService';
 @Component({
   selector: 'app-leave-group-dialog',
   imports: [
-    MatDialogModule, MatButtonModule, AsyncPipe
+    MatDialogModule, MatButtonModule
   ],
   templateUrl: './leave-group-dialog.component.html',
   styleUrl: './leave-group-dialog.component.scss'
@@ -22,7 +22,7 @@ import { SnackBarService } from '../../../../services/snackBarService';
 export class LeaveGroupDialogComponent {
   data = inject(DIALOG_DATA);
   group: UserGroupResponse = this.data.group;
-  canLeave$: Observable<boolean>;
+  canLeave: boolean = true;
 
   constructor(
     private groupRepository: GroupRepositoryService,
@@ -30,7 +30,11 @@ export class LeaveGroupDialogComponent {
     private dialogRef: MatDialogRef<LeaveGroupDialogComponent>,
     private snackBarService: SnackBarService
   ) {
-    this.canLeave$ = groupRepository.canLeaveGroup$(this.group.id)
+    groupRepository.canLeaveGroup$(this.group.id).subscribe({
+      next: (canLeave) => {
+        this.canLeave = canLeave
+      }
+    })
   }
 
   onNoClick() {

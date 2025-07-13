@@ -24,6 +24,7 @@ import { GroupRepositoryService } from '../../services/group/groupRepository.ser
 import { GroupHelper } from '../../helpers/groupHelper';
 import { Constants } from '../../helpers/constants';
 import { GroupInfoResponse } from '../../services/group/dtos/groupInfoResponse';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-search-group',
@@ -32,7 +33,7 @@ import { GroupInfoResponse } from '../../services/group/dtos/groupInfoResponse';
     MatButtonModule, CommonModule, MatProgressSpinnerModule,
     TranslatePipe, MatPaginator, MatPaginatorModule, MatChipsModule,
     MatFormFieldModule, MatSelectModule, MatOptionModule, MatAutocompleteModule,
-    ReactiveFormsModule, MatInputModule, MatTooltipModule,
+    ReactiveFormsModule, MatInputModule, MatTooltipModule, MatSortModule
   ],
   templateUrl: './search-group.component.html',
   styleUrl: './search-group.component.scss'
@@ -49,6 +50,7 @@ export class SearchGroupComponent {
   modefilterControl = new FormControl<string>('all')
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort?: MatSort;
 
   filterDictionary= new Map<string,string>();
   filterOptionsMode = Constants.StudyModes;
@@ -56,8 +58,6 @@ export class SearchGroupComponent {
   filterOptionsYear?: Set<number>
   filteredOptionsCourse$: Observable<string[]>;
   filterOptionsCourse?: Set<string>;
-
-
 
   displayedColumns: string[] = [
     'name', 'startingYear', 'studyCourseName', 'studyLevel', 
@@ -84,7 +84,21 @@ export class SearchGroupComponent {
         this.filterOptionsYear = new Set(this.groups?.data.map(x => x.startingYear).sort((a, b) => a - b))
         this.filterOptionsCourse = new Set(this.groups?.data.map(x => x.studyCourseName).sort((a, b) => a > b ? 1 : -1))
         this.courseFilterControl.setValue('')
+        this.groups!.sortingDataAccessor = (item, property) => {
+          switch (property) {
+            case 'name': return this.getName(item);
+            case 'startingYear': return item.startingYear;
+            case 'studyCourseName': return item.studyCourseName;
+            case 'studyLevel': return item.studyLevel;
+            case 'studyMode': return item.studyMode;
+            case 'subgroup': return item.subgroup;
+            case 'membersCount': return item.membersCount;
+            default: return 0
+          }
+        }
         setTimeout(() => this.groups!.paginator = this.paginator);
+        setTimeout(() => this.groups!.sort = this.sort!);
+
         this.groups.filterPredicate = function (record,filter) {
             var map = new Map(JSON.parse(filter));
             let isMatch = false;

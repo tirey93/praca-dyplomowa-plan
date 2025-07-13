@@ -1,0 +1,27 @@
+<title mat-dialog-title>Usunięcie Grupy</title>
+<mat-dialog-content>
+    <div class="dialog-description">
+        Zamierzasz właśnie usunąć grupę <b>{{getGroupName(group)}}</b>.
+        <br>
+        Usunięcie grupy spowoduje wypisanie z niej wszystkich jej aktywnych członków.
+        <br>
+        <p>Aby kontynuować, wpisz ilość członków grupy w polu poniżej.</p>
+        <form style="margin-top: 20px;" [formGroup]="form">
+            <div class="dialog-content-half-container">
+                <mat-form-field appearance="outline">
+                    <mat-label>Ilość członków grupy</mat-label>
+                    <input formControlName="membersCount" required type="number" matInput>
+                </mat-form-field>
+            </div>
+        </form>
+    </div>
+    <mat-dialog-actions>
+        <button mat-raised-button type="button" (click)="onNoClick()">Anuluj</button>
+        <button style="background-color: darkred; margin-left: 15px;"
+            mat-flat-button
+            type="submit" 
+            [disabled]="form.invalid"
+            (click)="remove()">Usuń grupę
+        </button>
+    </mat-dialog-actions>
+</mat-dialog-content>

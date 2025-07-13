@@ -1,15 +1,20 @@
-<div class="week-drawer-menu">
-    <button matTooltip="Ustawienia" mat-icon-button [matMenuTriggerFor]="settings"> <mat-icon>more_vert</mat-icon></button>
-    <mat-menu #settings="matMenu">
-        <button mat-menu-item (click)="leaveGroup()">
-            <mat-icon>group_remove</mat-icon>
-            Opuść grupę
-        </button>
-    </mat-menu>
-    <button matTooltip="Zamknij" mat-icon-button (click)="closeSidenav()"><mat-icon>close</mat-icon></button>
-</div>
-
 @if (group) {
+    <div class="week-drawer-menu">
+        <button matTooltip="Ustawienia" mat-icon-button [matMenuTriggerFor]="settings"> <mat-icon>more_vert</mat-icon></button>
+        <mat-menu #settings="matMenu">
+            <button mat-menu-item (click)="leaveGroup()">
+                <mat-icon>group_remove</mat-icon>
+                Opuść grupę
+            </button>
+            @if (group.isAdmin) {
+                <button mat-menu-item (click)="removeGroup()">
+                    <mat-icon>group_off</mat-icon>
+                    Usuń grupę
+                </button>
+            }
+        </mat-menu>
+        <button matTooltip="Zamknij" mat-icon-button (click)="closeSidenav()"><mat-icon>close</mat-icon></button>
+    </div>
     <mat-card style="margin: 20px" appearance="outlined">
         <mat-card-header>
             <mat-card-title>Grupa <b>{{getGroupName(group)}}</b></mat-card-title>

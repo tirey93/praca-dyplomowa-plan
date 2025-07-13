@@ -191,9 +191,13 @@ namespace WebSchedule.Controllers.Group
         {
             try
             {
+                var userId = JwtHelper.GetUserIdFromToken(Request.Headers.Authorization)
+                    ?? throw new UserNotFoundException();
+
                 return Ok(await _mediator.Send(new GetGroupByIdQuery
                 {
                     GroupId = id,
+                    UserId = userId
                 }));
             }
             catch (ApplicationException ex)

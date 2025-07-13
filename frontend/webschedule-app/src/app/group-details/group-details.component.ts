@@ -14,6 +14,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { LeaveGroupDialogComponent } from '../main/week-schedule/leave-group-dialog/leave-group-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
+import { RemoveGroupDialogComponent } from '../main/week-schedule/remove-group-dialog/remove-group-dialog.component';
 
 @Component({
   selector: 'app-group-details',
@@ -55,6 +56,14 @@ export class GroupDetailsComponent implements OnDestroy{
 
   leaveGroup() {
     this.dialog.open(LeaveGroupDialogComponent, {
+      data: {
+        group: this.group
+      },
+    })
+  }
+
+  removeGroup() {
+    this.dialog.open(RemoveGroupDialogComponent, {
       data: {
         group: this.group
       },

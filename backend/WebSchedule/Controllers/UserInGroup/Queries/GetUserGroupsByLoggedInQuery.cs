@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Controllers.User.Exceptions;
+using WebSchedule.Domain.Entities.Study;
 using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Controllers.UserInGroup.Queries
@@ -27,17 +28,27 @@ namespace WebSchedule.Controllers.UserInGroup.Queries
                     ?? throw new UserNotFoundException(request.UserId.ToString());
 
             var userGroups = _userInGroupRepository.GetUserGroupsByUser(request.UserId);
-            return Task.FromResult(userGroups.Select(x => new UserGroupResponse
+            return Task.FromResult(userGroups.Select(userGroup => new UserGroupResponse
             {
-                Id = x.Id,
-                StudyCourseName = x.StudyCourseName,
-                IsAdmin = x.IsAdmin,
-                IsCandidate = x.IsCandidate,
-                StartingYear = x.StartingYear,
-                StudyCourseShort = x.StudyCourseShort,
-                StudyLevel = x.StudyLevel,
-                StudyMode = x.StudyMode,
-                Subgroup = x.Subgroup,
+                Group = new GroupResponse
+                {
+                    Id = userGroup.Group.Id,
+                    StudyCourseName = userGroup.Group.StudyCourseName,
+                    StartingYear = userGroup.Group.StartingYear,
+                    StudyCourseShort = userGroup.Group.StudyCourseShort,
+                    StudyLevel = userGroup.Group.StudyLevel,
+                    StudyMode = userGroup.Group.StudyMode,
+                    Subgroup = userGroup.Group.Subgroup,
+                },
+                User = new UserResponse
+                {
+                    Id = userGroup.User.Id,
+                    Login = userGroup.User.Login,
+                    DisplayName = userGroup.User.DisplayName,
+                    IsActive = userGroup.User.IsActive
+                },
+                IsAdmin = userGroup.IsAdmin,
+                IsCandidate = userGroup.IsCandidate,
             }));
         }
     }

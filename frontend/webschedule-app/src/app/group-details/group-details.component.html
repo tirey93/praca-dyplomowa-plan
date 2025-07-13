@@ -1,4 +1,4 @@
-@if (group) {
+@if (userGroup) {
     <div class="week-drawer-menu">
         <button matTooltip="Ustawienia" mat-icon-button [matMenuTriggerFor]="settings"> <mat-icon>more_vert</mat-icon></button>
         <mat-menu #settings="matMenu">
@@ -6,7 +6,7 @@
                 <mat-icon>group_remove</mat-icon>
                 Opuść grupę
             </button>
-            @if (group.isAdmin) {
+            @if (userGroup.isAdmin) {
                 <button mat-menu-item (click)="removeGroup()">
                     <mat-icon>group_off</mat-icon>
                     Usuń grupę
@@ -18,7 +18,7 @@
     <mat-card style="margin: 20px" appearance="outlined">
         <mat-card-header>
              <mat-card-title-group>
-                <mat-card-title>Grupa <b>{{getGroupName(group)}}</b></mat-card-title>
+                <mat-card-title>Grupa <b>{{getGroupName(userGroup)}}</b></mat-card-title>
                 <button [cdkCopyToClipboard]="getLinkToGroup()" (click)="snackBarService.openMessage('LinkCopied', 1000)" mat-icon-button>
                     <mat-icon>content_copy</mat-icon>
                 </button>
@@ -26,10 +26,10 @@
         </mat-card-header>
         <mat-card-footer style="padding: 16px;">
             <mat-chip-set>
-                <mat-chip>{{group.startingYear}}</mat-chip>
-                <mat-chip>{{group.studyMode | translate}}</mat-chip>
-                <mat-chip>{{group.studyLevel | translate}}</mat-chip>
-                <mat-chip>{{group.studyCourseName}}</mat-chip>
+                <mat-chip>{{userGroup.group.startingYear}}</mat-chip>
+                <mat-chip>{{userGroup.group.studyMode | translate}}</mat-chip>
+                <mat-chip>{{userGroup.group.studyLevel | translate}}</mat-chip>
+                <mat-chip>{{userGroup.group.studyCourseName}}</mat-chip>
             </mat-chip-set>
         </mat-card-footer>
     </mat-card>
@@ -39,7 +39,7 @@
         <mat-tab label="Wydarzenia">
         </mat-tab>
         <mat-tab label="Członkowie">
-            <app-group-members [group]="group"></app-group-members>
+            <app-group-members [userGroup]="userGroup"></app-group-members>
         </mat-tab>
     </mat-tab-group>
 }

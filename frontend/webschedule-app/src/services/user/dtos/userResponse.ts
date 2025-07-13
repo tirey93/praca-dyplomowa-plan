@@ -1,7 +1,7 @@
 
 export interface UserResponse {
     id: number,
-    name: string,
+    login: string,
     displayName: string,
     isActive: boolean
 }

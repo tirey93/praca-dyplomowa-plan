@@ -30,7 +30,7 @@ namespace WebSchedule.Controllers.User.Queries
             return Task.FromResult(new UserResponse
             {
                 Id = user.Id,
-                Name = user.Login,
+                Login = user.Login,
                 DisplayName = user.DisplayName,
                 IsActive = user.IsActive
             });

@@ -31,7 +31,7 @@ import { GroupMembersComponent } from "./group-members/group-members.component";
   styleUrl: './group-details.component.scss'
 })
 export class GroupDetailsComponent implements OnDestroy{
-  group?: UserGroupResponse;
+  userGroup?: UserGroupResponse;
 
   private destroy$ = new Subject<void>();
 
@@ -47,7 +47,7 @@ export class GroupDetailsComponent implements OnDestroy{
       switchMap((groupId) => this.userInGroupRepository.getLoggedInByGroup$(groupId))
     ).subscribe({
       next: (userGroupResponse) => {
-        this.group = userGroupResponse;
+        this.userGroup = userGroupResponse;
       }
     })
   }
@@ -64,7 +64,7 @@ export class GroupDetailsComponent implements OnDestroy{
   leaveGroup() {
     this.dialog.open(LeaveGroupDialogComponent, {
       data: {
-        group: this.group
+        userGroup: this.userGroup
       },
     })
   }
@@ -72,7 +72,7 @@ export class GroupDetailsComponent implements OnDestroy{
   removeGroup() {
     this.dialog.open(RemoveGroupDialogComponent, {
       data: {
-        group: this.group
+        userGroup: this.userGroup
       },
     }).afterClosed().subscribe((result:boolean) => {
       if (result) {
@@ -82,9 +82,9 @@ export class GroupDetailsComponent implements OnDestroy{
     })
   }
 
-  getGroupName(group: UserGroupResponse): string { return GroupHelper.groupInfoToString(group)}
+  getGroupName(userGroup: UserGroupResponse): string { return GroupHelper.groupInfoToString(userGroup.group)}
 
   getLinkToGroup(): string {
-    return `${environment.host}:${environment.webPort}/group/${this.group?.id}`;
+    return `${environment.host}:${environment.webPort}/group/${this.userGroup?.group.id}`;
   }
 }

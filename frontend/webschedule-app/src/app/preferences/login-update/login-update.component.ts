@@ -33,8 +33,8 @@ export class LoginUpdateComponent {
   ) {
     userRepository.getLoggedIn$().subscribe({
       next: (response) => {
-        this.defaultLogin = response.name;
-        this.prefForm.controls.login.setValue(response.name)
+        this.defaultLogin = response.login;
+        this.prefForm.controls.login.setValue(response.login)
       },
       error: (err) => {
         this.snackBarService.openError(err);

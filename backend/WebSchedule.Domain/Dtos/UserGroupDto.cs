@@ -1,9 +1,11 @@
 ﻿
 namespace WebSchedule.Domain.Dtos
 {
-    public class UserGroupDto : GroupDto
+    public class UserGroupDto
     {
-        public int UserId { get; set; }
+        public GroupDto Group { get; set; }
+        public UserDto User { get; set; }
+
         public bool IsAdmin { get; set; }
         public bool IsCandidate { get; set; }
     }

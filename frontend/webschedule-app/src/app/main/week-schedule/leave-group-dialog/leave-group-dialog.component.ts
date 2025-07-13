@@ -21,7 +21,7 @@ import { SnackBarService } from '../../../../services/snackBarService';
 })
 export class LeaveGroupDialogComponent {
   data = inject(DIALOG_DATA);
-  group: UserGroupResponse = this.data.group;
+  userGroup: UserGroupResponse = this.data.userGroup;
   canLeave: boolean = true;
 
   constructor(
@@ -30,7 +30,7 @@ export class LeaveGroupDialogComponent {
     private dialogRef: MatDialogRef<LeaveGroupDialogComponent>,
     private snackBarService: SnackBarService
   ) {
-    groupRepository.canLeaveGroup$(this.group.id).subscribe({
+    groupRepository.canLeaveGroup$(this.userGroup.group.id).subscribe({
       next: (canLeave) => {
         this.canLeave = canLeave
       }
@@ -42,7 +42,7 @@ export class LeaveGroupDialogComponent {
   }
 
   leave() {
-    this.userInGroupRepository.disenrollFromGroup$({ groupId: this.group.id }).subscribe({
+    this.userInGroupRepository.disenrollFromGroup$({ groupId: this.userGroup.group.id }).subscribe({
       next: () => {
         this.snackBarService.openMessage('LeaveGroupSuccess');
         this.dialogRef.close();
@@ -53,5 +53,5 @@ export class LeaveGroupDialogComponent {
     })
   }
 
-  getGroupName(group: UserGroupResponse): string { return GroupHelper.groupInfoToString(group)}
+  getGroupName(userGroup: UserGroupResponse): string { return GroupHelper.groupInfoToString(userGroup.group)}
 }

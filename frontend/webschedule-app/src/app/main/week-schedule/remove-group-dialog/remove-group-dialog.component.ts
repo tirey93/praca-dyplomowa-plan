@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
 })
 export class RemoveGroupDialogComponent {
   data = inject(DIALOG_DATA);
-  group: UserGroupResponse = this.data.group;
+  userGroup: UserGroupResponse = this.data.userGroup;
 
   realMembersCount = 0;
   form = new FormGroup({
@@ -35,7 +35,7 @@ export class RemoveGroupDialogComponent {
     private groupRepository: GroupRepositoryService,
     private snackBarService: SnackBarService,
   ) {
-    userInGroupRepository.getByGroup$(this.group.id).subscribe({
+    userInGroupRepository.getByGroup$(this.userGroup.group.id).subscribe({
       next: (userGroupResponses) => {
         this.realMembersCount = userGroupResponses.filter(x => !x.isCandidate).length;
       }
@@ -53,7 +53,7 @@ export class RemoveGroupDialogComponent {
   }
 
   remove() {
-    this.groupRepository.remove$(this.group.id).subscribe({
+    this.groupRepository.remove$(this.userGroup.group.id).subscribe({
       next: () => {
         this.snackBarService.openMessage('RemoveGroupSuccess');
         this.dialogRef.close(true);
@@ -65,5 +65,5 @@ export class RemoveGroupDialogComponent {
     })
   }
 
-  getGroupName(group: UserGroupResponse): string { return GroupHelper.groupInfoToString(group)}
+  getGroupName(userGroup: UserGroupResponse): string { return GroupHelper.groupInfoToString(userGroup.group)}
 }

@@ -24,19 +24,29 @@ namespace WebSchedule.Controllers.UserInGroup.Queries
 
         public Task<UserGroupResponse> Handle(GetUserGroupByGroupAndUserQuery request, CancellationToken cancellationToken)
         {
-            var userGroup = _userInGroupRepository.GetUserGroupsByUser(request.UserId).FirstOrDefault(x => x.Id == request.GroupId)
+            var userGroup = _userInGroupRepository.GetUserGroupsByUser(request.UserId).FirstOrDefault(x => x.Group.Id == request.GroupId)
                 ?? throw new UserInGroupNotFoundException(request.UserId, request.GroupId);
             return Task.FromResult(new UserGroupResponse
             {
-                Id = userGroup.Id,
-                StudyCourseName = userGroup.StudyCourseName,
+                Group = new GroupResponse
+                {
+                    Id = userGroup.Group.Id,
+                    StudyCourseName = userGroup.Group.StudyCourseName,
+                    StartingYear = userGroup.Group.StartingYear,
+                    StudyCourseShort = userGroup.Group.StudyCourseShort,
+                    StudyLevel = userGroup.Group.StudyLevel,
+                    StudyMode = userGroup.Group.StudyMode,
+                    Subgroup = userGroup.Group.Subgroup,
+                },
+                User = new UserResponse
+                {
+                    Id = userGroup.User.Id,
+                    Login = userGroup.User.Login,
+                    DisplayName = userGroup.User.DisplayName,
+                    IsActive = userGroup.User.IsActive
+                },
                 IsAdmin = userGroup.IsAdmin,
                 IsCandidate = userGroup.IsCandidate,
-                StartingYear = userGroup.StartingYear,
-                StudyCourseShort = userGroup.StudyCourseShort,
-                StudyLevel = userGroup.StudyLevel,
-                StudyMode = userGroup.StudyMode,
-                Subgroup = userGroup.Subgroup,
             });
         }
     }

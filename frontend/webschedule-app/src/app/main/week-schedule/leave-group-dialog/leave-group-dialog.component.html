@@ -2,13 +2,13 @@
 <mat-dialog-content>
     @if (canLeave) {
         <div class="dialog-description">
-            Zamierzasz właśnie opuścić grupę <b>{{getGroupName(group)}}</b>.
+            Zamierzasz właśnie opuścić grupę <b>{{getGroupName(userGroup)}}</b>.
             <br>
             Czy na pewno chcesz kontynuować?
         </div>
     } @else {
         <div class="dialog-description">
-            Nie możesz opuścić grupy <b>{{getGroupName(group)}}</b> ponieważ jesteś jej jedynym administratorem.
+            Nie możesz opuścić grupy <b>{{getGroupName(userGroup)}}</b> ponieważ jesteś jej jedynym administratorem.
             <br>
             Nadaj swoje uprawnienie innemu członkowi grupy, aby kontynuować.
         </div>

@@ -47,7 +47,7 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
       switchMap(() => userInGroupRepository.getByLoggedIn$())
     ).subscribe({
       next: (userGroupsResponses) => {
-        this.groupsToDisplay = userGroupsResponses.map(x => x.id)
+        this.groupsToDisplay = userGroupsResponses.map(x => x.group.id)
       }
     })
   }

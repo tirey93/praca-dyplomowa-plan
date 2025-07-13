@@ -27,15 +27,25 @@ namespace WebSchedule.Infrastructure.Repositories
                 .Where(g => g.UserId == userId)
                 .Select(x => new UserGroupDto
                 {
-                    Id = x.GroupId,
+                    Group = new GroupDto
+                    {
+                        Id = x.GroupId,
+                        StartingYear = x.Group.StartingYear,
+                        StudyLevel = x.Group.StudyLevel.ToString(),
+                        StudyCourseName = x.Group.StudyCourse.Name,
+                        StudyCourseShort = x.Group.StudyCourse.ShortName,
+                        StudyMode = x.Group.StudyMode.ToString(),
+                        Subgroup = x.Group.Subgroup,
+                    },
+                    User = new UserDto
+                    {
+                        Id = x.UserId,
+                        Login = x.User.Login,
+                        DisplayName = x.User.DisplayName,
+                        IsActive = x.User.IsActive,
+                    },
                     IsAdmin = x.UserRole == UserRole.Admin,
                     IsCandidate = x.UserRole == UserRole.Candidate,
-                    StartingYear = x.Group.StartingYear,
-                    StudyLevel = x.Group.StudyLevel.ToString(),
-                    StudyCourseName = x.Group.StudyCourse.Name,
-                    StudyCourseShort = x.Group.StudyCourse.ShortName,
-                    StudyMode = x.Group.StudyMode.ToString(),
-                    Subgroup = x.Group.Subgroup,
                 });
         }
 
@@ -47,15 +57,25 @@ namespace WebSchedule.Infrastructure.Repositories
                 .Where(g => g.GroupId == groupId)
                 .Select(x => new UserGroupDto
                 {
-                    Id = x.GroupId,
+                    Group = new GroupDto
+                    {
+                        Id = x.GroupId,
+                        StartingYear = x.Group.StartingYear,
+                        StudyLevel = x.Group.StudyLevel.ToString(),
+                        StudyCourseName = x.Group.StudyCourse.Name,
+                        StudyCourseShort = x.Group.StudyCourse.ShortName,
+                        StudyMode = x.Group.StudyMode.ToString(),
+                        Subgroup = x.Group.Subgroup,
+                    },
+                    User = new UserDto
+                    {
+                        Id = x.UserId,
+                        Login = x.User.Login,
+                        DisplayName = x.User.DisplayName,
+                        IsActive = x.User.IsActive,
+                    },
                     IsAdmin = x.UserRole == UserRole.Admin,
                     IsCandidate = x.UserRole == UserRole.Candidate,
-                    StartingYear = x.Group.StartingYear,
-                    StudyLevel = x.Group.StudyLevel.ToString(),
-                    StudyCourseName = x.Group.StudyCourse.Name,
-                    StudyCourseShort = x.Group.StudyCourse.ShortName,
-                    StudyMode = x.Group.StudyMode.ToString(),
-                    Subgroup = x.Group.Subgroup,
                 });
         }
     }

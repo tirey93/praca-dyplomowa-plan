@@ -8,5 +8,5 @@ import { UserGroupResponse } from '../../../services/userInGroup/dtos/userGroupR
   styleUrl: './group-members.component.scss'
 })
 export class GroupMembersComponent {
-  @Input() group?: UserGroupResponse
+  @Input() userGroup?: UserGroupResponse
 }

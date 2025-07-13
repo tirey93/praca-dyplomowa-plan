@@ -26,15 +26,25 @@ namespace WebSchedule.Controllers.UserInGroup.Queries
             var userGroups = _userInGroupRepository.GetUserGroupsByGroup(request.GroupId);
             return Task.FromResult(userGroups.Select(userGroup => new UserGroupResponse
             {
-                Id = userGroup.Id,
-                StudyCourseName = userGroup.StudyCourseName,
+                Group = new GroupResponse
+                {
+                    Id = userGroup.Group.Id,
+                    StudyCourseName = userGroup.Group.StudyCourseName,
+                    StartingYear = userGroup.Group.StartingYear,
+                    StudyCourseShort = userGroup.Group.StudyCourseShort,
+                    StudyLevel = userGroup.Group.StudyLevel,
+                    StudyMode = userGroup.Group.StudyMode,
+                    Subgroup = userGroup.Group.Subgroup,
+                },
+                User = new UserResponse
+                {
+                    Id = userGroup.User.Id,
+                    Login = userGroup.User.Login,
+                    DisplayName = userGroup.User.DisplayName,
+                    IsActive = userGroup.User.IsActive
+                },
                 IsAdmin = userGroup.IsAdmin,
                 IsCandidate = userGroup.IsCandidate,
-                StartingYear = userGroup.StartingYear,
-                StudyCourseShort = userGroup.StudyCourseShort,
-                StudyLevel = userGroup.StudyLevel,
-                StudyMode = userGroup.StudyMode,
-                Subgroup = userGroup.Subgroup,
             }));
         }
     }

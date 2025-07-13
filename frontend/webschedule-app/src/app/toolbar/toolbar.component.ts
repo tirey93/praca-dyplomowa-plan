@@ -47,10 +47,10 @@ export class ToolbarComponent {
           filter(isLoggedIn => isLoggedIn),
           switchMap(() => {
             return this.userInGroupRepository.getByLoggedIn$().pipe(
-              map(apiGroups => 
-                apiGroups.map(apiGroup => ({
-                  id: apiGroup.id,
-                  name: GroupHelper.groupInfoToString(apiGroup),
+              map(userGroups => 
+                userGroups.map(userGroup => ({
+                  id: userGroup.group.id,
+                  name: GroupHelper.groupInfoToString(userGroup.group),
                 } as GroupSelected))
               ),
             )

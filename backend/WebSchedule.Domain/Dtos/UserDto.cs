@@ -1,6 +1,7 @@
-﻿namespace WebSchedule.Controllers.Responses
+﻿
+namespace WebSchedule.Domain.Dtos
 {
-    public class UserResponse
+    public class UserDto
     {
         public int Id { get; set; }
         public string Login { get; set; }

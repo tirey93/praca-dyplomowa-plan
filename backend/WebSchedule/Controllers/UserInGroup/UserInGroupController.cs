@@ -188,6 +188,34 @@ namespace WebSchedule.Controllers.User
             }
         }
 
+        [HttpPut("Role")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+#if !DEBUG
+        [Authorize]
+#endif
+        public async Task<ActionResult> ChangeRole([FromBody] ChangeRoleCommand changeRoleCommand)
+        {
+            try
+            {
+                await _mediator.Send(changeRoleCommand);
+                return NoContent();
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
+            }
+        }
+
     }
 
 }

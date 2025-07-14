@@ -69,4 +69,43 @@ export class GroupMembersComponent implements OnInit {
       }
     })
   }
+
+  isAdmin(userId: number) {
+    if (!this.users?.data)
+          return;
+    return this.users.data.find(g => g.user.id === userId)?.isAdmin;
+  }
+
+  handleAdminToggle(userGroup: UserGroupResponse, selected: boolean) {
+    if (userGroup.isAdmin === selected)
+      return;
+
+    this.users!.data = this.users!.data.map(g => 
+          g.user.id === userGroup.user.id ? { ...g, isAdmin: selected} : g);
+
+
+    // const result = selected ? this.userInGroupService.addCandidate$({
+    //     groupId: userGroup.id
+    //   }) : this.userInGroupService.disenrollFromGroup$({
+    //     groupId: userGroup.id
+    //   });
+      
+    // result.subscribe({
+    //   next: () => {
+    //     if (!this.users?.data)
+    //       return;
+    //     this.users.data = this.users!.data.map(g => 
+    //       g.user.id === userGroup.user.id ? { ...g, isAdmin: selected} : g
+    //     );
+    //   },
+    //   error:(err) => {
+    //     this.snackBarService.openError(err);
+    //     if (!this.users?.data)
+    //       return;
+    //     this.users.data = this.users!.data.map(g => 
+    //       g.user.id === userGroup.user.id ? { ...g, isAdmin: !selected} : g
+    //     );
+    //   },
+    // })
+  }
 }

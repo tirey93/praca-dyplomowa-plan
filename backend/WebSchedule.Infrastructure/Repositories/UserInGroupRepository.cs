@@ -78,5 +78,14 @@ namespace WebSchedule.Infrastructure.Repositories
                     IsCandidate = x.UserRole == UserRole.Candidate,
                 });
         }
+
+        public UserInGroup Get(int userId, int groupId)
+        {
+            return _dbSet
+                .Include(g => g.User)
+                .Include(g => g.Group).ThenInclude(x => x.StudyCourse)
+                .Where(g => g.GroupId == groupId && g.UserId == userId)
+                .FirstOrDefault();
+        }
     }
 }

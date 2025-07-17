@@ -10,6 +10,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { SyncService } from '../../../services/sync.service';
 import { startWith, switchMap } from 'rxjs';
+import { Constants } from '../../../helpers/constants';
+import { Role } from '../../../helpers/roles';
 
 @Component({
   selector: 'app-group-members',
@@ -79,33 +81,28 @@ export class GroupMembersComponent implements OnInit {
   handleAdminToggle(userGroup: UserGroupResponse, selected: boolean) {
     if (userGroup.isAdmin === selected)
       return;
-
-    this.users!.data = this.users!.data.map(g => 
-          g.user.id === userGroup.user.id ? { ...g, isAdmin: selected} : g);
-
-
-    // const result = selected ? this.userInGroupService.addCandidate$({
-    //     groupId: userGroup.id
-    //   }) : this.userInGroupService.disenrollFromGroup$({
-    //     groupId: userGroup.id
-    //   });
-      
-    // result.subscribe({
-    //   next: () => {
-    //     if (!this.users?.data)
-    //       return;
-    //     this.users.data = this.users!.data.map(g => 
-    //       g.user.id === userGroup.user.id ? { ...g, isAdmin: selected} : g
-    //     );
-    //   },
-    //   error:(err) => {
-    //     this.snackBarService.openError(err);
-    //     if (!this.users?.data)
-    //       return;
-    //     this.users.data = this.users!.data.map(g => 
-    //       g.user.id === userGroup.user.id ? { ...g, isAdmin: !selected} : g
-    //     );
-    //   },
-    // })
+    
+    const role = selected ? Role.Admin.toString() : Role.Student.toString();
+    this.userInGroupRepository.changeRole$({
+        groupId: userGroup.group.id,
+        userId: userGroup.user.id,
+        role: role
+      }).subscribe({
+      next: () => {
+        if (!this.users?.data)
+          return;
+        this.users.data = this.users!.data.map(g => 
+          g.user.id === userGroup.user.id ? { ...g, isAdmin: selected} : g
+        );
+      },
+      error:(err) => {
+        this.snackBarService.openError(err);
+        if (!this.users?.data)
+          return;
+        this.users.data = this.users!.data.map(g => 
+          g.user.id === userGroup.user.id ? { ...g, isAdmin: !selected} : g
+        );
+      },
+    })
   }
 }

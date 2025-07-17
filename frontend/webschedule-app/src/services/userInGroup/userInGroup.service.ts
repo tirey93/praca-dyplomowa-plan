@@ -5,6 +5,7 @@ import { environment } from '../../enviroments/enviroments';
 import { AddCandidateRequest } from './dtos/add-candidate-request';
 import { DisenrollFromGroupRequest } from './dtos/disenroll-from-group-request';
 import { UserGroupResponse } from './dtos/userGroupResponse';
+import { ChangeRoleRequest } from './dtos/changeRoleRequest';
 
 @Injectable({
     providedIn: 'root'
@@ -48,6 +49,14 @@ import { UserGroupResponse } from './dtos/userGroupResponse';
 
     disenrollFromGroup$(request: DisenrollFromGroupRequest) {
       return this.http.put(`${this.url}/Disenroll`, request, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        },
+      })
+    }
+
+    changeRole$(request: ChangeRoleRequest) {
+      return this.http.put(`${this.url}/Role`, request, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         },

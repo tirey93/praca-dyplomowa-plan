@@ -15,12 +15,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { RemoveFromGroupDialogComponent } from './remove-from-group-dialog/remove-from-group-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-group-members',
   imports: [
     CommonModule, MatProgressSpinnerModule, MatTableModule, MatPaginatorModule, MatChipsModule,
-    MatSortModule, MatIconModule, MatButtonModule
+    MatSortModule, MatIconModule, MatButtonModule, MatButtonModule, MatExpansionModule,
+    MatTooltipModule
   ],
   templateUrl: './group-members.component.html',
   styleUrl: './group-members.component.scss'

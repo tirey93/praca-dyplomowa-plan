@@ -1,38 +1,65 @@
-<div *ngIf="isLoading">
-    <mat-spinner></mat-spinner>
-</div>
+@if (userGroup?.isAdmin) {
+    <div style="margin: 5px;">
+        <mat-accordion>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title> Akcje administracyjne </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div style="direction: rtl;">
+                    <button matTooltip="Dodaj do grupy" mat-mini-fab type="button"><mat-icon>add</mat-icon></button>
+                </div>
+                <ng-container [ngTemplateOutlet]="userTable"></ng-container>
+            </mat-expansion-panel>
+            <mat-expansion-panel expanded>
+                <mat-expansion-panel-header>
+                    <mat-panel-title> Lista osób w grupie </mat-panel-title>
+                </mat-expansion-panel-header>
+                <ng-container [ngTemplateOutlet]="userTable"></ng-container>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+} @else {
+    <ng-container [ngTemplateOutlet]="userTable"></ng-container>
+}
 
-<div *ngIf="noData">
-    Brak członków
-</div>
-<div style="margin: 30px 0;" *ngIf="!isLoading && !noData">
-    <mat-table [dataSource]="users!" matSort style="display: table;padding-top: 20px;">
-        <ng-container matColumnDef="displayName">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nazwa </th>
-            <td mat-cell *matCellDef="let element"> {{element.user.displayName}} </td>
-        </ng-container>
-        <ng-container matColumnDef="role">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Rola </th>
-            <td mat-cell *matCellDef="let element"> 
-                <mat-chip-option
-                    [disabled]="!userGroup?.isAdmin"
-                    (selectionChange)="handleAdminToggle(element, $event.selected)" 
-                    [selected]="element.isAdmin">{{isAdmin(element.user.id) ? "Admin" : "User"}}
-                </mat-chip-option> 
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="delete">
-            <th mat-header-cell *matHeaderCellDef> Usuwanie </th>
-            <td mat-cell *matCellDef="let element"> 
-                <button mat-icon-button (click)="removeFromGroup(element)"><mat-icon style="color: red;">close_small</mat-icon> </button>
-            </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </mat-table>
-    <mat-paginator 
-        pageSize="5" 
-        style="margin-bottom: 4px;"
-        showFirstLastButtons>
-    </mat-paginator>
-</div>
+<ng-template #userTable>
+    <div *ngIf="isLoading">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <div *ngIf="noData">
+        Brak członków
+    </div>
+    <div style="margin: 10px 0;" *ngIf="!isLoading && !noData">
+        <mat-table [dataSource]="users!" matSort style="display: table;padding-top: 20px;">
+            <ng-container matColumnDef="displayName">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nazwa </th>
+                <td mat-cell *matCellDef="let element"> {{element.user.displayName}} </td>
+            </ng-container>
+            <ng-container matColumnDef="role">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Rola </th>
+                <td mat-cell *matCellDef="let element"> 
+                    <mat-chip-option
+                        [disabled]="!userGroup?.isAdmin"
+                        (selectionChange)="handleAdminToggle(element, $event.selected)" 
+                        [selected]="element.isAdmin">{{isAdmin(element.user.id) ? "Admin" : "User"}}
+                    </mat-chip-option> 
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="delete">
+                <th mat-header-cell *matHeaderCellDef> Usuwanie </th>
+                <td mat-cell *matCellDef="let element"> 
+                    <button mat-icon-button (click)="removeFromGroup(element)"><mat-icon style="color: red;">close_small</mat-icon> </button>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </mat-table>
+        <mat-paginator 
+            pageSize="5" 
+            style="margin-bottom: 4px;"
+            showFirstLastButtons>
+        </mat-paginator>
+    </div>
+</ng-template>
+

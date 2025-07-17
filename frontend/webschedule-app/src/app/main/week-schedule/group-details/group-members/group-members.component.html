@@ -22,7 +22,9 @@
         </ng-container>
         <ng-container matColumnDef="delete">
             <th mat-header-cell *matHeaderCellDef> Usuwanie </th>
-            <td mat-cell *matCellDef="let element"> Usuń </td>
+            <td mat-cell *matCellDef="let element"> 
+                <button mat-icon-button (click)="removeFromGroup(element)"><mat-icon style="color: red;">close_small</mat-icon> </button>
+            </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>

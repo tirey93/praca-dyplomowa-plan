@@ -2,5 +2,6 @@
 {
     public class DisenrollFromGroupRequest : AddCandidateRequest
     {
+        public int? UserId { get; set; }
     }
 }

@@ -11,12 +11,16 @@ import { SnackBarService } from '../../../../../services/snackBarService';
 import { SyncService } from '../../../../../services/sync.service';
 import { UserGroupResponse } from '../../../../../services/userInGroup/dtos/userGroupResponse';
 import { UserInGroupService } from '../../../../../services/userInGroup/userInGroup.service';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { RemoveFromGroupDialogComponent } from './remove-from-group-dialog/remove-from-group-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-group-members',
   imports: [
     CommonModule, MatProgressSpinnerModule, MatTableModule, MatPaginatorModule, MatChipsModule,
-    MatSortModule
+    MatSortModule, MatIconModule, MatButtonModule
   ],
   templateUrl: './group-members.component.html',
   styleUrl: './group-members.component.scss'
@@ -35,7 +39,8 @@ export class GroupMembersComponent implements OnInit {
   constructor(
     private userInGroupRepository: UserInGroupService,
     private snackBarService: SnackBarService,
-    private syncService: SyncService
+    private syncService: SyncService,
+    private readonly dialog: MatDialog,
   ) {
     
   }
@@ -103,5 +108,17 @@ export class GroupMembersComponent implements OnInit {
         );
       },
     })
+  }
+
+  removeFromGroup(userGroup: UserGroupResponse) {
+    this.dialog.open(RemoveFromGroupDialogComponent, {
+        data: {
+          userGroup: userGroup
+        },
+      }).afterClosed().subscribe((result:boolean) => {
+        if (result) {
+          this.users!.data = this.users!.data.filter(x => x.user.id !== userGroup.user.id)
+        }
+      })
   }
 }

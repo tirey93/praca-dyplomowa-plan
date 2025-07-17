@@ -1,8 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { UserGroupResponse } from '../../services/userInGroup/dtos/userGroupResponse';
 import { filter, Subject, switchMap, takeUntil } from 'rxjs';
-import { GroupHelper } from '../../helpers/groupHelper';
-import { SyncService } from '../../services/sync.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -10,14 +7,17 @@ import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
-import { LeaveGroupDialogComponent } from '../main/week-schedule/leave-group-dialog/leave-group-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
-import { RemoveGroupDialogComponent } from '../main/week-schedule/remove-group-dialog/remove-group-dialog.component';
-import { UserInGroupService } from '../../services/userInGroup/userInGroup.service';
 import {ClipboardModule} from '@angular/cdk/clipboard';
-import { SnackBarService } from '../../services/snackBarService';
-import { environment } from '../../enviroments/enviroments';
 import { GroupMembersComponent } from "./group-members/group-members.component";
+import { environment } from '../../../../enviroments/enviroments';
+import { GroupHelper } from '../../../../helpers/groupHelper';
+import { SnackBarService } from '../../../../services/snackBarService';
+import { SyncService } from '../../../../services/sync.service';
+import { UserGroupResponse } from '../../../../services/userInGroup/dtos/userGroupResponse';
+import { UserInGroupService } from '../../../../services/userInGroup/userInGroup.service';
+import { LeaveGroupDialogComponent } from '../leave-group-dialog/leave-group-dialog.component';
+import { RemoveGroupDialogComponent } from '../remove-group-dialog/remove-group-dialog.component';
 
 
 @Component({

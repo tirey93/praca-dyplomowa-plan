@@ -48,7 +48,9 @@ export class ToolbarComponent {
           switchMap(() => {
             return this.userInGroupRepository.getByLoggedIn$().pipe(
               map(userGroups => 
-                userGroups.map(userGroup => ({
+                userGroups
+                .filter(x => !x.isCandidate)
+                .map(userGroup => ({
                   id: userGroup.group.id,
                   name: GroupHelper.groupInfoToString(userGroup.group),
                 } as GroupSelected))

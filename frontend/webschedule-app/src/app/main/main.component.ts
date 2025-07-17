@@ -33,7 +33,7 @@ export class MainComponent implements OnInit, OnDestroy{
         switchMap((isLogged) => isLogged ? this.userInGroupRepository.getByLoggedIn$() : of([])),
       ).subscribe({
         next: (userGroupResponses) => {
-          this.userGroups = userGroupResponses.map(y => y.group.id)
+          this.userGroups = userGroupResponses.filter(x => !x.isCandidate).map(y => y.group.id)
           this.isLoading = false;
           this.shouldShowGroupList = this.groupId == undefined && this.userGroups && this.userGroups.length === 0
         }

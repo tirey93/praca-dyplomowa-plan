@@ -34,7 +34,7 @@ export class GroupMembersComponent implements OnInit {
   isLoading = true;
   noData = false;
 
-  displayedColumns: string[] = ['displayName', 'role', 'delete'];
+  displayedColumns: string[] = ['displayName', 'role'];
 
   constructor(
     private userInGroupRepository: UserInGroupService,
@@ -54,6 +54,9 @@ export class GroupMembersComponent implements OnInit {
         if (userGroupsResponse.length === 0) {
           this.noData = true;
           return;
+        }
+        if (this.userGroup?.isAdmin && !this.displayedColumns.includes('delete')) {
+          this.displayedColumns.push('delete')
         }
         if (!this.users) {
           this.users = new MatTableDataSource<UserGroupResponse>();

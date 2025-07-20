@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { startWith, switchMap } from 'rxjs';
+import { filter, startWith, switchMap } from 'rxjs';
 import { Role } from '../../../../../helpers/roles';
 import { SnackBarService } from '../../../../../services/snackBarService';
 import { SyncService } from '../../../../../services/sync.service';
@@ -50,6 +50,7 @@ export class GroupMembersComponent implements OnInit {
   }
   ngOnInit(): void {
     this.syncService.groupId$.pipe(
+      filter(groupId=> groupId != null),
       startWith(this.userGroup?.group.id),
       switchMap((groupId) => this.userInGroupRepository.getByGroup$(groupId!, true))
     ).subscribe({

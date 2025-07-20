@@ -48,7 +48,7 @@ export class GroupDetailsComponent implements OnDestroy{
     ).subscribe({
       next: (userGroupResponse) => {
         this.userGroup = userGroupResponse;
-      }
+      },
     })
   }
 

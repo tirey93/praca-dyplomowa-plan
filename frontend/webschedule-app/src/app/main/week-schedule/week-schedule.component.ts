@@ -23,7 +23,6 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
   @Input() userGroups: number[] = [];
   @Input() groupId?: number;
   sidenavOpened$: Observable<boolean>;
-  sidenavGroupId$: Observable<number | null>;
 
   groupsToDisplay: number[] = []
 
@@ -36,7 +35,6 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     private syncService: SyncService,
   ) {  
     this.sidenavOpened$ = syncService.groupSelected$;
-    this.sidenavGroupId$ = syncService.groupId$;
 
     syncService.refreshGroups$.pipe(
       takeUntil(this.destroy$),

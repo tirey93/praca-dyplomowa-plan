@@ -69,6 +69,7 @@ export class ToolbarComponent {
   }
   logout() {
     this.loginService.logout();
+    this.syncService.unselectGroup();
     this.login();
   }
 

@@ -13,18 +13,22 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { map, Observable } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserInGroupService } from '../../services/userInGroup/userInGroup.service';
 import { SnackBarService } from '../../services/snackBarService';
-import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
 import { GroupRepositoryService } from '../../services/group/groupRepository.service';
 import { GroupHelper } from '../../helpers/groupHelper';
 import { Constants } from '../../helpers/constants';
 import { GroupInfoResponse } from '../../services/group/dtos/groupInfoResponse';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+
+
+export interface CandidateGroupInfoResponse extends GroupInfoResponse {
+    isCandidate: boolean,
+}
 
 @Component({
   selector: 'app-search-group',
@@ -44,7 +48,7 @@ export class SearchGroupComponent implements OnInit {
 
   isLoading = true;
   noData = false;
-  groups?: MatTableDataSource<GroupInfoResponse>;
+  groups?: MatTableDataSource<CandidateGroupInfoResponse>;
 
   courseFilterControl = new FormControl<string>('')
   yearFilterControl = new FormControl<string>('all')
@@ -67,7 +71,7 @@ export class SearchGroupComponent implements OnInit {
 
   constructor(
     private groupService: GroupRepositoryService,
-    private userInGroupsService: UserInGroupService,
+    private userInGroupService: UserInGroupService,
     private snackBarService: SnackBarService,
   ) {
     this.filteredOptionsCourse$ = this.courseFilterControl.valueChanges.pipe(
@@ -78,8 +82,15 @@ export class SearchGroupComponent implements OnInit {
   }
 
   ngOnInit(): void {
-      this.groupService.getGroups$(this.hasJoinOption).subscribe({
-      next: (groups => {
+    let subscription;
+    if (this.hasJoinOption){
+      subscription = forkJoin([this.userInGroupService.getCandidatesByLoggedIn$(), this.groupService.getGroups$(true)])
+    } else {
+      subscription = forkJoin([of([]), this.groupService.getGroups$()])
+    }
+    
+    subscription.subscribe({
+      next: (([candidates, groups]) => {
         this.isLoading = false;
         if (groups.length === 0) {
           this.noData = true;
@@ -88,8 +99,12 @@ export class SearchGroupComponent implements OnInit {
         if (this.hasJoinOption && !this.displayedColumns.includes('join')) {
           this.displayedColumns.push('join')
         }
-        this.groups = new MatTableDataSource<GroupInfoResponse>();
-        this.groups.data = groups;
+        this.groups = new MatTableDataSource<CandidateGroupInfoResponse>();
+        this.groups.data = groups.map(g => { 
+           const result = g as CandidateGroupInfoResponse;
+           result.isCandidate = candidates.some(x => x.group.id === g.id)
+           return result;
+        }).sort((a, b) => a.isCandidate ? -1 : 1);
         this.filterOptionsYear = new Set(this.groups?.data.map(x => x.startingYear).sort((a, b) => a - b))
         this.filterOptionsCourse = new Set(this.groups?.data.map(x => x.studyCourseName).sort((a, b) => a > b ? 1 : -1))
         this.courseFilterControl.setValue('')
@@ -112,7 +127,7 @@ export class SearchGroupComponent implements OnInit {
             var map = new Map(JSON.parse(filter));
             let isMatch = false;
             for(let [key,value] of map){
-              isMatch = (value=="all") || (record[key as keyof GroupInfoResponse] == value); 
+              isMatch = (value=="all") || (record[key as keyof CandidateGroupInfoResponse] == value); 
               if(!isMatch) return false;
             }
             return isMatch;
@@ -124,10 +139,10 @@ export class SearchGroupComponent implements OnInit {
     })
   }
 
-  getName(group: GroupInfoResponse):string {
+  getName(group: CandidateGroupInfoResponse):string {
     return GroupHelper.groupInfoToString(group);
   }
-  getLink(group: GroupInfoResponse) {
+  getLink(group: CandidateGroupInfoResponse) {
     return `/group/${group.id}`;
   }
 
@@ -146,21 +161,40 @@ export class SearchGroupComponent implements OnInit {
     this.modefilterControl.setValue('all')
   }
 
-  handleCandidateJoin(group: GroupInfoResponse) {        
-      this.userInGroupsService.addCandidate$({
-          groupId: group.id
-        }).subscribe({
-        next: () => {
-          if (!this.groups?.data)
-            return;
-          this.groups.data = this.groups!.data.filter(x => x.id !== group.id)
-        },
-        error:(err) => {
-          this.snackBarService.openError(err);
-        },
-      })
-    }
+  handleCandidateJoin(group: CandidateGroupInfoResponse, selected: boolean) {
+    if (group.isCandidate === selected)
+      return;
 
+    const result = selected ? this.userInGroupService.addCandidate$({
+        groupId: group.id
+      }) : this.userInGroupService.disenrollFromGroup$({
+        groupId: group.id
+      });
+      
+    result.subscribe({
+      next: () => {
+        if (!this.groups?.data)
+          return;
+        this.groups.data = this.groups!.data.map(g => 
+          g.id === group.id ? { ...g, isCandidate: selected} : g
+        );
+      },
+      error:(err) => {
+        this.snackBarService.openError(err);
+        if (!this.groups?.data)
+          return;
+        this.groups.data = this.groups!.data.map(g => 
+          g.id === group.id ? { ...g, isCandidate: !selected} : g
+        );
+      },
+    })
+  }
+  
+  isCandidate(groupId: number) {
+    if (!this.groups?.data)
+          return;
+    return this.groups.data.find(g => g.id === groupId)?.isCandidate;
+  }
   private filterOptionCourse(name: string): string[] {
     const filterValue = name.toLowerCase();
     return [...this.filterOptionsCourse!].filter(option => option.toLowerCase().includes(filterValue));

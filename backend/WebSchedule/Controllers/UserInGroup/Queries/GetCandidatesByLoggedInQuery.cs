@@ -1,30 +1,28 @@
 ﻿using MediatR;
 using WebSchedule.Controllers.Responses;
-using WebSchedule.Controllers.UserInGroup.Exceptions;
 using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Controllers.UserInGroup.Queries
 {
-    public class GetUserGroupByGroupAndUserQuery : IRequest<UserGroupResponse>
+    public class GetCandidatesByLoggedInQuery : IRequest<IEnumerable<UserGroupResponse>>
     {
-        public int GroupId { get; set; }
         public int UserId { get; set; }
     }
 
-    public class GetGroupByIdQueryHandler : IRequestHandler<GetUserGroupByGroupAndUserQuery, UserGroupResponse>
+    public class GetCandidatesByLoggedInQueryHandler : IRequestHandler<GetCandidatesByLoggedInQuery, IEnumerable<UserGroupResponse>>
     {
         private readonly IUserInGroupRepository _userInGroupRepository;
 
-        public GetGroupByIdQueryHandler(IUserInGroupRepository userInGroupRepository)
+        public GetCandidatesByLoggedInQueryHandler(IUserInGroupRepository userInGroupRepository)
         {
             _userInGroupRepository = userInGroupRepository;
         }
 
-        public Task<UserGroupResponse> Handle(GetUserGroupByGroupAndUserQuery request, CancellationToken cancellationToken)
+        public Task<IEnumerable<UserGroupResponse>> Handle(GetCandidatesByLoggedInQuery request, CancellationToken cancellationToken)
         {
-            var userGroup = _userInGroupRepository.GetUserGroupsByUser(request.UserId).FirstOrDefault(x => x.Group.Id == request.GroupId)
-                ?? throw new UserInGroupNotFoundException(request.UserId, request.GroupId);
-            return Task.FromResult(new UserGroupResponse
+            var userGroups = _userInGroupRepository.GetUserGroupsByUser(request.UserId)
+                .Where(x => x.IsCandidate);
+            return Task.FromResult(userGroups.Select(userGroup => new UserGroupResponse
             {
                 Group = new GroupResponse
                 {
@@ -45,7 +43,7 @@ namespace WebSchedule.Controllers.UserInGroup.Queries
                 },
                 IsAdmin = userGroup.IsAdmin,
                 IsCandidate = userGroup.IsCandidate,
-            });
+            }));
         }
     }
 }

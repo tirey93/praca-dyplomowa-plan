@@ -13,20 +13,15 @@ namespace WebSchedule.Controllers.UserInGroup.Queries
 
     public class GetGroupsByLoggedInQueryHandler : IRequestHandler<GetUserGroupsByLoggedInQuery, IEnumerable<UserGroupResponse>>
     {
-        private readonly IUserRepository _userRepository;
         private readonly IUserInGroupRepository _userInGroupRepository;
 
         public GetGroupsByLoggedInQueryHandler(IUserRepository userRepository, IUserInGroupRepository userInGroupRepository)
         {
-            _userRepository = userRepository;
             _userInGroupRepository = userInGroupRepository;
         }
 
         public Task<IEnumerable<UserGroupResponse>> Handle(GetUserGroupsByLoggedInQuery request, CancellationToken cancellationToken)
         {
-            var user = _userRepository.Get(request.UserId)
-                    ?? throw new UserNotFoundException(request.UserId.ToString());
-
             var userGroups = _userInGroupRepository.GetUserGroupsByUser(request.UserId);
             return Task.FromResult(userGroups.Select(userGroup => new UserGroupResponse
             {

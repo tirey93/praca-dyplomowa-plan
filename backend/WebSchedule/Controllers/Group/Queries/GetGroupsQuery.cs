@@ -22,7 +22,7 @@ namespace WebSchedule.Controllers.Group.Queries
         {
             var groups = _groupRepository.Get()
                 .Where(g => request.ExceptUserId == null 
-                    || (!g.Candidates.Any(m => m.Id == request.ExceptUserId) && !g.Members.Any(m => m.Id == request.ExceptUserId)))
+                    || !g.Members.Any(m => m.Id == request.ExceptUserId))
                 .OrderByDescending(x => x.StartingYear)
                 .ThenBy(x => x.StudyMode)
                 .ThenBy(x => x.StudyLevel)

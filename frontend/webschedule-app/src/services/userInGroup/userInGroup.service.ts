@@ -23,6 +23,14 @@ import { ChangeRoleRequest } from './dtos/changeRoleRequest';
       })
     }
 
+    getCandidatesByLoggedIn$() {
+      return this.http.get<UserGroupResponse[]>(`${this.url}/Candidates/ByLoggedIn`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
     getLoggedInByGroup$(groupId: number | undefined) {
       return this.http.get<UserGroupResponse>(`${this.url}/Group/${groupId}/ByLoggedIn`, {
         headers: {

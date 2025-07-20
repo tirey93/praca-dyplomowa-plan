@@ -12,12 +12,10 @@ namespace WebSchedule.Controllers.UserInGroup.Queries
 
     public class GetUserGroupsByGroupQueryHandler : IRequestHandler<GetUserGroupsByGroupQuery, IEnumerable<UserGroupResponse>>
     {
-        private readonly IUserRepository _userRepository;
         private readonly IUserInGroupRepository _userInGroupRepository;
 
-        public GetUserGroupsByGroupQueryHandler(IUserRepository userRepository, IUserInGroupRepository userInGroupRepository)
+        public GetUserGroupsByGroupQueryHandler(IUserInGroupRepository userInGroupRepository)
         {
-            _userRepository = userRepository;
             _userInGroupRepository = userInGroupRepository;
         }
 

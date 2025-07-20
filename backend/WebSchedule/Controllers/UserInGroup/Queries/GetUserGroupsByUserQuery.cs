@@ -6,21 +6,21 @@ using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Controllers.UserInGroup.Queries
 {
-    public class GetUserGroupsByLoggedInQuery : IRequest<IEnumerable<UserGroupResponse>>
+    public class GetUserGroupsByUserQuery : IRequest<IEnumerable<UserGroupResponse>>
     {
         public int UserId { get; set; }
     }
 
-    public class GetGroupsByLoggedInQueryHandler : IRequestHandler<GetUserGroupsByLoggedInQuery, IEnumerable<UserGroupResponse>>
+    public class GetUserGroupsByUserQueryHandler : IRequestHandler<GetUserGroupsByUserQuery, IEnumerable<UserGroupResponse>>
     {
         private readonly IUserInGroupRepository _userInGroupRepository;
 
-        public GetGroupsByLoggedInQueryHandler(IUserRepository userRepository, IUserInGroupRepository userInGroupRepository)
+        public GetUserGroupsByUserQueryHandler(IUserRepository userRepository, IUserInGroupRepository userInGroupRepository)
         {
             _userInGroupRepository = userInGroupRepository;
         }
 
-        public Task<IEnumerable<UserGroupResponse>> Handle(GetUserGroupsByLoggedInQuery request, CancellationToken cancellationToken)
+        public Task<IEnumerable<UserGroupResponse>> Handle(GetUserGroupsByUserQuery request, CancellationToken cancellationToken)
         {
             var userGroups = _userInGroupRepository.GetUserGroupsByUser(request.UserId);
             return Task.FromResult(userGroups.Select(userGroup => new UserGroupResponse

@@ -3,12 +3,12 @@
         <mat-accordion>
             <mat-expansion-panel>
                 <mat-expansion-panel-header>
-                    <mat-panel-title> Akcje administracyjne </mat-panel-title>
+                    <mat-panel-title> Dodaj nowych członków </mat-panel-title>
                 </mat-expansion-panel-header>
                 <div style="direction: rtl;">
                     <button matTooltip="Dodaj do grupy" mat-mini-fab type="button"><mat-icon>add</mat-icon></button>
                 </div>
-                <ng-container [ngTemplateOutlet]="userTable"></ng-container>
+                <app-candidates-list [groupId]="userGroup?.group?.id"></app-candidates-list>
             </mat-expansion-panel>
             <mat-expansion-panel expanded>
                 <mat-expansion-panel-header>
@@ -21,6 +21,7 @@
 } @else {
     <ng-container [ngTemplateOutlet]="userTable"></ng-container>
 }
+
 
 <ng-template #userTable>
     <div *ngIf="isLoading">
@@ -42,7 +43,7 @@
                     <mat-chip-option
                         [disabled]="!userGroup?.isAdmin"
                         (selectionChange)="handleAdminToggle(element, $event.selected)" 
-                        [selected]="element.isAdmin">{{isAdmin(element.user.id) ? "Admin" : "User"}}
+                        [selected]="element.isAdmin">{{isAdmin(element.user.id) ? "Admin" : "Student"}}
                     </mat-chip-option> 
                 </td>
             </ng-container>
@@ -56,7 +57,7 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </mat-table>
         <mat-paginator 
-            pageSize="5" 
+            pageSize="4" 
             style="margin-bottom: 4px;"
             showFirstLastButtons>
         </mat-paginator>

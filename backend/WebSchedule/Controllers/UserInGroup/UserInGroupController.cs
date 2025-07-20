@@ -34,7 +34,7 @@ namespace WebSchedule.Controllers.User
                 var userId = JwtHelper.GetUserIdFromToken(Request.Headers.Authorization)
                     ?? throw new UserNotFoundException();
 
-                return Ok(await _mediator.Send(new GetUserGroupsByLoggedInQuery
+                return Ok(await _mediator.Send(new GetUserGroupsByUserQuery
                 {
                     UserId = userId,
                 }));
@@ -67,9 +67,39 @@ namespace WebSchedule.Controllers.User
                 var userId = JwtHelper.GetUserIdFromToken(Request.Headers.Authorization)
                     ?? throw new UserNotFoundException();
 
-                return Ok(await _mediator.Send(new GetCandidatesByLoggedInQuery
+                return Ok(await _mediator.Send(new GetUserCandidatesQuery
                 {
                     UserId = userId,
+                }));
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
+            }
+        }
+
+        [HttpGet("Group/{id}/Candidates")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+#if !DEBUG
+        [Authorize]
+#endif
+        public async Task<ActionResult<IEnumerable<UserGroupResponse>>> GetGroupCandidates(int id)
+        {
+            try
+            {
+                return Ok(await _mediator.Send(new GetGroupCandidatesQuery
+                {
+                    GroupId = id
                 }));
             }
             catch (ApplicationException ex)

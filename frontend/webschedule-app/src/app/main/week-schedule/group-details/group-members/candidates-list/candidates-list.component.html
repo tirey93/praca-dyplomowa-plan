@@ -1,0 +1,34 @@
+<div *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+</div>
+
+<div *ngIf="noData">
+    Brak kandydatów
+</div>
+<div style="margin: 10px 0;" *ngIf="!isLoading && !noData">
+    <mat-table [dataSource]="candidates!" matSort style="display: table;padding-top: 20px;">
+        <ng-container matColumnDef="displayName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Kandydat </th>
+            <td mat-cell *matCellDef="let element"> {{element.user.displayName}} </td>
+        </ng-container>
+        <ng-container matColumnDef="approve">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Przyjmij </th>
+            <td mat-cell *matCellDef="let element"> 
+                <button mat-icon-button (click)="handleApprove(element)"><mat-icon style="color: green;">check_small</mat-icon> </button>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="reject">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Odrzuć </th>
+            <td mat-cell *matCellDef="let element"> 
+                <button mat-icon-button (click)="handleReject(element)"><mat-icon style="color: red;">close_small</mat-icon> </button>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </mat-table>
+    <mat-paginator 
+        pageSize="4" 
+        style="margin-bottom: 4px;"
+        showFirstLastButtons>
+    </mat-paginator>
+</div>

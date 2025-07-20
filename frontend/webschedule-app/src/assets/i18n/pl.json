@@ -30,6 +30,8 @@
   "LeaveGroupSuccess": "Grupę opuszczono z powodzeniem.",
   "RemoveGroupSuccess": "Grupę usunięto z powodzeniem.",
   "RemoveUserFromGroupSuccess": "Użytkownik został poprawnie usunięty.",
+  "RemoveCandidateFromGroupSuccess": "Kandydat został poprawnie usunięty.",
+  "ApproveCandidateToGroupSuccess": "Kandydat został poprawnie dodany do grupy.",
 
   "UserWasCreated": "Użytkownik został utworzony.",
   "LinkCopied": "Link do grupy został skopiowany."

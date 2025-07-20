@@ -4,23 +4,23 @@ using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Controllers.UserInGroup.Queries
 {
-    public class GetCandidatesByLoggedInQuery : IRequest<IEnumerable<UserGroupResponse>>
+    public class GetGroupCandidatesQuery : IRequest<IEnumerable<UserGroupResponse>>
     {
-        public int UserId { get; set; }
+        public int GroupId { get; set; }
     }
 
-    public class GetCandidatesByLoggedInQueryHandler : IRequestHandler<GetCandidatesByLoggedInQuery, IEnumerable<UserGroupResponse>>
+    public class GetGroupCandidatesQueryHandler : IRequestHandler<GetGroupCandidatesQuery, IEnumerable<UserGroupResponse>>
     {
         private readonly IUserInGroupRepository _userInGroupRepository;
 
-        public GetCandidatesByLoggedInQueryHandler(IUserInGroupRepository userInGroupRepository)
+        public GetGroupCandidatesQueryHandler(IUserInGroupRepository userInGroupRepository)
         {
             _userInGroupRepository = userInGroupRepository;
         }
 
-        public Task<IEnumerable<UserGroupResponse>> Handle(GetCandidatesByLoggedInQuery request, CancellationToken cancellationToken)
+        public Task<IEnumerable<UserGroupResponse>> Handle(GetGroupCandidatesQuery request, CancellationToken cancellationToken)
         {
-            var userGroups = _userInGroupRepository.GetUserGroupsByUser(request.UserId)
+            var userGroups = _userInGroupRepository.GetUserGroupsByGroup(request.GroupId)
                 .Where(x => x.IsCandidate);
             return Task.FromResult(userGroups.Select(userGroup => new UserGroupResponse
             {

@@ -31,6 +31,14 @@ import { ChangeRoleRequest } from './dtos/changeRoleRequest';
       })
     }
 
+    getGroupCandidates$(groupId: number) {
+      return this.http.get<UserGroupResponse[]>(`${this.url}/Group/${groupId}/Candidates`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
     getLoggedInByGroup$(groupId: number | undefined) {
       return this.http.get<UserGroupResponse>(`${this.url}/Group/${groupId}/ByLoggedIn`, {
         headers: {

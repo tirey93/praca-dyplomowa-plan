@@ -17,14 +17,15 @@ import { RemoveFromGroupDialogComponent } from './remove-from-group-dialog/remov
 import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { CandidatesListComponent } from "./candidates-list/candidates-list.component";
 
 @Component({
   selector: 'app-group-members',
   imports: [
     CommonModule, MatProgressSpinnerModule, MatTableModule, MatPaginatorModule, MatChipsModule,
-    MatSortModule, MatIconModule, MatButtonModule, MatButtonModule, MatExpansionModule,
-    MatTooltipModule
-  ],
+    MatSortModule, MatIconModule, MatButtonModule, MatExpansionModule,MatTooltipModule,
+    CandidatesListComponent
+],
   templateUrl: './group-members.component.html',
   styleUrl: './group-members.component.scss'
 })
@@ -73,7 +74,9 @@ export class GroupMembersComponent implements OnInit {
           setTimeout(() => this.users!.paginator = this.paginator);
           setTimeout(() => this.users!.sort = this.sort!);
         }
-        this.users.data = userGroupsResponse.filter(x => !x.isCandidate);
+        this.users.data = userGroupsResponse
+          .filter(x => !x.isCandidate)
+          .sort((a, b) => a.user.displayName > b.user.displayName ? 1 : -1);
         this.noData = false;
       }),
       error: (err) => {

@@ -2,7 +2,9 @@
 @if (isLoading) {
     <mat-spinner></mat-spinner>
 } @else if (shouldShowGroupList) {
-    <app-search-group></app-search-group>
+    <div class="content">
+        <app-search-group></app-search-group>
+    </div>
 } @else {
     <app-week-schedule [userGroups]="userGroups" [groupId]="groupId"></app-week-schedule>
 }

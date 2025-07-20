@@ -6,24 +6,23 @@ namespace WebSchedule.Controllers.Group.Queries
 {
     public class GetGroupsQuery : IRequest<IEnumerable<GroupInfoResponse>>
     {
+        public int? ExceptUserId { get; set; }
     }
 
     public class GetGroupsQueryHandler : IRequestHandler<GetGroupsQuery, IEnumerable<GroupInfoResponse>>
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IUserInGroupRepository _userInGroupRepository;
         private readonly IGroupRepository _groupRepository;
 
-        public GetGroupsQueryHandler(IUserRepository userRepository, IUserInGroupRepository userInGroupRepository, IGroupRepository groupRepository)
+        public GetGroupsQueryHandler(IGroupRepository groupRepository)
         {
-            _userRepository = userRepository;
-            _userInGroupRepository = userInGroupRepository;
             _groupRepository = groupRepository;
         }
 
         public Task<IEnumerable<GroupInfoResponse>> Handle(GetGroupsQuery request, CancellationToken cancellationToken)
         {
             var groups = _groupRepository.Get()
+                .Where(g => request.ExceptUserId == null 
+                    || (!g.Candidates.Any(m => m.Id == request.ExceptUserId) && !g.Members.Any(m => m.Id == request.ExceptUserId)))
                 .OrderByDescending(x => x.StartingYear)
                 .ThenBy(x => x.StudyMode)
                 .ThenBy(x => x.StudyLevel)

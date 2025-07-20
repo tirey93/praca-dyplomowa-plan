@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatMenuModule } from '@angular/material/menu';
@@ -38,7 +38,9 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
   templateUrl: './search-group.component.html',
   styleUrl: './search-group.component.scss'
 })
-export class SearchGroupComponent {
+export class SearchGroupComponent implements OnInit {
+  @Input() hasJoinOption: boolean = false;
+  @Input() pagesizeOptions: number[] = [10, 20, 50]
 
   isLoading = true;
   noData = false;
@@ -65,6 +67,7 @@ export class SearchGroupComponent {
 
   constructor(
     private groupService: GroupRepositoryService,
+    private userInGroupsService: UserInGroupService,
     private snackBarService: SnackBarService,
   ) {
     this.filteredOptionsCourse$ = this.courseFilterControl.valueChanges.pipe(
@@ -72,12 +75,18 @@ export class SearchGroupComponent {
         return value ? this.filterOptionCourse(value) : [...this.filterOptionsCourse!].slice();
       }),
     );
-    this.groupService.getGroups$().subscribe({
+  }
+
+  ngOnInit(): void {
+      this.groupService.getGroups$(this.hasJoinOption).subscribe({
       next: (groups => {
         this.isLoading = false;
         if (groups.length === 0) {
           this.noData = true;
           return;
+        }
+        if (this.hasJoinOption && !this.displayedColumns.includes('join')) {
+          this.displayedColumns.push('join')
         }
         this.groups = new MatTableDataSource<GroupInfoResponse>();
         this.groups.data = groups;
@@ -136,6 +145,21 @@ export class SearchGroupComponent {
     this.levelFilterControl.setValue('all')
     this.modefilterControl.setValue('all')
   }
+
+  handleCandidateJoin(group: GroupInfoResponse) {        
+      this.userInGroupsService.addCandidate$({
+          groupId: group.id
+        }).subscribe({
+        next: () => {
+          if (!this.groups?.data)
+            return;
+          this.groups.data = this.groups!.data.filter(x => x.id !== group.id)
+        },
+        error:(err) => {
+          this.snackBarService.openError(err);
+        },
+      })
+    }
 
   private filterOptionCourse(name: string): string[] {
     const filterValue = name.toLowerCase();

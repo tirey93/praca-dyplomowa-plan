@@ -11,7 +11,7 @@ import { SyncService } from '../../../../../../services/sync.service';
 import { UserRepositoryService } from '../../../../../../services/user/userRepository.service';
 import { UserResponse } from '../../../../../../services/user/dtos/userResponse';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { map, Observable } from 'rxjs';
+import { forkJoin, groupBy, map, Observable, switchMap } from 'rxjs';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -21,6 +21,8 @@ import { UserGroupResponse } from '../../../../../../services/userInGroup/dtos/u
 import { GroupResponse } from '../../../../../../services/group/dtos/groupResponse';
 import { GroupHelper } from '../../../../../../helpers/groupHelper';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { UserInGroupService } from '../../../../../../services/userInGroup/userInGroup.service';
+import { Role } from '../../../../../../helpers/roles';
 
 @Component({
   selector: 'app-add-member-dialog',
@@ -51,6 +53,7 @@ export class AddMemberDialogComponent implements OnInit{
 
   constructor(
     private userRepositoryService: UserRepositoryService,
+    private userInGroupsService: UserInGroupService,
     private snackBarService: SnackBarService,
     private syncService: SyncService
   ) {
@@ -62,15 +65,18 @@ export class AddMemberDialogComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.userRepositoryService.get$().subscribe({
-      next: (usersResponse => {
+    forkJoin([this.userRepositoryService.get$(), this.userInGroupsService.getByGroup$(this.userGroup.group.id)])
+    .subscribe({
+      next: (([usersResponse, usersInGroup]) => {
         this.isLoading = false;
         if (usersResponse.length === 0) {
           this.noData = true;
           return;
         }
         this.users = new MatTableDataSource<UserResponse>();
-        this.users.data = usersResponse.sort((a, b) => a.displayName > b.displayName ? 1 : -1);
+        this.users.data = usersResponse
+          .filter(x => !usersInGroup.map(u => u.user.id).includes(x.id))
+          .sort((a, b) => a.displayName > b.displayName ? 1 : -1);
 
         this.filterOptionsDisplayName = new Set(this.users?.data.map(x => x.displayName).sort((a, b) => a > b ? 1 : -1));
         this.displayNameFilterControl.setValue('');
@@ -93,8 +99,20 @@ export class AddMemberDialogComponent implements OnInit{
     })
   }
 
-  handleAddToGroup(_t33: any) {
-    throw new Error('Method not implemented.');
+  handleAddToGroup(user: UserResponse) {
+    this.userInGroupsService.addCandidate$({groupId: this.userGroup.group.id, userId: user.id}).pipe(
+      switchMap(() => this.userInGroupsService
+        .changeRole$({groupId: this.userGroup.group.id, userId: user.id, role: Role.Student.toString()}))
+    ).subscribe({
+      next: () => {
+        this.snackBarService.openMessage('AddMemberToGroupSuccess');
+        this.users!.data = this.users!.data.filter(x => x.id !== user.id);
+        this.syncService.selectGroup(this.userGroup.group.id)
+      },
+      error: (err) => {
+        this.snackBarService.openError(err);
+      }
+    })
   }
 
   onClearAllFilters() {

@@ -193,7 +193,8 @@ namespace WebSchedule.Controllers.User
         {
             try
             {
-                var userId = JwtHelper.GetUserIdFromToken(Request.Headers.Authorization)
+                var userId = addCandidateRequest.UserId
+                    ?? JwtHelper.GetUserIdFromToken(Request.Headers.Authorization)
                     ?? throw new UserNotFoundException();
 
                 await _mediator.Send(new AddCandidateCommand

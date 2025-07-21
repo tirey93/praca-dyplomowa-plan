@@ -15,6 +15,7 @@ import { UserInGroupService } from '../../services/userInGroup/userInGroup.servi
 export class MainComponent implements OnInit, OnDestroy{
   userGroups: number[] = [];
   isLoading = true;
+  noData = false;
   shouldShowGroupList: boolean = false;
   @Input() groupId?: number;
 
@@ -36,6 +37,10 @@ export class MainComponent implements OnInit, OnDestroy{
           this.userGroups = userGroupResponses.filter(x => !x.isCandidate).map(y => y.group.id)
           this.isLoading = false;
           this.shouldShowGroupList = this.groupId == undefined && this.userGroups && this.userGroups.length === 0
+        },
+        error: () => {
+          this.noData = true;
+          this.isLoading = false;
         }
       });
   }

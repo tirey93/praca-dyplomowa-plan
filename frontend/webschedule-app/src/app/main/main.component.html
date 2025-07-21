@@ -1,6 +1,8 @@
 
 @if (isLoading) {
     <mat-spinner></mat-spinner>
+} @else if (noData) {
+    Wystąpił problem po stronie serwera.
 } @else if (shouldShowGroupList) {
     <div class="content">
         <app-search-group></app-search-group>

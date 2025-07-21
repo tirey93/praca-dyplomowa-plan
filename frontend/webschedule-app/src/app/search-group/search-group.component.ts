@@ -134,6 +134,8 @@ export class SearchGroupComponent implements OnInit {
         }
       }),
       error: (err) => {
+        this.noData = true;
+        this.isLoading = false;
         this.snackBarService.openError(err);
       },
     })

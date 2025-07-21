@@ -6,7 +6,7 @@
                     <mat-panel-title> Dodaj nowych członków </mat-panel-title>
                 </mat-expansion-panel-header>
                 <div style="direction: rtl;">
-                    <button matTooltip="Dodaj do grupy" mat-mini-fab type="button"><mat-icon>add</mat-icon></button>
+                    <button (click)="addToGroup()" matTooltip="Dodaj do grupy" mat-mini-fab type="button"><mat-icon>add</mat-icon></button>
                 </div>
                 <app-candidates-list [groupId]="userGroup?.group?.id"></app-candidates-list>
             </mat-expansion-panel>

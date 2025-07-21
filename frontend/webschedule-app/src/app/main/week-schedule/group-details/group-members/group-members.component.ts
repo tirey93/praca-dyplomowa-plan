@@ -18,6 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CandidatesListComponent } from "./candidates-list/candidates-list.component";
+import { AddMemberDialogComponent } from './add-member-dialog/add-member-dialog.component';
 
 @Component({
   selector: 'app-group-members',
@@ -129,6 +130,16 @@ export class GroupMembersComponent implements OnInit {
         if (result) {
           this.users!.data = this.users!.data.filter(x => x.user.id !== userGroup.user.id)
         }
+      })
+  }
+
+  addToGroup() {
+    this.dialog.open(AddMemberDialogComponent, {
+        maxWidth: '100vw',
+        autoFocus: false,
+        data: {
+          userGroup: this.userGroup
+        },
       })
   }
 }

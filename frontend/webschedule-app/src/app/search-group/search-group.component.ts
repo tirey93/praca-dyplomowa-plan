@@ -197,6 +197,7 @@ export class SearchGroupComponent implements OnInit {
           return;
     return this.groups.data.find(g => g.id === groupId)?.isCandidate;
   }
+
   private filterOptionCourse(name: string): string[] {
     const filterValue = name.toLowerCase();
     return [...this.filterOptionsCourse!].filter(option => option.toLowerCase().includes(filterValue));

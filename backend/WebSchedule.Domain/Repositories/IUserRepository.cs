@@ -9,5 +9,6 @@ namespace WebSchedule.Domain.Repositories
         User TryLoginByPassword(string userName, string hashedPassword);
         User Get(int id);
         bool UserExists(int userId);
+        IEnumerable<User> Get();
     }
 }

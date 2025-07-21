@@ -18,6 +18,11 @@ namespace WebSchedule.Infrastructure.Repositories
                 .Where(x => x.Id == id)
                 .FirstOrDefault();
         }
+
+        public IEnumerable<User> Get()
+        {
+            return _dbSet;
+        }
         public async Task RegisterUserAsync(User user)
         {
             await _dbSet.AddAsync(user);

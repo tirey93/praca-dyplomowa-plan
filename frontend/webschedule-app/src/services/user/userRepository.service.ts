@@ -23,6 +23,14 @@ import { UpdateUserPasswordRequest } from './dtos/updateUserPasswordRequest';
       })
     }
 
+    get$() {
+      return this.http.get<UserResponse[]>(`${this.url}`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
     updateLogin$(command: UpdateUserLoginRequest) {
       return this.http.put(`${this.url}/Login`, command, {
         headers: {

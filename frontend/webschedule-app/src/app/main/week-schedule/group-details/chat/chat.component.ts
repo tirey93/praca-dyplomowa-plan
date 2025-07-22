@@ -28,17 +28,18 @@ export class ChatComponent implements OnDestroy{
     public messageService: MessageService,
     syncService: SyncService
   ) {
+    this.messageService.startConnection();
     syncService.groupId$.pipe(
       takeUntil(this.destroy$),
       filter(groupId=> groupId != null)
     )
     .subscribe({
-      next: (groupId) => {
+      next: async (groupId) => {
         this.messages = [];
         if (this.currentGroup){
           this.messageService.leaveGroup(this.currentGroup);
         }
-        this.messageService.startConnection(groupId);
+        await this.messageService.joinGroup(groupId);
         this.currentGroup = groupId;
       }
     })

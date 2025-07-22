@@ -2,7 +2,7 @@
 {
     public class MessageDto
     {
-        public string Message { get; set; }
-        public int Prop { get; set; }
+        public string Content { get; set; }
+        public int GroupId { get; set; }
     }
 }

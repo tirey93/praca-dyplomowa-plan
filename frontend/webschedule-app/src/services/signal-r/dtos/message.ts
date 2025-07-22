@@ -1,4 +1,4 @@
 export interface MessageDto {
-    message: string;
-    prop: number;
+    content: string;
+    groupId: number;
 }

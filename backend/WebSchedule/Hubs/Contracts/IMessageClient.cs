@@ -5,5 +5,6 @@ namespace WebSchedule.Hubs.Contracts
     public interface IMessageClient
     {
         Task Receive(MessageDto messageDto);
+        Task GroupJoined(int groupId);
     }
 }

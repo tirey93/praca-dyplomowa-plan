@@ -13,26 +13,33 @@ export class MessageService implements OnDestroy{
   protected url = `${environment.host}:${environment.port}/messageHub`
   
 
-  public startConnection = () => {
+  startConnection = (groupId: number) => {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(this.url)
       .build();
 
-    this.hubConnection.start();
+    this.hubConnection.start().then(() => {
+      this.joinGroup(groupId);
+      this.onMessageReceive();
+    });
   }
 
-  public receiveListener = () => {
+  onMessageReceive = () => {
     this.hubConnection.on('Receive', (messageDto: MessageDto) => {
       this.message$.next(messageDto);
     });
+  }
+
+  joinGroup(groupId: number) {
+    this.hubConnection.invoke("JoinGroup", groupId);
   }
 
   sendMessage(dto: MessageDto) {
     this.hubConnection.invoke("SendMessage", dto);
   }
 
-  unsubscribe() {
-    this.hubConnection.off('Receive')
+  leaveGroup(groupId: number) {
+    this.hubConnection.invoke("LeaveGroup", groupId);
   }
 
   ngOnDestroy(): void {

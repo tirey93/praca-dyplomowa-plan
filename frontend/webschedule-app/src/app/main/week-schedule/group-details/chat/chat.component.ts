@@ -19,6 +19,7 @@ import { MessageDto } from '../../../../../services/signal-r/dtos/message';
 })
 export class ChatComponent implements OnDestroy{
   messages: MessageDto[] = []
+  currentGroup: number = 0
 
   echoControl = new FormControl<string>('')
   private destroy$ = new Subject<void>();
@@ -27,15 +28,16 @@ export class ChatComponent implements OnDestroy{
     public messageService: MessageService,
     syncService: SyncService
   ) {
-    this.messageService.startConnection();
-    syncService.groupSelected$.pipe(takeUntil(this.destroy$))
+    syncService.groupId$.pipe(takeUntil(this.destroy$))
     .subscribe({
-      next: (selected) => {
-        if (selected) {
-          this.messageService.unsubscribe();
-          this.messageService.receiveListener();
-        } else {
-          this.messageService.unsubscribe();
+      next: (groupId) => {
+        if (groupId) {
+          this.messages = [];
+          if (this.currentGroup){
+            this.messageService.leaveGroup(this.currentGroup);
+          }
+          this.messageService.startConnection(groupId);
+          this.currentGroup = groupId;
         }
       }
     })
@@ -46,14 +48,13 @@ export class ChatComponent implements OnDestroy{
     )
     .subscribe({
       next: message => {
-        console.log('message in');
         this.messages.push(message);
       }
     })
   }
 
   sendEcho() {
-    this.messageService.sendMessage({message: this.echoControl.value!, prop: 2});
+    this.messageService.sendMessage({content: this.echoControl.value!, groupId: 2});
   }
 
   ngOnDestroy(): void {

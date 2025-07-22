@@ -1,8 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
-using WebSchedule.Controllers.User.Commands;
 using WebSchedule.Hubs.Contracts;
-using WebSchedule.Hubs.Dtos;
 
 namespace WebSchedule.Hubs
 {
@@ -15,14 +13,14 @@ namespace WebSchedule.Hubs
             _mediator = mediator;
         }
 
-        public async Task SendMessage(MessageDto testDto)
+        public async Task JoinGroup(int groupId)
         {
-            //await _mediator.Send(new UpdateUserDisplayNameCommand
-            //{
-            //    DisplayName = testDto.Message,
-            //    UserId = testDto.Prop
-            //});
-            await Clients.All.Receive(testDto);
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupId.ToString());
+        }
+
+        public async Task LeaveGroup(int groupId)
+        {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, groupId.ToString());
         }
     }
 }

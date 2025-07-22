@@ -3,7 +3,7 @@
   <p>Otrzymane powiadomienia:</p>
   <ul>
     <li *ngFor="let message of messages">
-      {{message.content}} {{message.groupId}}
+      {{message.content}} {{message.groupId}} : {{message.user.displayName}} ({{message.user.role}})
     </li>
   </ul>
 </div>

@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
+using WebSchedule.Controllers.User.Exceptions;
+using WebSchedule.Controllers.UserInGroup.Exceptions;
 using WebSchedule.Domain.Repositories;
 using WebSchedule.Hubs;
 using WebSchedule.Hubs.Contracts;
@@ -16,23 +18,31 @@ namespace WebSchedule.Controllers.Message.Commands
 
     public class SendMessageCommandHandler : IRequestHandler<SendMessageCommand>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserInGroupRepository _userInGroupRepository;
         private readonly IHubContext<ConversationHub, IMessageClient> _hubContext;
 
-        public SendMessageCommandHandler(IUserRepository userRepository, IHubContext<ConversationHub, IMessageClient> hubContext)
+        public SendMessageCommandHandler(IUserInGroupRepository userInGroupRepository, IHubContext<ConversationHub, IMessageClient> hubContext)
         {
-            _userRepository = userRepository;
+            _userInGroupRepository = userInGroupRepository;
             _hubContext = hubContext;
         }
 
         public async Task Handle(SendMessageCommand request, CancellationToken cancellationToken)
         {
-            await _hubContext.Clients.Group(request.GroupId.ToString()).Receive(new MessageDto
-           {
-               Content = request.Content,
-               GroupId = request.GroupId
-           });
+            var userGroup = _userInGroupRepository.Get(request.SenderId, request.GroupId)
+                ?? throw new UserNotFoundInGroupException(request.SenderId, request.GroupId);
 
+            await _hubContext.Clients.Group(request.GroupId.ToString()).Receive(new MessageDto
+            {
+                Content = request.Content,
+                GroupId = request.GroupId,
+                User = new UserDto
+                {
+                    Id = userGroup.User.Id,
+                    DisplayName = userGroup.User.DisplayName,
+                    Role = userGroup.UserRole.ToString()
+                }
+            });
         }
     }
 }

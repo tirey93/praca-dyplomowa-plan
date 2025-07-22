@@ -10,10 +10,11 @@ import { BehaviorSubject } from 'rxjs';
 export class MessageService implements OnDestroy{
   private hubConnection!: signalR.HubConnection;
   private connectionPromise!: Promise<void>;
+
   public message$ = new BehaviorSubject<MessageDto | null>(null);
+  
   protected url = `${environment.host}:${environment.port}/messageHub`
   
-
   startConnection = () => {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl(this.url)

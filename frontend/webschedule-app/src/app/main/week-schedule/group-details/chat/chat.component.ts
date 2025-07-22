@@ -28,17 +28,18 @@ export class ChatComponent implements OnDestroy{
     public messageService: MessageService,
     syncService: SyncService
   ) {
-    syncService.groupId$.pipe(takeUntil(this.destroy$))
+    syncService.groupId$.pipe(
+      takeUntil(this.destroy$),
+      filter(groupId=> groupId != null)
+    )
     .subscribe({
       next: (groupId) => {
-        if (groupId) {
-          this.messages = [];
-          if (this.currentGroup){
-            this.messageService.leaveGroup(this.currentGroup);
-          }
-          this.messageService.startConnection(groupId);
-          this.currentGroup = groupId;
+        this.messages = [];
+        if (this.currentGroup){
+          this.messageService.leaveGroup(this.currentGroup);
         }
+        this.messageService.startConnection(groupId);
+        this.currentGroup = groupId;
       }
     })
 
@@ -51,10 +52,6 @@ export class ChatComponent implements OnDestroy{
         this.messages.push(message);
       }
     })
-  }
-
-  sendEcho() {
-    this.messageService.sendMessage({content: this.echoControl.value!, groupId: 2});
   }
 
   ngOnDestroy(): void {

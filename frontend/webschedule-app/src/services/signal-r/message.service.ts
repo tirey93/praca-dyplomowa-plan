@@ -27,15 +27,12 @@ export class MessageService implements OnDestroy{
   onMessageReceive = () => {
     this.hubConnection.on('Receive', (messageDto: MessageDto) => {
       this.message$.next(messageDto);
+      console.log('message');
     });
   }
 
   joinGroup(groupId: number) {
     this.hubConnection.invoke("JoinGroup", groupId);
-  }
-
-  sendMessage(dto: MessageDto) {
-    this.hubConnection.invoke("SendMessage", dto);
   }
 
   leaveGroup(groupId: number) {

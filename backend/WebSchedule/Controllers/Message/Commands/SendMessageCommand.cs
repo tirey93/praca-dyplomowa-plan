@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.SignalR;
-using WebSchedule.Controllers.User.Exceptions;
 using WebSchedule.Domain.Repositories;
 using WebSchedule.Hubs;
 using WebSchedule.Hubs.Contracts;
@@ -18,9 +17,9 @@ namespace WebSchedule.Controllers.Message.Commands
     public class SendMessageCommandHandler : IRequestHandler<SendMessageCommand>
     {
         private readonly IUserRepository _userRepository;
-        private readonly IHubContext<MessageHub, IMessageClient> _hubContext;
+        private readonly IHubContext<ConversationHub, IMessageClient> _hubContext;
 
-        public SendMessageCommandHandler(IUserRepository userRepository, IHubContext<MessageHub, IMessageClient> hubContext)
+        public SendMessageCommandHandler(IUserRepository userRepository, IHubContext<ConversationHub, IMessageClient> hubContext)
         {
             _userRepository = userRepository;
             _hubContext = hubContext;

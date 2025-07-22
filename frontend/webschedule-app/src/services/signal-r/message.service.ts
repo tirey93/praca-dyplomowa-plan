@@ -2,13 +2,14 @@ import { Injectable, OnDestroy } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { environment } from '../../enviroments/enviroments';
 import { MessageDto } from './dtos/message';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService implements OnDestroy{
   private hubConnection!: signalR.HubConnection;
-  public notifications: string[] = [];
+  public message$ = new BehaviorSubject<MessageDto | null>(null);
   protected url = `${environment.host}:${environment.port}/messageHub`
   
 
@@ -17,25 +18,21 @@ export class MessageService implements OnDestroy{
       .withUrl(this.url)
       .build();
 
-    this.hubConnection
-      .start()
-      .then(() => console.log('Połączenie nawiązane'))
-      .catch(err => console.log('Błąd podczas nawiązywania połączenia: ' + err));
+    this.hubConnection.start();
   }
 
-  public addNotificationListener = () => {
-    this.hubConnection.on('Echo', (message: string) => {
-      this.notifications.push(message);
-      console.log('Otrzymano powiadomienie: ', message);
+  public receiveListener = () => {
+    this.hubConnection.on('Receive', (messageDto: MessageDto) => {
+      this.message$.next(messageDto);
     });
   }
 
-  sendEcho(dto: MessageDto) {
-    this.hubConnection.invoke("SendEcho", dto);
+  sendMessage(dto: MessageDto) {
+    this.hubConnection.invoke("SendMessage", dto);
   }
 
   unsubscribe() {
-    this.hubConnection.off('Echo')
+    this.hubConnection.off('Receive')
   }
 
   ngOnDestroy(): void {

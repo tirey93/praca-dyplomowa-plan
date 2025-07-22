@@ -2,11 +2,12 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MessageService } from '../../../../../services/signal-r/message.service';
 import { CommonModule } from '@angular/common';
 import { SyncService } from '../../../../../services/sync.service';
-import { Subject, takeUntil } from 'rxjs';
+import { filter, Subject, takeUntil } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MessageDto } from '../../../../../services/signal-r/dtos/message';
 
 @Component({
   selector: 'app-chat',
@@ -17,30 +18,42 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   styleUrl: './chat.component.scss'
 })
 export class ChatComponent implements OnDestroy{
+  messages: MessageDto[] = []
 
   echoControl = new FormControl<string>('')
   private destroy$ = new Subject<void>();
 
   constructor(
-    public signalRService: MessageService,
+    public messageService: MessageService,
     syncService: SyncService
   ) {
-    this.signalRService.startConnection();
+    this.messageService.startConnection();
     syncService.groupSelected$.pipe(takeUntil(this.destroy$))
     .subscribe({
       next: (selected) => {
         if (selected) {
-          this.signalRService.unsubscribe();
-          this.signalRService.addNotificationListener();
+          this.messageService.unsubscribe();
+          this.messageService.receiveListener();
         } else {
-          this.signalRService.unsubscribe();
+          this.messageService.unsubscribe();
         }
+      }
+    })
+
+    this.messageService.message$.pipe(
+      takeUntil(this.destroy$),
+      filter(message => message != null)
+    )
+    .subscribe({
+      next: message => {
+        console.log('message in');
+        this.messages.push(message);
       }
     })
   }
 
   sendEcho() {
-    this.signalRService.sendEcho({message: this.echoControl.value!, prop: 2});
+    this.messageService.sendMessage({message: this.echoControl.value!, prop: 2});
   }
 
   ngOnDestroy(): void {

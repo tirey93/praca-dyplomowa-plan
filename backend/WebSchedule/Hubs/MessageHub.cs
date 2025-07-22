@@ -15,14 +15,14 @@ namespace WebSchedule.Hubs
             _mediator = mediator;
         }
 
-        public async Task SendEcho(MessageDto testDto)
+        public async Task SendMessage(MessageDto testDto)
         {
-            await _mediator.Send(new UpdateUserDisplayNameCommand
-            {
-                DisplayName = testDto.Message,
-                UserId = testDto.Prop
-            });
-            await Clients.All.Echo($"{testDto.Message} {testDto.Prop}");
+            //await _mediator.Send(new UpdateUserDisplayNameCommand
+            //{
+            //    DisplayName = testDto.Message,
+            //    UserId = testDto.Prop
+            //});
+            await Clients.All.Receive(testDto);
         }
     }
 }

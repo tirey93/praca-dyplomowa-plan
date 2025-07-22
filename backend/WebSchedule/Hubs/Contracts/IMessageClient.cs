@@ -1,7 +1,9 @@
-﻿namespace WebSchedule.Hubs.Contracts
+﻿using WebSchedule.Hubs.Dtos;
+
+namespace WebSchedule.Hubs.Contracts
 {
     public interface IMessageClient
     {
-        Task Echo(string message);
+        Task Receive(MessageDto messageDto);
     }
 }

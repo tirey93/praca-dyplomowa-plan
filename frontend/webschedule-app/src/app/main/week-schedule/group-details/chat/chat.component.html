@@ -6,8 +6,8 @@
   <button mat-raised-button (click)="sendEcho()">Echo</button>
   <p>Otrzymane powiadomienia:</p>
   <ul>
-    <li *ngFor="let notification of signalRService.notifications">
-      {{notification}}
+    <li *ngFor="let message of messages">
+      {{message.message}} {{message.prop}}
     </li>
   </ul>
 </div>

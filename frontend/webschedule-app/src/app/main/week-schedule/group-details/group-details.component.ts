@@ -19,13 +19,15 @@ import { UserInGroupService } from '../../../../services/userInGroup/userInGroup
 import { LeaveGroupDialogComponent } from '../leave-group-dialog/leave-group-dialog.component';
 import { RemoveGroupDialogComponent } from '../remove-group-dialog/remove-group-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ChatComponent } from "./chat/chat.component";
 
 
 @Component({
   selector: 'app-group-details',
   imports: [
     MatCardModule, MatChipsModule, TranslatePipe, MatTabsModule, MatIconModule, MatMenuModule, MatButtonModule,
-    ClipboardModule, GroupMembersComponent, MatTooltipModule
+    ClipboardModule, GroupMembersComponent, MatTooltipModule,
+    ChatComponent
 ],
   templateUrl: './group-details.component.html',
   styleUrl: './group-details.component.scss'

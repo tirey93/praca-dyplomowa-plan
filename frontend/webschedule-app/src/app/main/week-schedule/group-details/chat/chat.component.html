@@ -1,0 +1,9 @@
+<div style="padding: 20px;">
+  <h1>SignalR POC</h1>
+  <p>Otrzymane powiadomienia:</p>
+  <ul>
+    <li *ngFor="let notification of signalRService.notifications">
+      {{notification}}
+    </li>
+  </ul>
+</div>

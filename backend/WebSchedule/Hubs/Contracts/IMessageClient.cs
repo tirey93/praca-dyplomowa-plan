@@ -1,6 +1,6 @@
 ﻿namespace WebSchedule.Hubs.Contracts
 {
-    public interface IEcho
+    public interface IMessageClient
     {
         Task Echo(string message);
     }

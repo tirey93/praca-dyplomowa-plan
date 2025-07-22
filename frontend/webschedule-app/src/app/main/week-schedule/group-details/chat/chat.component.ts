@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SignalRService } from '../../../../../services/signal-r/signal-r.service';
+import { MessageService } from '../../../../../services/signal-r/message.service';
 import { CommonModule } from '@angular/common';
 import { SyncService } from '../../../../../services/sync.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -22,7 +22,7 @@ export class ChatComponent implements OnDestroy{
   private destroy$ = new Subject<void>();
 
   constructor(
-    public signalRService: SignalRService,
+    public signalRService: MessageService,
     syncService: SyncService
   ) {
     this.signalRService.startConnection();

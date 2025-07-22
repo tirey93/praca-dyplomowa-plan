@@ -6,16 +6,16 @@ using WebSchedule.Hubs.Dtos;
 
 namespace WebSchedule.Hubs
 {
-    public class TestHub : Hub<IEcho>
+    public class MessageHub : Hub<IMessageClient>
     {
         private readonly IMediator _mediator;
 
-        public TestHub(IMediator mediator)
+        public MessageHub(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        public async Task SendEcho(TestDto testDto)
+        public async Task SendEcho(MessageDto testDto)
         {
             await _mediator.Send(new UpdateUserDisplayNameCommand
             {

@@ -1,4 +1,4 @@
-export interface TestDto {
+export interface MessageDto {
     message: string;
     prop: number;
 }

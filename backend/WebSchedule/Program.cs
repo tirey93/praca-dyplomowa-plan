@@ -66,14 +66,4 @@ app.UseAuthorization();
 app.MapControllers();
 app.MapHub<TestHub>("/testHub");
 
-var timer = new System.Timers.Timer(5000);
-var counter = 0;
-timer.Elapsed += async (sender, e) =>
-{
-    counter++;
-    var hubContext = app.Services.GetRequiredService<IHubContext<TestHub>>();
-    await hubContext.Clients.All.SendAsync("ReceiveNotification", $"Nowa wiadomosc #{counter}");
-};
-timer.Start();
-
 app.Run();

@@ -23,14 +23,18 @@ export class SignalRService implements OnDestroy{
   }
 
   public addNotificationListener = () => {
-    this.hubConnection.on('ReceiveNotification', (message: string) => {
+    this.hubConnection.on('Echo', (message: string) => {
       this.notifications.push(message);
       console.log('Otrzymano powiadomienie: ', message);
     });
   }
 
+  sendEcho(message: string) {
+    this.hubConnection.invoke("SendEcho", message);
+  }
+
   public unsubscribe() {
-    this.hubConnection.off('ReceiveNotification')
+    this.hubConnection.off('Echo')
   }
 
   ngOnDestroy(): void {

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SignalRService } from '../../../../../services/signalr.service';
+import { SignalRService } from '../../../../../services/signal-r/signal-r.service';
 import { CommonModule } from '@angular/common';
 import { SyncService } from '../../../../../services/sync.service';
 import { Subject, takeUntil } from 'rxjs';
@@ -40,7 +40,7 @@ export class ChatComponent implements OnDestroy{
   }
 
   sendEcho() {
-    this.signalRService.sendEcho(this.echoControl.value!);
+    this.signalRService.sendEcho({message: this.echoControl.value!, prop: 2});
   }
 
   ngOnDestroy(): void {

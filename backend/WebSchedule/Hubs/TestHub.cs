@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using WebSchedule.Controllers.User.Commands;
 using WebSchedule.Hubs.Contracts;
+using WebSchedule.Hubs.Dtos;
 
 namespace WebSchedule.Hubs
 {
@@ -14,14 +15,14 @@ namespace WebSchedule.Hubs
             _mediator = mediator;
         }
 
-        public async Task SendEcho(string echo)
+        public async Task SendEcho(TestDto testDto)
         {
             await _mediator.Send(new UpdateUserDisplayNameCommand
             {
-                DisplayName = echo,
-                UserId = 1
+                DisplayName = testDto.Message,
+                UserId = testDto.Prop
             });
-            await Clients.All.Echo(echo);
+            await Clients.All.Echo($"{testDto.Message} {testDto.Prop}");
         }
     }
 }

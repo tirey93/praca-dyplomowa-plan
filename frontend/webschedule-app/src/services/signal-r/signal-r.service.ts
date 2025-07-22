@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { environment } from '../enviroments/enviroments';
+import { environment } from '../../enviroments/enviroments';
+import { TestDto } from './dtos/test';
 
 @Injectable({
   providedIn: 'root'
@@ -29,8 +30,8 @@ export class SignalRService implements OnDestroy{
     });
   }
 
-  sendEcho(message: string) {
-    this.hubConnection.invoke("SendEcho", message);
+  sendEcho(dto: TestDto) {
+    this.hubConnection.invoke("SendEcho", dto);
   }
 
   public unsubscribe() {

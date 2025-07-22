@@ -19,11 +19,16 @@ namespace WebSchedule.Controllers.Message.Commands
     public class SendMessageCommandHandler : IRequestHandler<SendMessageCommand>
     {
         private readonly IUserInGroupRepository _userInGroupRepository;
+        private readonly IMessageRepostory _messageRepostory;
         private readonly IHubContext<ConversationHub, IMessageClient> _hubContext;
 
-        public SendMessageCommandHandler(IUserInGroupRepository userInGroupRepository, IHubContext<ConversationHub, IMessageClient> hubContext)
+        public SendMessageCommandHandler(
+            IUserInGroupRepository userInGroupRepository,
+            IMessageRepostory messageRepostory,
+            IHubContext<ConversationHub, IMessageClient> hubContext)
         {
             _userInGroupRepository = userInGroupRepository;
+            _messageRepostory = messageRepostory;
             _hubContext = hubContext;
         }
 
@@ -31,6 +36,9 @@ namespace WebSchedule.Controllers.Message.Commands
         {
             var userGroup = _userInGroupRepository.Get(request.SenderId, request.GroupId)
                 ?? throw new UserNotFoundInGroupException(request.SenderId, request.GroupId);
+
+            await _messageRepostory.Add(new Domain.Entities.Message(userGroup, request.Content));
+            await _messageRepostory.SaveChangesAsync();
 
             await _hubContext.Clients.Group(request.GroupId.ToString()).Receive(new MessageDto
             {

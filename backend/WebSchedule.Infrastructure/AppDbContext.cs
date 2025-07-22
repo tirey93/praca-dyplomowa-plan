@@ -11,6 +11,7 @@ namespace WebSchedule.Infrastructure
         public DbSet<Group> Groups { get; set; }
         public DbSet<UserInGroup> UserInGroups { get; set; }
         public DbSet<StudyCourse> StudyCourses { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

@@ -1,4 +1,4 @@
-﻿namespace WebSchedule.Domain.Exceptions
+﻿namespace WebSchedule.Domain.Exceptions.Group
 {
     public class NoSuchCandidateInGroupException : DomainException
     {

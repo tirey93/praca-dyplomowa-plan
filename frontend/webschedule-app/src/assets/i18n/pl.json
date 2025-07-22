@@ -35,5 +35,8 @@
   "AddMemberToGroupSuccess": "Użytkownik został poprawnie dodany do grupy.",
 
   "UserWasCreated": "Użytkownik został utworzony.",
-  "LinkCopied": "Link do grupy został skopiowany."
+  "LinkCopied": "Link do grupy został skopiowany.",
+
+  "ExceptionContentCannotBeEmpty": "Wiadomość nie może być pusta.",
+  "ExceptionContentCannotBeThatLarge": "Wiadomość nie może być dłuższa niż {{0}} znaków."
 }

@@ -1,6 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations.Schema;
-using WebSchedule.Domain.Exceptions;
+using WebSchedule.Domain.Exceptions.Group;
 
 namespace WebSchedule.Domain.Entities.Study
 {

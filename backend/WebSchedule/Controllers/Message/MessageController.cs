@@ -35,6 +35,23 @@ namespace WebSchedule.Controllers.Message
                     ?? throw new UserNotFoundException();
 
                 command.SenderId = userId;
+
+                return (await Send(command));
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.FromApplicationException());
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> Send([FromBody] SendCommand command)
+        {
+            try
+            {
                 await _mediator.Send(command);
 
                 return NoContent();

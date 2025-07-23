@@ -8,6 +8,9 @@
   <div style="overflow-y: auto; max-height: 25vh;">
     <ul>
       <li *ngFor="let message of messages">
+        @if (currentUserId === message.user.id) {
+          >
+        }
         {{message.content}} {{message.groupId}} : {{message.user.displayName}} ({{message.user.role}})
       </li>
     </ul>

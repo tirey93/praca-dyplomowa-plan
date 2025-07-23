@@ -10,6 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MessageDto } from '../../../../../services/signal-r/dtos/message';
 import { MessageRepositoryService } from '../../../../../services/message/messageRepository.service';
 import { SnackBarService } from '../../../../../services/snackBarService';
+import { UserRepositoryService } from '../../../../../services/user/userRepository.service';
 
 @Component({
   selector: 'app-chat',
@@ -21,22 +22,24 @@ import { SnackBarService } from '../../../../../services/snackBarService';
 })
 export class ChatComponent implements OnDestroy{
   messages: MessageDto[] = []
-  currentGroupId: number = 0
+  currentGroupId: number = 0;
+  currentUserId: number = 0;
 
   echoControl = new FormControl<string>('')
   private destroy$ = new Subject<void>();
 
   constructor(
     public messageService: MessageService,
+    private userRepository: UserRepositoryService,
     private messageRepository: MessageRepositoryService,
     private snackBarService: SnackBarService,
     syncService: SyncService
   ) {
     this.messageService.startConnection();
-
+ 
     syncService.groupId$.pipe(
       takeUntil(this.destroy$),
-      filter(groupId=> groupId != null)
+      filter(groupId => groupId != null)
     )
     .subscribe({
       next: async (groupId) => {
@@ -45,24 +48,30 @@ export class ChatComponent implements OnDestroy{
           this.messageService.leaveGroup(this.currentGroupId);
         }
         await this.messageService.joinGroup(groupId);
-        this.currentGroupId = groupId;
-
-        messageRepository.getByGroup$(this.currentGroupId).subscribe({
-          next: (messagesDto) => {
-            this.messages = messagesDto
-          },
-          error: (err) => {
+        
+        this.userRepository.getLoggedIn$().subscribe({
+          next: (userResponse) => {
+            this.currentUserId = userResponse.id;
+            messageRepository.getByGroup$(groupId).subscribe({
+              next: (messagesDto) => {
+                this.messages = messagesDto
+              },
+              error: (err) => {
+                this.snackBarService.openError(err);
+              }
+            })
+          }, error: (err) => {
             this.snackBarService.openError(err);
           }
         })
+        this.currentGroupId = groupId;
       }
     })
 
     this.messageService.message$.pipe(
       takeUntil(this.destroy$),
       filter(message => message != null)
-    )
-    .subscribe({
+    ).subscribe({
       next: message => {
         if (this.currentGroupId){
           this.messages.push(message);

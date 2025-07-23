@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.EntityFrameworkCore;
 using WebSchedule.Domain.Entities;
 using WebSchedule.Domain.Repositories;
 
@@ -13,6 +14,15 @@ namespace WebSchedule.Infrastructure.Repositories
         public async Task Add(Message message)
         {
             await _dbSet.AddAsync(message);
+        }
+
+        public IEnumerable<Message> GetByGroup(int groupId)
+        {
+            return _dbSet
+                .Include(x => x.UserInGroup).ThenInclude(x => x.User)
+                .Where(x => x.UserInGroup.GroupId == groupId)
+                .OrderByDescending(x => x.CreatedAt)
+                .Take(50);
         }
     }
 }

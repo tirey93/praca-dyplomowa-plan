@@ -4,4 +4,5 @@ export interface MessageDto {
     content: string;
     groupId: number;
     user: UserDto;
+    createdAt: Date
 }

@@ -6,5 +6,6 @@ namespace WebSchedule.Domain.Repositories
     public interface IMessageRepostory : IRepository<Message>
     {
         Task Add(Message message);
+        IEnumerable<Message> GetByGroup(int groupId);
     }
 }

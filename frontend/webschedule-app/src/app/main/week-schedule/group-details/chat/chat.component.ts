@@ -55,6 +55,10 @@ export class ChatComponent implements OnDestroy{
     })
   }
 
+  send() {
+    this.echoControl.value!
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

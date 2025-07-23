@@ -21,7 +21,7 @@ namespace WebSchedule.Infrastructure.Repositories
             return _dbSet
                 .Include(x => x.UserInGroup).ThenInclude(x => x.User)
                 .Where(x => x.UserInGroup.GroupId == groupId)
-                .OrderByDescending(x => x.CreatedAt)
+                .OrderBy(x => x.CreatedAt)
                 .Take(50);
         }
     }

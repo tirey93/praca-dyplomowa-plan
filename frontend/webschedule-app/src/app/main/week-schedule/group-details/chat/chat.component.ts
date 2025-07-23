@@ -8,6 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MessageDto } from '../../../../../services/signal-r/dtos/message';
+import { MessageRepositoryService } from '../../../../../services/message/messageRepository.service';
+import { SnackBarService } from '../../../../../services/snackBarService';
 
 @Component({
   selector: 'app-chat',
@@ -19,16 +21,19 @@ import { MessageDto } from '../../../../../services/signal-r/dtos/message';
 })
 export class ChatComponent implements OnDestroy{
   messages: MessageDto[] = []
-  currentGroup: number = 0
+  currentGroupId: number = 0
 
   echoControl = new FormControl<string>('')
   private destroy$ = new Subject<void>();
 
   constructor(
     public messageService: MessageService,
+    private messageRepository: MessageRepositoryService,
+    private snackBarService: SnackBarService,
     syncService: SyncService
   ) {
     this.messageService.startConnection();
+
     syncService.groupId$.pipe(
       takeUntil(this.destroy$),
       filter(groupId=> groupId != null)
@@ -36,11 +41,20 @@ export class ChatComponent implements OnDestroy{
     .subscribe({
       next: async (groupId) => {
         this.messages = [];
-        if (this.currentGroup){
-          this.messageService.leaveGroup(this.currentGroup);
+        if (this.currentGroupId){
+          this.messageService.leaveGroup(this.currentGroupId);
         }
         await this.messageService.joinGroup(groupId);
-        this.currentGroup = groupId;
+        this.currentGroupId = groupId;
+
+        messageRepository.getByGroup$(this.currentGroupId).subscribe({
+          next: (messagesDto) => {
+            this.messages = messagesDto
+          },
+          error: (err) => {
+            this.snackBarService.openError(err);
+          }
+        })
       }
     })
 
@@ -50,13 +64,19 @@ export class ChatComponent implements OnDestroy{
     )
     .subscribe({
       next: message => {
-        this.messages.push(message);
+        if (this.currentGroupId){
+          this.messages.push(message);
+        }
       }
     })
   }
 
   send() {
-    this.echoControl.value!
+    this.messageRepository.sendByLoggedIn$({content: this.echoControl.value!, groupId: this.currentGroupId}).subscribe({
+      error: (err) => {
+        this.snackBarService.openError(err);
+      }
+    })
   }
 
   ngOnDestroy(): void {

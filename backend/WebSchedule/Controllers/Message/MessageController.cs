@@ -2,14 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using WebSchedule.Controllers.Message.Commands;
 using WebSchedule.Controllers.Message.Queries;
-using WebSchedule.Controllers.User.Commands;
 using WebSchedule.Controllers.User.Exceptions;
-using WebSchedule.Controllers.UserInGroup.Requests;
 using WebSchedule.Domain;
 using WebSchedule.Hubs.Dtos;
 using WebSchedule.Utils;
 
-namespace WebSchedule.Controllers.User
+namespace WebSchedule.Controllers.Message
 {
     [ApiController]
     [Route("[controller]")]
@@ -22,7 +20,7 @@ namespace WebSchedule.Controllers.User
             _mediator = mediator;
         }
 
-        [HttpPost("/ByLoggedIn")]
+        [HttpPost("ByLoggedIn")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -55,7 +53,7 @@ namespace WebSchedule.Controllers.User
             }
         }
 
-        [HttpGet("/Group/{groupId}")]
+        [HttpGet("Group/{groupId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

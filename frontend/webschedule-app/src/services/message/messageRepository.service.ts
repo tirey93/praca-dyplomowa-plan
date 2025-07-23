@@ -8,7 +8,7 @@ import { MessageDto } from "../signal-r/dtos/message"
 @Injectable({
     providedIn: 'root'
   })
-  export class GroupRepositoryService {
+  export class MessageRepositoryService {
     protected url = `${environment.host}:${environment.port}/Message`
 
     constructor(private http: HttpClient, private cookieService: CookieService) { }
@@ -22,7 +22,7 @@ import { MessageDto } from "../signal-r/dtos/message"
     }
 
     getByGroup$(groupId: number) {
-      return this.http.get<MessageDto>(`${this.url}/Group/${groupId}`, {
+      return this.http.get<MessageDto[]>(`${this.url}/Group/${groupId}`, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

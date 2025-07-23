@@ -5,9 +5,11 @@
   </mat-form-field>
   <button mat-raised-button (click)="send()">Echo</button>
   <p>Otrzymane powiadomienia:</p>
-  <ul style="overflow-y: auto; max-height: 50vh;">
-    <li *ngFor="let message of messages">
-      {{message.content}} {{message.groupId}} : {{message.user.displayName}} ({{message.user.role}})
-    </li>
-  </ul>
+  <div style="overflow-y: auto; max-height: 25vh;">
+    <ul>
+      <li *ngFor="let message of messages">
+        {{message.content}} {{message.groupId}} : {{message.user.displayName}} ({{message.user.role}})
+      </li>
+    </ul>
+  </div>
 </div>

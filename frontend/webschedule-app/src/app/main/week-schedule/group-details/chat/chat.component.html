@@ -1,15 +1,10 @@
 <div style="margin-top: 20px;"></div>
 <div class="messages-container">
-
   @for (message of messages; track $index) {
     @if (message.user.id === currentUserId) {
       <div class="my-message">
         <mat-card appearance="outlined" [matTooltip]="message.createdAt.toString()">
           <mat-card-actions align="end" [innerHTML]="message.content">
-            <!-- Inny tekst<br>
-            Inny tekst2<br>
-            Inny tekst3<br> -->
-            <!-- {{message.content}} -->
           </mat-card-actions>
         </mat-card>
       </div>
@@ -18,13 +13,13 @@
         <span class="author">{{message.user.displayName}}</span>
         <mat-card appearance="outlined" [matTooltip]="message.createdAt.toString()">
           <mat-card-actions [innerHTML]="message.content">
-            <!-- {{message.content}} -->
-            <!-- Inny tekst<br>
-            Inny tekst2<br>
-            Inny tekst3<br> -->
           </mat-card-actions>
         </mat-card>
       </div>
     }
   }
 </div>
+<mat-form-field style="min-width: 30vw; margin: 50px 20px 0 20px;" appearance="fill">
+    <mat-label>Zacznij pisać...</mat-label>
+    <input required type="text" matInput [formControl]="sendMessageControl" (keydown.enter)="send()">
+</mat-form-field>

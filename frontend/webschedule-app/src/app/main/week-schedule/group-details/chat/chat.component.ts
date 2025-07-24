@@ -29,7 +29,7 @@ export class ChatComponent implements OnDestroy{
   currentGroupId: number = 0;
   currentUserId: number = 0;
 
-  echoControl = new FormControl<string>('')
+  sendMessageControl = new FormControl<string>('')
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -89,7 +89,10 @@ export class ChatComponent implements OnDestroy{
   }
 
   send() {
-    this.messageRepository.sendByLoggedIn$({content: this.echoControl.value!, groupId: this.currentGroupId}).subscribe({
+    this.messageRepository.sendByLoggedIn$({content: this.sendMessageControl.value!, groupId: this.currentGroupId}).subscribe({
+      next: () => {
+        this.sendMessageControl.setValue("");
+      },
       error: (err) => {
         this.snackBarService.openError(err);
       }

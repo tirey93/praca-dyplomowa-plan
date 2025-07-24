@@ -1,18 +1,54 @@
-<div style="padding: 20px;">
-  <h1>SignalR POC</h1>
-  <mat-form-field appearance="outline">
-    <input [formControl]="echoControl" required type="text" matInput>
-  </mat-form-field>
-  <button mat-raised-button (click)="send()">Echo</button>
-  <p>Otrzymane powiadomienia:</p>
-  <div style="overflow-y: auto; max-height: 25vh;">
-    <ul>
-      <li *ngFor="let message of messages">
-        @if (currentUserId === message.user.id) {
-          >
-        }
-        {{message.content}} {{message.groupId}} : {{message.user.displayName}} ({{message.user.role}})
-      </li>
-    </ul>
+<div style="margin-top: 20px;"></div>
+<div class="messages-container">
+  <div class="foreign-message">
+    <span class="author">Author</span>
+    <mat-card appearance="outlined" matTooltip="4 lipca 2025 12:31">
+      <mat-card-actions>Actions</mat-card-actions>
+    </mat-card>
   </div>
+  <div class="my-message">
+    <mat-card appearance="outlined" matTooltip="4 lipca 2025 13:31">
+      <mat-card-actions align="end">
+        Inny tekst<br>
+        Inny tekst2<br>
+        Inny tekst3<br>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div class="foreign-message">
+    <span class="author">Author2</span>
+    <mat-card appearance="outlined" matTooltip="4 lipca 2025 14:52">
+      <mat-card-actions>
+        Inny tekst<br>
+        Inny tekst2<br>
+        Inny tekst3<br>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <div class="foreign-message">
+    <span class="author">Author</span>
+    <mat-card appearance="outlined" matTooltip="5 lipca 2025 12:31">
+      <mat-card-actions>Inny tekst<br>Inny tekst2</mat-card-actions>
+    </mat-card>
+  </div>
+  <div class="foreign-message">
+    <span class="author">Author2</span>
+    <mat-card appearance="outlined" matTooltip="5 lipca 2025 12:31">
+      <mat-card-actions>Inny tekst<br>Inny tekst2</mat-card-actions>
+    </mat-card>
+  </div>
+  <div class="foreign-message">
+    <span class="author">Author</span>
+    <mat-card appearance="outlined" matTooltip="5 lipca 2025 12:31">
+      <mat-card-actions>Inny tekst<br>Inny tekst2</mat-card-actions>
+    </mat-card>
+  </div>
+  <div class="foreign-message">
+    <span class="author">Author2</span>
+    <mat-card appearance="outlined" matTooltip="5 lipca 2025 12:31">
+      <mat-card-actions>Inny tekst<br>Inny tekst2</mat-card-actions>
+    </mat-card>
+  </div>
+
 </div>

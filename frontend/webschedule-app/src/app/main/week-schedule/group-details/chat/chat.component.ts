@@ -11,11 +11,14 @@ import { MessageDto } from '../../../../../services/signal-r/dtos/message';
 import { MessageRepositoryService } from '../../../../../services/message/messageRepository.service';
 import { SnackBarService } from '../../../../../services/snackBarService';
 import { UserRepositoryService } from '../../../../../services/user/userRepository.service';
+import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-chat',
   imports: [
-    CommonModule, MatInputModule, MatButtonModule, ReactiveFormsModule, MatFormFieldModule
+    CommonModule, MatInputModule, MatButtonModule, ReactiveFormsModule, MatFormFieldModule, MatCardModule,
+    MatTooltipModule
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
@@ -55,6 +58,7 @@ export class ChatComponent implements OnDestroy{
             messageRepository.getByGroup$(groupId).subscribe({
               next: (messagesDto) => {
                 this.messages = messagesDto
+                this.currentGroupId = groupId;
               },
               error: (err) => {
                 this.snackBarService.openError(err);
@@ -64,7 +68,6 @@ export class ChatComponent implements OnDestroy{
             this.snackBarService.openError(err);
           }
         })
-        this.currentGroupId = groupId;
       }
     })
 

@@ -1,0 +1,16 @@
+.messages-container {
+    overflow-y: auto; 
+    max-height: 45vh;
+    display: flex; 
+    flex-direction: column-reverse;
+}
+.foreign-message {
+    margin: 5px 20px;
+}
+.author {
+    font-size: 0.80em; 
+    margin-left: 12px;
+}
+.my-message {
+    margin: 22px 20px 5px 20px;
+}

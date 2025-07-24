@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MessageService } from '../../../../../services/signal-r/message.service';
 import { CommonModule } from '@angular/common';
 import { SyncService } from '../../../../../services/sync.service';
-import { filter, Subject, takeUntil } from 'rxjs';
+import { filter, lastValueFrom, Subject, takeUntil } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -13,6 +13,7 @@ import { SnackBarService } from '../../../../../services/snackBarService';
 import { UserRepositoryService } from '../../../../../services/user/userRepository.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { UserDto } from '../../../../../services/signal-r/dtos/user';
 
 @Component({
   selector: 'app-chat',
@@ -57,7 +58,7 @@ export class ChatComponent implements OnDestroy{
             this.currentUserId = userResponse.id;
             messageRepository.getByGroup$(groupId).subscribe({
               next: (messagesDto) => {
-                this.messages = messagesDto
+                this.messages = this.combineMessages(messagesDto).reverse();
                 this.currentGroupId = groupId;
               },
               error: (err) => {
@@ -77,7 +78,11 @@ export class ChatComponent implements OnDestroy{
     ).subscribe({
       next: message => {
         if (this.currentGroupId){
-          this.messages.push(message);
+          if(this.messages[0].user.id == message.user.id) {
+            this.messages[0].content = this.messages[0].content + "<br>" + message.content
+          } else {
+            this.messages.unshift(message);
+          }
         }
       }
     })
@@ -91,6 +96,57 @@ export class ChatComponent implements OnDestroy{
     })
   }
 
+  private combineMessages(messages: MessageDto[]): MessageDto[]{
+    const result: MessageDto[] = []
+    if (messages.length === 0){
+      return [];
+    }
+    
+    let currentContentCombine = messages[0].content;
+    let currentUser = {
+      displayName: messages[0].user.displayName,
+      id: messages[0].user.id,
+      role: messages[0].user.role
+    } as UserDto;
+    let currentDate = messages[0].createdAt;
+
+    for (let i = 1; i < messages.length; i++) {
+      const message = messages[i];
+
+      if (currentUser.id === message.user.id) {
+        currentContentCombine = currentContentCombine + "<br>" + message.content
+      } else {
+        result.push({
+          content: currentContentCombine,
+          createdAt: currentDate,
+          groupId: message.groupId,
+          user: {
+            displayName: currentUser.displayName,
+            id: currentUser.id,
+            role: currentUser.role
+          }
+        });
+        currentContentCombine = message.content;
+        currentUser = {
+          displayName: message.user.displayName,
+          id: message.user.id,
+          role: message.user.role
+        } as UserDto;
+        currentDate = message.createdAt;
+      }
+    }
+    result.push({
+      content: currentContentCombine,
+      createdAt: currentDate,
+      groupId: this.currentGroupId,
+      user: {
+        displayName: currentUser.displayName,
+        id: currentUser.id,
+        role: currentUser.role
+      }
+    });
+    return result;
+  }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

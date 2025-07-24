@@ -1,54 +1,30 @@
 <div style="margin-top: 20px;"></div>
 <div class="messages-container">
-  <div class="foreign-message">
-    <span class="author">Author</span>
-    <mat-card appearance="outlined" matTooltip="4 lipca 2025 12:31">
-      <mat-card-actions>Actions</mat-card-actions>
-    </mat-card>
-  </div>
-  <div class="my-message">
-    <mat-card appearance="outlined" matTooltip="4 lipca 2025 13:31">
-      <mat-card-actions align="end">
-        Inny tekst<br>
-        Inny tekst2<br>
-        Inny tekst3<br>
-      </mat-card-actions>
-    </mat-card>
-  </div>
 
-  <div class="foreign-message">
-    <span class="author">Author2</span>
-    <mat-card appearance="outlined" matTooltip="4 lipca 2025 14:52">
-      <mat-card-actions>
-        Inny tekst<br>
-        Inny tekst2<br>
-        Inny tekst3<br>
-      </mat-card-actions>
-    </mat-card>
-  </div>
-  <div class="foreign-message">
-    <span class="author">Author</span>
-    <mat-card appearance="outlined" matTooltip="5 lipca 2025 12:31">
-      <mat-card-actions>Inny tekst<br>Inny tekst2</mat-card-actions>
-    </mat-card>
-  </div>
-  <div class="foreign-message">
-    <span class="author">Author2</span>
-    <mat-card appearance="outlined" matTooltip="5 lipca 2025 12:31">
-      <mat-card-actions>Inny tekst<br>Inny tekst2</mat-card-actions>
-    </mat-card>
-  </div>
-  <div class="foreign-message">
-    <span class="author">Author</span>
-    <mat-card appearance="outlined" matTooltip="5 lipca 2025 12:31">
-      <mat-card-actions>Inny tekst<br>Inny tekst2</mat-card-actions>
-    </mat-card>
-  </div>
-  <div class="foreign-message">
-    <span class="author">Author2</span>
-    <mat-card appearance="outlined" matTooltip="5 lipca 2025 12:31">
-      <mat-card-actions>Inny tekst<br>Inny tekst2</mat-card-actions>
-    </mat-card>
-  </div>
-
+  @for (message of messages; track $index) {
+    @if (message.user.id === currentUserId) {
+      <div class="my-message">
+        <mat-card appearance="outlined" [matTooltip]="message.createdAt.toString()">
+          <mat-card-actions align="end" [innerHTML]="message.content">
+            <!-- Inny tekst<br>
+            Inny tekst2<br>
+            Inny tekst3<br> -->
+            <!-- {{message.content}} -->
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    } @else {
+      <div class="foreign-message">
+        <span class="author">{{message.user.displayName}}</span>
+        <mat-card appearance="outlined" [matTooltip]="message.createdAt.toString()">
+          <mat-card-actions [innerHTML]="message.content">
+            <!-- {{message.content}} -->
+            <!-- Inny tekst<br>
+            Inny tekst2<br>
+            Inny tekst3<br> -->
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    }
+  }
 </div>

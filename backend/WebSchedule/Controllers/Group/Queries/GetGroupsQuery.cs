@@ -24,7 +24,6 @@ namespace WebSchedule.Controllers.Group.Queries
                 .Where(g => request.ExceptUserId == null 
                     || !g.Members.Any(m => m.Id == request.ExceptUserId))
                 .OrderByDescending(x => x.StartingYear)
-                .ThenBy(x => x.StudyMode)
                 .ThenBy(x => x.StudyLevel)
                 .ThenBy(x => x.StudyCourse.Name)
                 .ThenBy(x => x.Subgroup);
@@ -36,7 +35,6 @@ namespace WebSchedule.Controllers.Group.Queries
                 StudyCourseName = gi.StudyCourse.Name,
                 StudyCourseShort = gi.StudyCourse.ShortName,
                 StudyLevel = gi.StudyLevel.ToString(),
-                StudyMode = gi.StudyMode.ToString(),
                 Subgroup = gi.Subgroup,
                 MembersCount = gi.MembersCount,
             }));

@@ -21,13 +21,12 @@ namespace WebSchedule.Infrastructure.Repositories
             return _dbSet.Any(x => x.Id == groupId);
         }
 
-        public bool GroupExists(int year, int subgroup, StudyMode studyMode, StudyLevel studyLevel, int courseId)
+        public bool GroupExists(int year, int subgroup, StudyLevel studyLevel, int courseId)
         {
             return _dbSet
                 .Include(x => x.StudyCourse)
                 .Any(x => x.StartingYear == year 
                     && x.Subgroup == subgroup 
-                    && x.StudyMode == studyMode 
                     && x.StudyLevel == studyLevel
                     && x.StudyCourse.Id == courseId);
         }
@@ -47,11 +46,11 @@ namespace WebSchedule.Infrastructure.Repositories
                 .FirstOrDefault(x => x.Id == groupId);
         }
 
-        public int? GetNextSubgroup(int year, StudyMode studyMode, StudyLevel studyLevel, int courseId)
+        public int? GetNextSubgroup(int year, StudyLevel studyLevel, int courseId)
         {
             var group = _dbSet
                 .Include(x => x.StudyCourse)
-                .Where(x => x.StartingYear == year && x.StudyCourse.Id == courseId && x.StudyMode == studyMode && x.StudyLevel == studyLevel)
+                .Where(x => x.StartingYear == year && x.StudyCourse.Id == courseId && x.StudyLevel == studyLevel)
                 .OrderByDescending(x => x.Subgroup)
                 .FirstOrDefault();
             return group?.Subgroup;

@@ -132,7 +132,6 @@ namespace WebSchedule.Controllers.Group
 #endif
         public async Task<ActionResult<UserGroupResponse>> GetNextSubgroup(
             [FromQuery] int year,
-            [FromQuery] string studyMode,
             [FromQuery] string studyLevel,
             [FromQuery] int courseId)
         {
@@ -141,7 +140,6 @@ namespace WebSchedule.Controllers.Group
                 return Ok(await _mediator.Send(new GetNextSubGroupQuery
                 {
                     Year = year,
-                    StudyMode = studyMode,
                     StudyLevel = studyLevel,
                     CourseId = courseId
                 }));

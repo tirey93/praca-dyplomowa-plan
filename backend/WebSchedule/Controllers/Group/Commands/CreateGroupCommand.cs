@@ -13,7 +13,6 @@ namespace WebSchedule.Controllers.StudyCourse.Commands
     {
         public int Year { get; set; }
         public string Subgroup { get; set; }
-        public string Mode { get; set; }
         public string Level { get; set; }
         public int CourseId { get; set; }
         public int UserId { get; set; }
@@ -45,14 +44,14 @@ public class CreateGroupCommandHandler : IRequestHandler<CreateGroupCommand, Gro
             throw new UserNotFoundException(request.UserId.ToString());
 
         var groupExists = _groupRepository.GroupExists(
-            request.Year, int.Parse(request.Subgroup), Enum.Parse<StudyMode>(request.Mode), Enum.Parse<StudyLevel>(request.Level), request.CourseId);
+            request.Year, int.Parse(request.Subgroup), Enum.Parse<StudyLevel>(request.Level), request.CourseId);
         if (groupExists)
             throw new GroupAlreadyExistsException();
 
         var studyCourse = _studyCourseRepository.Get(request.CourseId);
         var user = _userRepository.Get(request.UserId);
         var group = new Group
-            (request.Year, Enum.Parse<StudyMode>(request.Mode), Enum.Parse<StudyLevel>(request.Level), studyCourse, user, int.Parse(request.Subgroup));
+            (request.Year, Enum.Parse<StudyLevel>(request.Level), studyCourse, user, int.Parse(request.Subgroup));
         
         await _groupRepository.AddGroup(group);
         await _groupRepository.SaveChangesAsync();
@@ -64,7 +63,6 @@ public class CreateGroupCommandHandler : IRequestHandler<CreateGroupCommand, Gro
             StudyCourseName = studyCourse.Name,
             StudyCourseShort = studyCourse.ShortName,
             StudyLevel = group.StudyLevel.ToString(),
-            StudyMode = group.StudyMode.ToString(),
             Subgroup = group.Subgroup
         };
     }

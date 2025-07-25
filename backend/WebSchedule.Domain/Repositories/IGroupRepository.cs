@@ -7,8 +7,8 @@ namespace WebSchedule.Domain.Repositories
         Task AddGroup(Group group);
         IEnumerable<Group> Get();
         Group Get(int groupId);
-        int? GetNextSubgroup(int year, StudyMode studyMode, StudyLevel studyLevel, int courseId);
+        int? GetNextSubgroup(int year, StudyLevel studyLevel, int courseId);
         bool GroupExists(int groupId);
-        bool GroupExists(int year, int subgroup, StudyMode studyMode, StudyLevel studyLevel, int courseId);
+        bool GroupExists(int year, int subgroup, StudyLevel studyLevel, int courseId);
     }
 }

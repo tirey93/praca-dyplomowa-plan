@@ -7,7 +7,6 @@ namespace WebSchedule.Domain.Entities.Study
     public class Group : Entity
     {
         public int StartingYear { get; private set; }
-        public StudyMode StudyMode { get; private set; }
         public StudyLevel StudyLevel { get; private set; }
         public StudyCourse StudyCourse { get; private set; }
         public int Subgroup { get; private set; }
@@ -29,11 +28,10 @@ namespace WebSchedule.Domain.Entities.Study
         {
             MembersInGroup = [];
         }
-        public Group(int startingYear, StudyMode studyMode, StudyLevel studyLevel, StudyCourse studyCourse, User admin, int subgroup)
+        public Group(int startingYear, StudyLevel studyLevel, StudyCourse studyCourse, User admin, int subgroup)
         {
             MembersInGroup = [];
             StartingYear = startingYear;
-            StudyMode = studyMode;
             StudyLevel = studyLevel;
             StudyCourse = studyCourse;
             Subgroup = subgroup;

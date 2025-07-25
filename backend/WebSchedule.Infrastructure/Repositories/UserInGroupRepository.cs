@@ -34,7 +34,6 @@ namespace WebSchedule.Infrastructure.Repositories
                         StudyLevel = x.Group.StudyLevel.ToString(),
                         StudyCourseName = x.Group.StudyCourse.Name,
                         StudyCourseShort = x.Group.StudyCourse.ShortName,
-                        StudyMode = x.Group.StudyMode.ToString(),
                         Subgroup = x.Group.Subgroup,
                     },
                     User = new UserDto
@@ -64,7 +63,6 @@ namespace WebSchedule.Infrastructure.Repositories
                         StudyLevel = x.Group.StudyLevel.ToString(),
                         StudyCourseName = x.Group.StudyCourse.Name,
                         StudyCourseShort = x.Group.StudyCourse.ShortName,
-                        StudyMode = x.Group.StudyMode.ToString(),
                         Subgroup = x.Group.Subgroup,
                     },
                     User = new UserDto

@@ -8,7 +8,6 @@ namespace WebSchedule.Controllers.Group.Queries
     public class GetNextSubGroupQuery : IRequest<int>
     {
         public int Year { get; set; }
-        public string StudyMode { get; set; }
         public string StudyLevel { get; set; }
         public int CourseId { get; set; }
     }
@@ -26,7 +25,6 @@ namespace WebSchedule.Controllers.Group.Queries
         {
             var subgroup = _groupRepository.GetNextSubgroup(
                 request.Year, 
-                Enum.Parse<StudyMode>(request.StudyMode), 
                 Enum.Parse<StudyLevel>(request.StudyLevel), 
                 request.CourseId);
             return Task.FromResult((subgroup ?? 0) + 1);

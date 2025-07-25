@@ -31,7 +31,6 @@ import { SnackBarService } from '../../services/snackBarService';
   styleUrl: './create-group-dialog.component.scss'
 })
 export class CreateGroupDialogComponent {
-  studyModes = Constants.StudyModes;
   studyLevels = Constants.StudyLevels;
   filteredOptionsCourse$: Observable<SelectValue[]>;
   allCourses: SelectValue[] = [];
@@ -40,7 +39,6 @@ export class CreateGroupDialogComponent {
   groupForm = new FormGroup({
     year: new FormControl(this.getCurrentYear(), { validators: [Validators.min(this.getLowestYear()), Validators.max(this.getHighestYear())] }),
     subgroup: new FormControl({value: "01", disabled: true}),
-    mode: new FormControl(),
     level: new FormControl(),
     course: new FormControl<SelectValue | null>(null)
   });
@@ -71,7 +69,6 @@ export class CreateGroupDialogComponent {
 
     this.nextSubgroup$ = combineLatest([
       this.groupForm.controls.year.valueChanges.pipe(startWith(this.groupForm.controls.year.value)),
-      this.groupForm.controls.mode.valueChanges.pipe(startWith(this.groupForm.controls.mode.value)),
       this.groupForm.controls.level.valueChanges.pipe(startWith(this.groupForm.controls.level.value)),
       this.groupForm.controls.course.valueChanges.pipe(
         startWith(this.groupForm.controls.course.value),
@@ -79,20 +76,18 @@ export class CreateGroupDialogComponent {
       ),
     ]).pipe(
       debounceTime(50),
-      filter(([year, mode, level, courseId]) => {
+      filter(([year, level, courseId]) => {
         const isFormValid = this.groupForm.valid;
         const areApiParamsReady =
           year !== null && year !== undefined &&
-          mode !== null && mode !== undefined &&
           level !== null && level !== undefined &&
           courseId !== null && courseId !== undefined &&
           typeof courseId === 'number';
         return isFormValid && areApiParamsReady;
       }),
-      switchMap(([year, mode, level, courseId]) => {
+      switchMap(([year, level, courseId]) => {
         return this.groupService.getNextSubgroup$(
           year!,
-          mode!,
           level!,
           courseId!
         ).pipe(map(x => {
@@ -150,7 +145,6 @@ export class CreateGroupDialogComponent {
     this.groupService.create$({ 
       year: this.groupForm.controls.year.value!, 
       subgroup: this.groupForm.controls.subgroup.value!,
-      mode: this.groupForm.controls.mode.value!,
       level: this.groupForm.controls.level.value!,
       courseId: this.groupForm.controls.course.value!.id,
     }).subscribe({

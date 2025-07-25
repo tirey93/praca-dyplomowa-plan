@@ -2,8 +2,6 @@
   "Bachelor": "Licencjat",
   "Master": "Magister",
   "Engineer": "Inżynier",
-  "FullTime": "Stacjonarne",
-  "PartTime": "Niestacjonarne",
   "snackbar.dismiss": "Odrzuć",
   "snackbar.unknown.error": "Nastąpił nieoczekiwany błąd.",
 

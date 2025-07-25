@@ -53,13 +53,11 @@ export class SearchGroupComponent implements OnInit {
   courseFilterControl = new FormControl<string>('')
   yearFilterControl = new FormControl<string>('all')
   levelFilterControl = new FormControl<string>('all')
-  modefilterControl = new FormControl<string>('all')
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
 
   filterDictionary= new Map<string,string>();
-  filterOptionsMode = Constants.StudyModes;
   filterOptionsLevel = Constants.StudyLevels;
   filterOptionsYear?: Set<number>
   filteredOptionsCourse$: Observable<string[]>;
@@ -67,7 +65,7 @@ export class SearchGroupComponent implements OnInit {
 
   displayedColumns: string[] = [
     'name', 'startingYear', 'studyCourseName', 'studyLevel', 
-    'studyMode', 'subgroup', 'membersCount'];
+    'subgroup', 'membersCount'];
 
   constructor(
     private groupService: GroupRepositoryService,
@@ -114,7 +112,6 @@ export class SearchGroupComponent implements OnInit {
             case 'startingYear': return item.startingYear;
             case 'studyCourseName': return item.studyCourseName;
             case 'studyLevel': return item.studyLevel;
-            case 'studyMode': return item.studyMode;
             case 'subgroup': return item.subgroup;
             case 'membersCount': return item.membersCount;
             default: return 0
@@ -160,7 +157,6 @@ export class SearchGroupComponent implements OnInit {
     this.courseFilterControl.setValue('')
     this.yearFilterControl.setValue('all')
     this.levelFilterControl.setValue('all')
-    this.modefilterControl.setValue('all')
   }
 
   handleCandidateJoin(group: CandidateGroupInfoResponse, selected: boolean) {

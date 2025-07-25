@@ -36,18 +36,6 @@
             }
         </mat-select>
     </mat-form-field>
-    <mat-form-field appearance="outline">
-        <mat-label>Tryb</mat-label>
-        <mat-select
-            [formControl]="modefilterControl"
-            (selectionChange)="applyFilter($event.value, 'studyMode')"
-            value="all">
-            <mat-option value="all">Wszystkie</mat-option>
-            @for (option of filterOptionsMode; track $index) {
-                <mat-option [value]="option">{{option | translate}}</mat-option>
-            }
-        </mat-select>
-    </mat-form-field>
     <button mat-mini-fab (click)="onClearAllFilters()" color="accent" matTooltip="Wyczyść wszystkie filtry">
         <mat-icon>clear_all</mat-icon>
     </button>
@@ -76,10 +64,6 @@
             <ng-container matColumnDef="studyLevel">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Stopień </th>
                 <td mat-cell *matCellDef="let element"> {{element.studyLevel | translate}} </td>
-            </ng-container>
-            <ng-container matColumnDef="studyMode">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Rodzaj </th>
-                <td mat-cell *matCellDef="let element"> {{element.studyMode | translate}} </td>
             </ng-container>
             <ng-container matColumnDef="subgroup">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Podgrupa </th>

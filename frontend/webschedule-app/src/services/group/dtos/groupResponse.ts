@@ -5,6 +5,5 @@ export interface GroupResponse {
     studyCourseName: string,
     studyCourseShort: string,
     studyLevel: string,
-    studyMode: string,
     subgroup: number
 }

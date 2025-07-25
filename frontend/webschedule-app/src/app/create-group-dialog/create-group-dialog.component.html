@@ -14,16 +14,6 @@
                     <span *ngIf="groupForm.get('year')?.hasError('max')">Podano za późny rok.</span>
                 </mat-error>
             </mat-form-field>
-        </div>
-        <div class="dialog-content-half-container">
-            <mat-form-field appearance="outline" class="dialog-full-width">
-                <mat-label>Rodzaj studiów</mat-label>
-                <mat-select required formControlName="mode">
-                    @for (option of studyModes; track $index) {
-                        <mat-option [value]="option">{{option | translate}}</mat-option>
-                    }
-                </mat-select>
-            </mat-form-field>
             <mat-form-field appearance="outline" class="dialog-full-width">
                 <mat-label>Stopień studiów</mat-label>
                 <mat-select required formControlName="level">

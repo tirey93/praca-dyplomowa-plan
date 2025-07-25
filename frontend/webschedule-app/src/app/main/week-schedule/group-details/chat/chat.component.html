@@ -19,7 +19,7 @@
     }
   }
 </div>
-<mat-form-field style="min-width: 30vw; margin: 50px 20px 0 20px;" appearance="fill">
+<mat-form-field class="fixed-input-container" appearance="fill">
     <mat-label>Zacznij pisać...</mat-label>
     <input required type="text" matInput [formControl]="sendMessageControl" (keydown.enter)="send()">
 </mat-form-field>

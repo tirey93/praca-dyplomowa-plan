@@ -10,5 +10,10 @@ namespace WebSchedule.Infrastructure.Repositories
         {
         }
 
+        public IEnumerable<SessionInGroup> GetDefaults()
+        {
+            return _dbSet.Where(x => x.GroupId == null);
+        }
+
     }
 }

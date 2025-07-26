@@ -7,7 +7,7 @@ using WebSchedule.Controllers.UserInGroup.Requests;
 using WebSchedule.Domain;
 using WebSchedule.Utils;
 
-namespace WebSchedule.Controllers.User
+namespace WebSchedule.Controllers.UserInGroup
 {
     [ApiController]
     [Route("[controller]")]

@@ -1,4 +1,5 @@
 ﻿
+
 namespace WebSchedule.Domain.Entities.Study
 {
     public class SessionInGroup : Entity
@@ -8,7 +9,6 @@ namespace WebSchedule.Domain.Entities.Study
 
         public int Number { get; set; }
         public int WeekNumber { get; set; }
-        public bool Default => GroupId == null;
 
         public SessionInGroup() { }
 

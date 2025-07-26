@@ -84,11 +84,6 @@ export class ToolbarComponent {
     this.dialog.open(SearchGroupDialogComponent, {
       maxWidth: '100vw',
       autoFocus: false
-    }).afterClosed().subscribe({
-      next:(result:boolean) => {
-        if(result)
-          this.syncService.refreshGroups$.next();
-      }
     });
   }
 

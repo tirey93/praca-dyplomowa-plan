@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { MatDialog, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
-import { CreateGroupDialogComponent } from '../create-group-dialog/create-group-dialog.component';
+import { CreateGroupComponent } from '../create-group-dialog/create-group.component';
 import { SearchGroupComponent } from "../search-group/search-group.component";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-search-group-dialog',
@@ -14,18 +15,13 @@ import { SearchGroupComponent } from "../search-group/search-group.component";
 })
 export class SearchGroupDialogComponent {
   constructor(
-    private readonly dialog: MatDialog,
-    private dialogRef: MatDialogRef<SearchGroupDialogComponent>
+    private dialogRef: MatDialogRef<SearchGroupDialogComponent>,
+    private router: Router
   ) {
   }
 
   handleCreateNewGroup() {
-    this.dialog.open(CreateGroupDialogComponent, {
-      maxWidth: '100vw',
-      autoFocus: false
-    }).afterClosed().subscribe((result:boolean) => {
-      if(result)
-        this.dialogRef.close(result);
-    })
+    this.router.navigateByUrl("/create-group");
+    this.dialogRef.close();
   }
 }

@@ -6,7 +6,7 @@ import { map, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class LoginGuard implements CanActivate {
+export class LogoutGuard implements CanActivate {
   constructor(private router: Router, private loginService: LoginService){};
 
   canActivate(next: ActivatedRouteSnapshot,state: RouterStateSnapshot):Observable<boolean | UrlTree> {
@@ -14,9 +14,9 @@ export class LoginGuard implements CanActivate {
     return this.loginService.isLoggedIn$.pipe(
       map(isLoggedIn => {
         if (isLoggedIn) {
-          return true;
+          return this.router.createUrlTree(['']);
         } else {
-          return this.router.createUrlTree(['login']);
+          return true;
         }
       })
     )

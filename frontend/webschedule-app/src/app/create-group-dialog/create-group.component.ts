@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -11,26 +11,28 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { BehaviorSubject, combineLatest, debounceTime, filter, map, Observable, shareReplay, startWith, Subject, switchMap } from 'rxjs';
+import { combineLatest, debounceTime, filter, map, Observable, startWith, switchMap } from 'rxjs';
 import { SelectValue } from '../dtos/selectValue';
 import { StudyCourseRepository } from '../../services/study-course/studyCourseRepository.service';
 import { GroupRepositoryService } from '../../services/group/groupRepository.service';
 import { GroupHelper } from '../../helpers/groupHelper';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CreateCourseDialogComponent } from '../create-course-dialog/create-course-dialog.component';
 import { SnackBarService } from '../../services/snackBarService';
+import { CreateCourseDialogComponent } from './create-course-dialog/create-course-dialog.component';
+import { Router } from '@angular/router';
+import { SyncService } from '../../services/sync.service';
 
 @Component({
-  selector: 'app-create-gro-up-dialog',
+  selector: 'app-create-group',
   imports: [ 
-    MatDialogContent, MatDialogTitle, MatFormFieldModule, MatLabel, MatInputModule, MatDialogActions, 
+    MatFormFieldModule, MatLabel, MatInputModule,
     MatButtonModule, ReactiveFormsModule, CommonModule, MatIconModule, MatSelectModule, MatOptionModule,
     TranslatePipe, MatAutocompleteModule, MatTooltipModule
   ],
-  templateUrl: './create-group-dialog.component.html',
-  styleUrl: './create-group-dialog.component.scss'
+  templateUrl: './create-group.component.html',
+  styleUrl: './create-group.component.scss'
 })
-export class CreateGroupDialogComponent {
+export class CreateGroupComponent {
   studyLevels = Constants.StudyLevels;
   filteredOptionsCourse$: Observable<SelectValue[]>;
   allCourses: SelectValue[] = [];
@@ -44,12 +46,12 @@ export class CreateGroupDialogComponent {
   });
   
   constructor(
-    private dialogRef: MatDialogRef<CreateGroupDialogComponent>,
     private groupService: GroupRepositoryService,
     private readonly dialog: MatDialog,
     private studyCourseService: StudyCourseRepository,
-    private snackBarService: SnackBarService
-    
+    private snackBarService: SnackBarService,
+    private router: Router,
+    private syncService: SyncService
   ) {
     this.updateStudyCourses(null);
     
@@ -123,9 +125,7 @@ export class CreateGroupDialogComponent {
       this.updateStudyCourses(result);
     });
   }
-  onNoClick(): void {
-    this.dialogRef.close(false);
-  }
+
   displayFn(value: SelectValue): string {
     return value && value.displayText ? value.displayText : '';
   }
@@ -149,7 +149,8 @@ export class CreateGroupDialogComponent {
       courseId: this.groupForm.controls.course.value!.id,
     }).subscribe({
       next: () => {
-        this.dialogRef.close(true);
+        this.router.navigateByUrl("");
+        this.syncService.refreshGroups$.next();
       },
       error: (err) => {
         this.snackBarService.openError(err);

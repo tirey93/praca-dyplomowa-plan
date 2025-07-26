@@ -1,5 +1,5 @@
-<title mat-dialog-title>Utworzenie Nowej Grupy</title>
-<mat-dialog-content>
+<title>Utworzenie Nowej Grupy</title>
+<div class="content">
     <p class="dialog-description">
         Tutaj możesz stworzyć własną grupę. <br>Po jej utworzeniu automatycznie staniesz się jej starostą.
     </p>
@@ -50,8 +50,7 @@
             </mat-form-field>
         </div>
     </form>
-    <mat-dialog-actions>
-        <button mat-raised-button type="button" (click)="onNoClick()">Anuluj</button>
+    <div style="display: flex; justify-content: end;">
         <div style="margin-left: 15px;" [matTooltip]="groupForm.invalid ? 'Należy podać wszystkie wymagane pola.' : ''">
             <button 
                 mat-flat-button
@@ -61,5 +60,5 @@
                 (click)="submit()">Utwórz
             </button>
         </div>
-    </mat-dialog-actions>
-</mat-dialog-content>
+    </div>
+</div>

@@ -1,12 +1,14 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './login/login.component';
-import { LoginGuard } from './guards/login.guard';
+import { LogoutGuard } from './guards/logout.guard';
 import { MainComponent } from './main/main.component';
+import { CreateGroupComponent } from './create-group-dialog/create-group.component';
+import { LoginGuard } from './guards/login.guard';
 
 export const routes: Routes = [
     {
         path: "login",
-        canActivate: [LoginGuard],
+        canActivate: [LogoutGuard],
         component: LoginComponent,
     },
     {
@@ -16,6 +18,11 @@ export const routes: Routes = [
     {
         path: "group/:groupId",
         component: MainComponent
+    },
+    {
+        path: "create-group",
+        canActivate: [LoginGuard],
+        component: CreateGroupComponent
     },
     {
         path: "**",

@@ -3,12 +3,12 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SelectValue } from '../dtos/selectValue';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
-import { StudyCourseRepository } from '../../services/study-course/studyCourseRepository.service';
-import { SnackBarService } from '../../services/snackBarService';
+import { StudyCourseRepository } from '../../../services/study-course/studyCourseRepository.service';
+import { SnackBarService } from '../../../services/snackBarService';
+import { SelectValue } from '../../dtos/selectValue';
 
 @Component({
   selector: 'app-create-course-dialog',

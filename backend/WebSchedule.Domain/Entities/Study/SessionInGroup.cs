@@ -10,6 +10,8 @@ namespace WebSchedule.Domain.Entities.Study
         public int Number { get; set; }
         public int WeekNumber { get; set; }
 
+        public bool SpringSemester { get; set; }
+
         public SessionInGroup() { }
 
         public SessionInGroup(Group group, int number, int weekNumber)

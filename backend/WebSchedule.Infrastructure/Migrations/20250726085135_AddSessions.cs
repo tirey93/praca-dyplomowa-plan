@@ -19,7 +19,8 @@ namespace WebSchedule.Infrastructure.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     GroupId = table.Column<int>(type: "int", nullable: true),
                     Number = table.Column<int>(type: "int", nullable: false),
-                    WeekNumber = table.Column<int>(type: "int", nullable: false)
+                    WeekNumber = table.Column<int>(type: "int", nullable: false),
+                    SpringSemester = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -85,6 +85,9 @@ namespace WebSchedule.Infrastructure.Migrations
                     b.Property<int>("WeekNumber")
                         .HasColumnType("int");
 
+                    b.Property<int>("SpringSemester")
+                        .HasColumnType("tinyint(1)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("GroupId");

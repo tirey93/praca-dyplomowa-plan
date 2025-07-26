@@ -1,4 +1,11 @@
 <div style="margin-top: 20px;"></div>
+<div style="display: flex; justify-content: center;">
+  <mat-form-field class="input-container" appearance="outline">
+      <mat-label>Zacznij pisać...</mat-label>
+      <input required type="text" matInput [formControl]="sendMessageControl" (keydown.enter)="send()">
+  </mat-form-field>
+</div>
+<mat-divider></mat-divider>
 <div class="messages-container">
   @for (message of messages; track $index) {
     @if (message.user.id === currentUserId) {
@@ -19,7 +26,3 @@
     }
   }
 </div>
-<mat-form-field class="fixed-input-container" appearance="fill">
-    <mat-label>Zacznij pisać...</mat-label>
-    <input required type="text" matInput [formControl]="sendMessageControl" (keydown.enter)="send()">
-</mat-form-field>

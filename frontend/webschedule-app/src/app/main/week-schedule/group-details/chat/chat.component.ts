@@ -14,12 +14,13 @@ import { UserRepositoryService } from '../../../../../services/user/userReposito
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserDto } from '../../../../../services/signal-r/dtos/user';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-chat',
   imports: [
     CommonModule, MatInputModule, MatButtonModule, ReactiveFormsModule, MatFormFieldModule, MatCardModule,
-    MatTooltipModule
+    MatTooltipModule, MatDividerModule
   ],
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.scss'
@@ -58,7 +59,7 @@ export class ChatComponent implements OnDestroy{
             this.currentUserId = userResponse.id;
             messageRepository.getByGroup$(groupId).subscribe({
               next: (messagesDto) => {
-                this.messages = this.combineMessages(messagesDto).reverse();
+                this.messages = this.combineMessages(messagesDto);
                 this.currentGroupId = groupId;
               },
               error: (err) => {
@@ -78,8 +79,8 @@ export class ChatComponent implements OnDestroy{
     ).subscribe({
       next: message => {
         if (this.currentGroupId){
-          if(this.messages[0].user.id == message.user.id) {
-            this.messages[0].content = this.messages[0].content + "<br>" + message.content
+          if(this.messages.length > 0 && this.messages[0].user.id == message.user.id) {
+            this.messages[0].content = message.content + "<br>" + this.messages[0].content
           } else {
             this.messages.unshift(message);
           }
@@ -117,7 +118,7 @@ export class ChatComponent implements OnDestroy{
       const message = messages[i];
 
       if (currentUser.id === message.user.id) {
-        currentContentCombine = currentContentCombine + "<br>" + message.content
+        currentContentCombine = message.content + "<br>" + currentContentCombine
       } else {
         result.push({
           content: currentContentCombine,

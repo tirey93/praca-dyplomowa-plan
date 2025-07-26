@@ -16,6 +16,7 @@ namespace WebSchedule.Infrastructure.Extensions
             services.AddScoped<IUserInGroupRepository, UserInGroupRepository>();
             services.AddScoped<IStudyCourseRepository, StudyCourseRepository>();
             services.AddScoped<IMessageRepostory, MessageRepository>();
+            services.AddScoped<ISessionInGroupRepository, SessionInGroupRepository>();
         }
     }
 }

@@ -11,6 +11,7 @@ namespace WebSchedule.Domain.Entities.Study
         public StudyCourse StudyCourse { get; private set; }
         public int Subgroup { get; private set; }
 
+        public ICollection<SessionInGroup> SessionsInGroup { get; set; }
         public ICollection<UserInGroup> MembersInGroup { get; private set; }
 
         [NotMapped]

@@ -25,6 +25,7 @@ namespace WebSchedule.Controllers.SessionInGroup.Queries
                 GroupId = session.GroupId,
                 Number = session.Number,
                 WeekNumber = session.WeekNumber,
+                SpringSemester = session.SpringSemester,
             }));
         }
     }

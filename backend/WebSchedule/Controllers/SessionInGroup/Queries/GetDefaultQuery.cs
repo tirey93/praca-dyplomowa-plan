@@ -19,7 +19,7 @@ namespace WebSchedule.Controllers.SessionInGroup.Queries
 
         public Task<IEnumerable<SessionInGroupResponse>> Handle(GetDefaultQuery request, CancellationToken cancellationToken)
         {
-            var sessions = _sessionInGroupRepository.GetDefaults();
+            var sessions = _sessionInGroupRepository.GetDefaults().OrderBy(x => x.SpringSemester).ThenBy(x => x.Number);
             return Task.FromResult(sessions.Select(session => new SessionInGroupResponse
             {
                 GroupId = session.GroupId,

@@ -2,11 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Controllers.SessionInGroup.Queries;
-using WebSchedule.Controllers.User.Exceptions;
-using WebSchedule.Controllers.UserInGroup.Queries;
-using WebSchedule.Controllers.UserInGroup.Requests;
 using WebSchedule.Domain;
-using WebSchedule.Utils;
 
 namespace WebSchedule.Controllers.SessionInGroup
 {
@@ -28,7 +24,7 @@ namespace WebSchedule.Controllers.SessionInGroup
 #if !DEBUG
         [Authorize]
 #endif
-        public async Task<ActionResult<IEnumerable<UserGroupResponse>>> GetLoggedIn()
+        public async Task<ActionResult<IEnumerable<SessionInGroupResponse>>> GetDefaults()
         {
             try
             {

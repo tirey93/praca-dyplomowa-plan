@@ -208,6 +208,15 @@ export class CreateGroupComponent {
       return saturday;
   }
 
+  private getPeriod(date: Date): string {
+    const saturday = date.getDate().toString().padStart(2, '0');
+    const sundayFull = new Date(date.getTime() + (1000 * 60 * 60 * 24));
+    const sunday = sundayFull.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const year = date.getFullYear();
+    return `${saturday}-${sunday}.${month}.${year}`
+  }
+
   private getDataForSessions(sessionsInGroupResponse: SessionInGroupResponse[]): SessionDto[] {
     const result: SessionDto[] = [];
     let currentSessionIndex = 0;
@@ -217,13 +226,13 @@ export class CreateGroupComponent {
     while(currentWeek !== lastWeek) {
       if (currentWeek === sessionsInGroupResponse[currentSessionIndex].weekNumber) {
         result.push({
-          period: this.getSaturdayOfWeek(currentWeek).toString(),
-          number: currentWeek
+          period: this.getPeriod(this.getSaturdayOfWeek(currentWeek)),
+          number: sessionsInGroupResponse[currentSessionIndex].number
         })
         currentSessionIndex++;
       } else {
         result.push({
-          period: this.getSaturdayOfWeek(currentWeek).toString()
+          period: this.getPeriod(this.getSaturdayOfWeek(currentWeek))
         })
       }
 
@@ -234,6 +243,16 @@ export class CreateGroupComponent {
       }
     }
 
+    result.push({
+      period: this.getPeriod(this.getSaturdayOfWeek(currentWeek)),
+      number: sessionsInGroupResponse[currentSessionIndex].number
+    })
+    result.push({
+      period: this.getPeriod(this.getSaturdayOfWeek(currentWeek + 1))
+    })
+    result.push({
+      period: this.getPeriod(this.getSaturdayOfWeek(currentWeek + 2))
+    })
     return result;
   }
 }

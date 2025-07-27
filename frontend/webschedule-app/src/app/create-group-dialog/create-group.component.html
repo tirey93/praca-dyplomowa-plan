@@ -58,7 +58,7 @@
     <div *ngIf="noData">
         Wystąpił błąd podczas wczytywania listy zjazdów.
     </div>
-    <div *ngIf="!isLoading && !noData">
+    <div style="max-width: 35vw;" *ngIf="!isLoading && !noData">
         <mat-table [dataSource]="sessions!" matSort style="display: table; padding-top: 20px;">
             <ng-container matColumnDef="period">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Okres </th>

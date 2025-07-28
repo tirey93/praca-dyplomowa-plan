@@ -28,6 +28,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SessionInGroupService } from '../../services/sessionInGroup/sessionInGroup.service';
 
 export interface SessionDto {
+  index: number;
   period: string;
   number?: number;
 }
@@ -57,7 +58,7 @@ export class CreateGroupComponent {
   
   isLoading = true;
   noData = false;
-  displayedColumns: string[] = ['period', 'number'];
+  displayedColumns: string[] = ['period', 'number', 'up_down'];
   sessions?: MatTableDataSource<SessionDto>;
 
   constructor(
@@ -157,8 +158,47 @@ export class CreateGroupComponent {
     return value && value.displayText ? value.displayText : '';
   }
 
-  handleAddToGroup(_t119: any) {
-    throw new Error('Method not implemented.');
+  canBeMoveDown(sessionDto: SessionDto): boolean {
+    if (sessionDto.index === this.sessions!.data.length - 1) {
+      return false;
+    }
+    if (this.sessions!.data[sessionDto.index + 1].number){
+      return false;
+    }
+    return true;
+  }
+  canBeMoveUp(sessionDto: SessionDto): boolean {
+    if (sessionDto.index === 0) {
+      return false;
+    }
+    if (this.sessions!.data[sessionDto.index - 1].number){
+      return false;
+    }
+    return true;
+  }
+  handleMoveDown(sessionDto: SessionDto) {
+    const next = this.sessions!.data[sessionDto.index + 1];
+    this.sessions!.data = this.sessions!.data.map(x => {
+      if (x.index === sessionDto.index) {
+        return {...x, number: next.number};
+      }
+      if (x.index == sessionDto.index + 1) {
+        return {...x, number: sessionDto.number};
+      }
+      return x;
+    });
+  }
+  handleMoveUp(sessionDto: SessionDto) {
+    const next = this.sessions!.data[sessionDto.index - 1];
+    this.sessions!.data = this.sessions!.data.map(x => {
+      if (x.index === sessionDto.index) {
+        return {...x, number: next.number};
+      }
+      if (x.index == sessionDto.index - 1) {
+        return {...x, number: sessionDto.number};
+      }
+      return x;
+    });
   }
 
   submit() {
@@ -226,12 +266,14 @@ export class CreateGroupComponent {
     while(currentWeek !== lastWeek) {
       if (currentWeek === sessionsInGroupResponse[currentSessionIndex].weekNumber) {
         result.push({
+          index: result.length,
           period: this.getPeriod(this.getSaturdayOfWeek(currentWeek)),
           number: sessionsInGroupResponse[currentSessionIndex].number
         })
         currentSessionIndex++;
       } else {
         result.push({
+          index: result.length,
           period: this.getPeriod(this.getSaturdayOfWeek(currentWeek))
         })
       }
@@ -244,13 +286,16 @@ export class CreateGroupComponent {
     }
 
     result.push({
+      index: result.length,
       period: this.getPeriod(this.getSaturdayOfWeek(currentWeek)),
       number: sessionsInGroupResponse[currentSessionIndex].number
     })
     result.push({
+      index: result.length,
       period: this.getPeriod(this.getSaturdayOfWeek(currentWeek + 1))
     })
     result.push({
+      index: result.length,
       period: this.getPeriod(this.getSaturdayOfWeek(currentWeek + 2))
     })
     return result;

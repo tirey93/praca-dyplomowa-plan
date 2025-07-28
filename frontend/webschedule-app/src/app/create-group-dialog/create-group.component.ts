@@ -22,24 +22,17 @@ import { CreateCourseDialogComponent } from './create-course-dialog/create-cours
 import { Router } from '@angular/router';
 import { SyncService } from '../../services/sync.service';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { SessionInGroupResponse } from '../../services/sessionInGroup/dtos/sessionInGroupResponse';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { SessionInGroupService } from '../../services/sessionInGroup/sessionInGroup.service';
-
-export interface SessionDto {
-  index: number;
-  period: string;
-  number?: number;
-}
+import { SessionEditorComponent } from "../session-editor/session-editor.component";
+import { SessionDto } from '../dtos/sessionDto';
 
 @Component({
   selector: 'app-create-group',
-  imports: [ 
+  imports: [
     MatFormFieldModule, MatLabel, MatInputModule,
     MatButtonModule, ReactiveFormsModule, CommonModule, MatIconModule, MatSelectModule, MatOptionModule,
-    TranslatePipe, MatAutocompleteModule, MatTooltipModule, MatDividerModule, MatTableModule, MatProgressSpinnerModule
-  ],
+    TranslatePipe, MatAutocompleteModule, MatTooltipModule, MatDividerModule,
+    SessionEditorComponent
+],
   templateUrl: './create-group.component.html',
   styleUrl: './create-group.component.scss'
 })
@@ -49,17 +42,14 @@ export class CreateGroupComponent {
   allCourses: SelectValue[] = [];
   nextSubgroup$: Observable<string>;
 
+  sessions: SessionDto[] = []
+  
   groupForm = new FormGroup({
     year: new FormControl(this.getCurrentYear(), { validators: [Validators.min(this.getLowestYear()), Validators.max(this.getHighestYear())] }),
     subgroup: new FormControl({value: "01", disabled: true}),
     level: new FormControl(),
     course: new FormControl<SelectValue | null>(null)
   });
-  
-  isLoading = true;
-  noData = false;
-  displayedColumns: string[] = ['period', 'number', 'up_down'];
-  sessions?: MatTableDataSource<SessionDto>;
 
   constructor(
     private groupService: GroupRepositoryService,
@@ -68,7 +58,6 @@ export class CreateGroupComponent {
     private snackBarService: SnackBarService,
     private router: Router,
     private syncService: SyncService,
-    private sessionInGroupService: SessionInGroupService
   ) {
     this.updateStudyCourses(null);
     this.filteredOptionsCourse$ = this.groupForm.controls.course.valueChanges.pipe(
@@ -115,18 +104,6 @@ export class CreateGroupComponent {
         }));
       }),
     );
-
-    sessionInGroupService.getDefaults$().subscribe({
-      next: (sessionsInGroupResponse) => {
-        this.isLoading = false;
-        if (sessionsInGroupResponse.length === 0) {
-          this.noData = true;
-          return;
-        }
-        this.sessions = new MatTableDataSource<SessionDto>();
-        this.sessions.data = this.getDataForSessions(sessionsInGroupResponse.filter(x => !x.springSemester));
-      }
-    })
   }
 
   private updateStudyCourses(studyCourse: SelectValue | null) {
@@ -158,49 +135,10 @@ export class CreateGroupComponent {
     return value && value.displayText ? value.displayText : '';
   }
 
-  canBeMoveDown(sessionDto: SessionDto): boolean {
-    if (sessionDto.index === this.sessions!.data.length - 1) {
-      return false;
-    }
-    if (this.sessions!.data[sessionDto.index + 1].number){
-      return false;
-    }
-    return true;
+  handleSessionUpdate(sessions: SessionDto[]) {
+    this.sessions = [...sessions];
+    console.log(this.sessions);
   }
-  canBeMoveUp(sessionDto: SessionDto): boolean {
-    if (sessionDto.index === 0) {
-      return false;
-    }
-    if (this.sessions!.data[sessionDto.index - 1].number){
-      return false;
-    }
-    return true;
-  }
-  handleMoveDown(sessionDto: SessionDto) {
-    const next = this.sessions!.data[sessionDto.index + 1];
-    this.sessions!.data = this.sessions!.data.map(x => {
-      if (x.index === sessionDto.index) {
-        return {...x, number: next.number};
-      }
-      if (x.index == sessionDto.index + 1) {
-        return {...x, number: sessionDto.number};
-      }
-      return x;
-    });
-  }
-  handleMoveUp(sessionDto: SessionDto) {
-    const next = this.sessions!.data[sessionDto.index - 1];
-    this.sessions!.data = this.sessions!.data.map(x => {
-      if (x.index === sessionDto.index) {
-        return {...x, number: next.number};
-      }
-      if (x.index == sessionDto.index - 1) {
-        return {...x, number: sessionDto.number};
-      }
-      return x;
-    });
-  }
-
   submit() {
     this.groupService.create$({ 
       year: this.groupForm.controls.year.value!, 
@@ -229,75 +167,5 @@ export class CreateGroupComponent {
 
   private getHighestYear(): number {
     return this.getCurrentYear() + 5;
-  }
-
-  private getSaturdayOfWeek(weekNumber: number, year: number = new Date().getFullYear()): Date {
-      const januaryFirst = new Date(year, 0, 1);
-      const dayOfWeek = januaryFirst.getDay();
-      const firstMonday = new Date(januaryFirst);
-      if (dayOfWeek <= 4) {
-          firstMonday.setDate(januaryFirst.getDate() - dayOfWeek + 1);
-      } else {
-          firstMonday.setDate(januaryFirst.getDate() + 8 - dayOfWeek);
-      }
-      const saturday = new Date(firstMonday);
-      saturday.setDate(firstMonday.getDate() + (weekNumber - 1) * 7 + 5);
-      if (saturday < new Date()) {
-        return this.getSaturdayOfWeek(weekNumber, year + 1);
-      }
-      return saturday;
-  }
-
-  private getPeriod(date: Date): string {
-    const saturday = date.getDate().toString().padStart(2, '0');
-    const sundayFull = new Date(date.getTime() + (1000 * 60 * 60 * 24));
-    const sunday = sundayFull.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear();
-    return `${saturday}-${sunday}.${month}.${year}`
-  }
-
-  private getDataForSessions(sessionsInGroupResponse: SessionInGroupResponse[]): SessionDto[] {
-    const result: SessionDto[] = [];
-    let currentSessionIndex = 0;
-    let currentWeek = sessionsInGroupResponse[currentSessionIndex].weekNumber;
-    const lastWeek = sessionsInGroupResponse[sessionsInGroupResponse.length - 1].weekNumber;
-
-    while(currentWeek !== lastWeek) {
-      if (currentWeek === sessionsInGroupResponse[currentSessionIndex].weekNumber) {
-        result.push({
-          index: result.length,
-          period: this.getPeriod(this.getSaturdayOfWeek(currentWeek)),
-          number: sessionsInGroupResponse[currentSessionIndex].number
-        })
-        currentSessionIndex++;
-      } else {
-        result.push({
-          index: result.length,
-          period: this.getPeriod(this.getSaturdayOfWeek(currentWeek))
-        })
-      }
-
-      if (currentWeek === 52){
-        currentWeek = 1
-      } else {
-        currentWeek++;
-      }
-    }
-
-    result.push({
-      index: result.length,
-      period: this.getPeriod(this.getSaturdayOfWeek(currentWeek)),
-      number: sessionsInGroupResponse[currentSessionIndex].number
-    })
-    result.push({
-      index: result.length,
-      period: this.getPeriod(this.getSaturdayOfWeek(currentWeek + 1))
-    })
-    result.push({
-      index: result.length,
-      period: this.getPeriod(this.getSaturdayOfWeek(currentWeek + 2))
-    })
-    return result;
   }
 }

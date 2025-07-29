@@ -15,5 +15,9 @@ namespace WebSchedule.Infrastructure.Repositories
             return _dbSet.Where(x => x.GroupId == null);
         }
 
+        public IEnumerable<SessionInGroup> GetByGroup(int id)
+        {
+            return _dbSet.Where(x => x.GroupId == id);
+        }
     }
 }

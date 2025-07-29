@@ -24,6 +24,7 @@ import { SyncService } from '../../services/sync.service';
 import { MatDividerModule } from '@angular/material/divider';
 import { SessionEditorComponent } from "../session-editor/session-editor.component";
 import { SessionDto } from '../dtos/sessionDto';
+import { SessionRequest } from '../../services/group/dtos/sessionRequest';
 
 @Component({
   selector: 'app-create-group',
@@ -42,7 +43,8 @@ export class CreateGroupComponent {
   allCourses: SelectValue[] = [];
   nextSubgroup$: Observable<string>;
 
-  sessions: SessionDto[] = []
+  fallSessions: SessionDto[] = []
+  springSessions: SessionDto[] = []
   
   groupForm = new FormGroup({
     year: new FormControl(this.getCurrentYear(), { validators: [Validators.min(this.getLowestYear()), Validators.max(this.getHighestYear())] }),
@@ -135,16 +137,27 @@ export class CreateGroupComponent {
     return value && value.displayText ? value.displayText : '';
   }
 
-  handleSessionUpdate(sessions: SessionDto[]) {
-    this.sessions = [...sessions];
-    console.log(this.sessions);
+  handleFallSessionUpdate(sessions: SessionDto[]) {
+    this.fallSessions = [...sessions];
+  }
+  handleSpringSessionUpdate(sessions: SessionDto[]) {
+    this.springSessions = [...sessions];
   }
   submit() {
+    const springSessions: SessionRequest[] = this.springSessions
+      .filter(x => x.number != null)
+      .map(x => ({...x, springSemester: true }) as SessionRequest)
+    const fallSessions: SessionRequest[] = this.fallSessions
+      .filter(x => x.number != null)
+      .map(x => ({...x, springSemester: false }) as SessionRequest)
+      
+    const sessions = springSessions.concat(fallSessions);
     this.groupService.create$({ 
       year: this.groupForm.controls.year.value!, 
       subgroup: this.groupForm.controls.subgroup.value!,
       level: this.groupForm.controls.level.value!,
       courseId: this.groupForm.controls.course.value!.id,
+      sessions: sessions
     }).subscribe({
       next: () => {
         this.router.navigateByUrl("");

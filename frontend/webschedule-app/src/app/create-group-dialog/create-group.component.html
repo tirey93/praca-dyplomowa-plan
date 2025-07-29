@@ -55,10 +55,17 @@
     <p class="dialog-description">
         Ustawiaj weekendy zjazdowe zgodnie z rzeczywistością. <br> Nie jesteś pewny? Zawsze możesz się tym zająć później, w ustawieniach grupy.
     </p>
-    <div style="max-width: 45%;overflow-y: auto; max-height: 80vh;">
-        <app-session-editor (onSessionUpdate)="handleSessionUpdate($event)"></app-session-editor>
+    <div style="display: flex; justify-content: space-around;">
+        <div style="overflow-y: auto; max-height: 80vh;">
+            <p>Zima</p>
+            <app-session-editor [springSemester]="false" (onSessionUpdate)="handleFallSessionUpdate($event)"></app-session-editor>
+        </div>
+        <div style="overflow-y: auto; max-height: 80vh;">
+            <p>Lato</p>
+            <app-session-editor [springSemester]="true" (onSessionUpdate)="handleSpringSessionUpdate($event)"></app-session-editor>
+        </div>
     </div>
-    <mat-divider style="margin: 20px;"></mat-divider>
+    <mat-divider style="margin: 20px 0;"></mat-divider>
     <div style="display: flex; justify-content: end;">
         <div style="margin-left: 15px;" [matTooltip]="groupForm.invalid ? 'Należy podać wszystkie wymagane pola.' : ''">
             <button 

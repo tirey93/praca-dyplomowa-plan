@@ -16,6 +16,15 @@ namespace WebSchedule.Controllers.StudyCourse.Commands
         public string Level { get; set; }
         public int CourseId { get; set; }
         public int UserId { get; set; }
+
+        public List<SessionCommand> Sessions { get; set; }
+    }
+
+    public class SessionCommand
+    {
+        public int Number { get; set; }
+        public int WeekNumber { get; set; }
+        public bool SpringSemester { get; set; }
     }
 }
 
@@ -25,12 +34,15 @@ public class CreateGroupCommandHandler : IRequestHandler<CreateGroupCommand, Gro
     private readonly IGroupRepository _groupRepository;
     private readonly IStudyCourseRepository _studyCourseRepository;
     private readonly IUserRepository _userRepository;
+    private readonly ISessionInGroupRepository _sessionInGroupRepository;
 
-    public CreateGroupCommandHandler(IGroupRepository groupRepository, IStudyCourseRepository studyCourseRepository, IUserRepository userRepository)
+    public CreateGroupCommandHandler(IGroupRepository groupRepository, 
+        IStudyCourseRepository studyCourseRepository, IUserRepository userRepository, ISessionInGroupRepository sessionInGroupRepository)
     {
         _groupRepository = groupRepository;
         _studyCourseRepository = studyCourseRepository;
         _userRepository = userRepository;
+        _sessionInGroupRepository = sessionInGroupRepository;
     }
 
     public async Task<GroupResponse> Handle(CreateGroupCommand request, CancellationToken cancellationToken)
@@ -50,9 +62,37 @@ public class CreateGroupCommandHandler : IRequestHandler<CreateGroupCommand, Gro
 
         var studyCourse = _studyCourseRepository.Get(request.CourseId);
         var user = _userRepository.Get(request.UserId);
-        var group = new Group
-            (request.Year, Enum.Parse<StudyLevel>(request.Level), studyCourse, user, int.Parse(request.Subgroup));
-        
+        var group = new Group(
+            request.Year,
+            Enum.Parse<StudyLevel>(request.Level),
+            studyCourse,
+            user,
+            int.Parse(request.Subgroup));
+
+        if (request.Sessions.Count < 20)
+        {
+            var defaults = _sessionInGroupRepository.GetDefaults();
+            if (!request.Sessions.Any(x => x.SpringSemester))
+            {
+                var x = defaults.Where(x => x.SpringSemester).ToList();
+                request.Sessions.AddRange(defaults.Where(x => x.SpringSemester).Select(x => new SessionCommand
+                {
+                    Number = x.Number,
+                    WeekNumber = x.WeekNumber,
+                    SpringSemester = x.SpringSemester,
+                }));
+            }
+            if (!request.Sessions.Any(x => !x.SpringSemester))
+            {
+                request.Sessions.AddRange(defaults.Where(x => !x.SpringSemester).Select(x => new SessionCommand
+                {
+                    Number = x.Number,
+                    WeekNumber = x.WeekNumber,
+                    SpringSemester = x.SpringSemester,
+                }));
+            }
+        }
+        group.AddSessions(request.Sessions.Select(x => new SessionInGroup(group, x.Number, x.WeekNumber, x.SpringSemester)));
         await _groupRepository.AddGroup(group);
         await _groupRepository.SaveChangesAsync();
 

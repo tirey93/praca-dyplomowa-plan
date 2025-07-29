@@ -14,12 +14,13 @@ namespace WebSchedule.Domain.Entities.Study
 
         public SessionInGroup() { }
 
-        public SessionInGroup(Group group, int number, int weekNumber)
+        public SessionInGroup(Group group, int number, int weekNumber, bool springSemester)
         {
             Group = group;
             GroupId = group.Id;
             Number = number;
             WeekNumber = weekNumber;
+            SpringSemester = springSemester;
         }
     }
 }

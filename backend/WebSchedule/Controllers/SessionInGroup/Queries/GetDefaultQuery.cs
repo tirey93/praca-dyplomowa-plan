@@ -9,7 +9,7 @@ namespace WebSchedule.Controllers.SessionInGroup.Queries
     }
 
     public class GetDefaultQueryHandler : IRequestHandler<GetDefaultQuery, IEnumerable<SessionInGroupResponse>>
-    {-
+    {
         private readonly ISessionInGroupRepository _sessionInGroupRepository;
 
         public GetDefaultQueryHandler(ISessionInGroupRepository sessionInGroupRepository)

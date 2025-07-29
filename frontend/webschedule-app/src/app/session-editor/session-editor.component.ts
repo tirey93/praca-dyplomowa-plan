@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -23,6 +23,7 @@ export class SessionEditorComponent {
   displayedColumns: string[] = ['period', 'number', 'up_down'];
   sessions?: MatTableDataSource<SessionDto>;
 
+  @Input() springSemester = false;
   @Output() onSessionUpdate = new EventEmitter<SessionDto[]>();
 
   constructor(
@@ -36,11 +37,10 @@ export class SessionEditorComponent {
           return;
         }
         this.sessions = new MatTableDataSource<SessionDto>();
-        this.sessions.data = this.getDataForSessions(sessionsInGroupResponse.filter(x => !x.springSemester));
+        this.sessions.data = this.getDataForSessions(sessionsInGroupResponse.filter(x => x.springSemester === this.springSemester));
       }
     })
   }
-
 
   private getSaturdayOfWeek(weekNumber: number, year: number = new Date().getFullYear()): Date {
       const januaryFirst = new Date(year, 0, 1);
@@ -119,18 +119,26 @@ export class SessionEditorComponent {
     let currentWeek = sessionsInGroupResponse[currentSessionIndex].weekNumber;
     const lastWeek = sessionsInGroupResponse[sessionsInGroupResponse.length - 1].weekNumber;
 
+    result.push({
+      index: result.length,
+      period: this.getPeriod(this.getSaturdayOfWeek(currentWeek - 1)),
+      weekNumber: currentWeek - 1
+    })
+
     while(currentWeek !== lastWeek) {
       if (currentWeek === sessionsInGroupResponse[currentSessionIndex].weekNumber) {
         result.push({
           index: result.length,
           period: this.getPeriod(this.getSaturdayOfWeek(currentWeek)),
-          number: sessionsInGroupResponse[currentSessionIndex].number
+          number: sessionsInGroupResponse[currentSessionIndex].number,
+          weekNumber: currentWeek
         })
         currentSessionIndex++;
       } else {
         result.push({
           index: result.length,
-          period: this.getPeriod(this.getSaturdayOfWeek(currentWeek))
+          period: this.getPeriod(this.getSaturdayOfWeek(currentWeek)),
+          weekNumber: currentWeek
         })
       }
 
@@ -144,15 +152,18 @@ export class SessionEditorComponent {
     result.push({
       index: result.length,
       period: this.getPeriod(this.getSaturdayOfWeek(currentWeek)),
-      number: sessionsInGroupResponse[currentSessionIndex].number
+      number: sessionsInGroupResponse[currentSessionIndex].number,
+      weekNumber: currentWeek
     })
     result.push({
       index: result.length,
-      period: this.getPeriod(this.getSaturdayOfWeek(currentWeek + 1))
+      period: this.getPeriod(this.getSaturdayOfWeek(currentWeek + 1)),
+      weekNumber: currentWeek + 1
     })
     result.push({
       index: result.length,
-      period: this.getPeriod(this.getSaturdayOfWeek(currentWeek + 2))
+      period: this.getPeriod(this.getSaturdayOfWeek(currentWeek + 2)),
+      weekNumber: currentWeek + 2
     })
     return result;
   }

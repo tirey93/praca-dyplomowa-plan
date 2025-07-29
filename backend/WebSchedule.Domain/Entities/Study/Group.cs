@@ -40,6 +40,11 @@ namespace WebSchedule.Domain.Entities.Study
             MakeAdmin(admin);
         }
 
+        public void AddSessions(IEnumerable<SessionInGroup> sessionInGroups)
+        {
+            SessionsInGroup = sessionInGroups.ToList();
+        }
+
         public void AddCandidate(User candidate)
         {
             if (Members.Contains(candidate) || Candidates.Contains(candidate))

@@ -59,7 +59,7 @@ export class ChatComponent implements OnDestroy{
             this.currentUserId = userResponse.id;
             messageRepository.getByGroup$(groupId).subscribe({
               next: (messagesDto) => {
-                this.messages = this.combineMessages(messagesDto);
+                this.messages = this.combineMessages(messagesDto).reverse();
                 this.currentGroupId = groupId;
               },
               error: (err) => {

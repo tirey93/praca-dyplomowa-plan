@@ -16,10 +16,10 @@ import { SnackBarService } from '../../../../services/snackBarService';
 import { SyncService } from '../../../../services/sync.service';
 import { UserGroupResponse } from '../../../../services/userInGroup/dtos/userGroupResponse';
 import { UserInGroupService } from '../../../../services/userInGroup/userInGroup.service';
-import { LeaveGroupDialogComponent } from '../leave-group-dialog/leave-group-dialog.component';
-import { RemoveGroupDialogComponent } from '../remove-group-dialog/remove-group-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ChatComponent } from "./chat/chat.component";
+import { LeaveGroupDialogComponent } from './leave-group-dialog/leave-group-dialog.component';
+import { RemoveGroupDialogComponent } from './remove-group-dialog/remove-group-dialog.component';
 
 
 @Component({

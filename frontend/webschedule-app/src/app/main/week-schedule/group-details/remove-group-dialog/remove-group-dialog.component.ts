@@ -1,16 +1,15 @@
 import { DIALOG_DATA } from '@angular/cdk/dialog';
 import { Component, inject } from '@angular/core';
-import { UserGroupResponse } from '../../../../services/userInGroup/dtos/userGroupResponse';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { GroupHelper } from '../../../../helpers/groupHelper';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { UserInGroupService } from '../../../../services/userInGroup/userInGroup.service';
-import { GroupRepositoryService } from '../../../../services/group/groupRepository.service';
-import { SnackBarService } from '../../../../services/snackBarService';
-import { Router } from '@angular/router';
+import { GroupHelper } from '../../../../../helpers/groupHelper';
+import { GroupRepositoryService } from '../../../../../services/group/groupRepository.service';
+import { SnackBarService } from '../../../../../services/snackBarService';
+import { UserGroupResponse } from '../../../../../services/userInGroup/dtos/userGroupResponse';
+import { UserInGroupService } from '../../../../../services/userInGroup/userInGroup.service';
 
 @Component({
   selector: 'app-remove-group-dialog',

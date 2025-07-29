@@ -1,12 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { MatDialogModule, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { UserGroupResponse } from '../../../../services/userInGroup/dtos/userGroupResponse';
-import { GroupRepositoryService } from '../../../../services/group/groupRepository.service';
-import { GroupHelper } from '../../../../helpers/groupHelper';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
-import { UserInGroupService } from '../../../../services/userInGroup/userInGroup.service';
-import { SnackBarService } from '../../../../services/snackBarService';
+import { GroupHelper } from '../../../../../helpers/groupHelper';
+import { GroupRepositoryService } from '../../../../../services/group/groupRepository.service';
+import { SnackBarService } from '../../../../../services/snackBarService';
+import { UserGroupResponse } from '../../../../../services/userInGroup/dtos/userGroupResponse';
+import { UserInGroupService } from '../../../../../services/userInGroup/userInGroup.service';
 
 @Component({
   selector: 'app-leave-group-dialog',

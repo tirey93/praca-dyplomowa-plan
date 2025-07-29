@@ -43,6 +43,7 @@ namespace WebSchedule.Infrastructure.Repositories
             return _dbSet
                 .Include(x => x.StudyCourse)
                 .Include(x => x.MembersInGroup).ThenInclude(x => x.User)
+                .Include(x => x.SessionsInGroup)
                 .FirstOrDefault(x => x.Id == groupId);
         }
 

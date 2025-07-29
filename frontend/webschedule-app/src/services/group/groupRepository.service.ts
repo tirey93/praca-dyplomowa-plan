@@ -5,6 +5,7 @@ import { environment } from '../../enviroments/enviroments';
 import { GroupRequest } from './dtos/groupRequest';
 import { GroupResponse } from './dtos/groupResponse';
 import { GroupInfoResponse } from './dtos/groupInfoResponse';
+import { UpdateSessionsRequest } from './dtos/updateSessionsRequest';
 
 @Injectable({
     providedIn: 'root'
@@ -56,6 +57,14 @@ import { GroupInfoResponse } from './dtos/groupInfoResponse';
 
     remove$(groupId: number) {
       return this.http.delete(`${this.url}/${groupId}`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
+    updateSessions$(request: UpdateSessionsRequest) {
+      return this.http.put(`${this.url}/Sessions`, request, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

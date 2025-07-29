@@ -42,7 +42,19 @@ namespace WebSchedule.Domain.Entities.Study
 
         public void AddSessions(IEnumerable<SessionInGroup> sessionInGroups)
         {
-            SessionsInGroup = sessionInGroups.ToList();
+            if (SessionsInGroup == null)
+            {
+                SessionsInGroup = [];
+            }
+            foreach (var session in sessionInGroups) 
+            {
+                SessionsInGroup.Add(session);
+            }
+        }
+
+        public void RemoveSessions(bool springSemester)
+        {
+            SessionsInGroup = [.. SessionsInGroup.Where(x => x.SpringSemester == !springSemester)];
         }
 
         public void AddCandidate(User candidate)

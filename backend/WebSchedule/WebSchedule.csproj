@@ -17,4 +17,8 @@
     <ProjectReference Include="..\WebSchedule.Infrastructure\WebSchedule.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\SessionInGroup\Commands\" />
+  </ItemGroup>
+
 </Project>

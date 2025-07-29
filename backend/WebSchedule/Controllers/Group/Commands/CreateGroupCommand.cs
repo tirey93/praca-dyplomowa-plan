@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using WebSchedule.Controllers.Group.Commands;
 using WebSchedule.Controllers.Group.Exceptions;
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Controllers.StudyCourse.Commands;
@@ -18,13 +19,6 @@ namespace WebSchedule.Controllers.StudyCourse.Commands
         public int UserId { get; set; }
 
         public List<SessionCommand> Sessions { get; set; }
-    }
-
-    public class SessionCommand
-    {
-        public int Number { get; set; }
-        public int WeekNumber { get; set; }
-        public bool SpringSemester { get; set; }
     }
 }
 

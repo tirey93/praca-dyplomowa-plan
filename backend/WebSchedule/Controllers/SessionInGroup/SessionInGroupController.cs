@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using WebSchedule.Controllers.Group.Commands;
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Controllers.SessionInGroup.Queries;
 using WebSchedule.Domain;

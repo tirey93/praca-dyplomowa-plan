@@ -5,15 +5,13 @@ import { Router } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SyncService } from '../../../services/sync.service';
 import { Observable, Subject, switchMap, takeUntil } from 'rxjs';
-import { AsyncPipe } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserInGroupService } from '../../../services/userInGroup/userInGroup.service';
-import { GroupDetailsComponent } from './group-details/group-details.component';
 
 @Component({
   selector: 'app-week-schedule',
   imports: [
-    MatButtonModule, MatSidenavModule, AsyncPipe, GroupDetailsComponent,
+    MatButtonModule, MatSidenavModule,
     MatTooltipModule
   ],
   templateUrl: './week-schedule.component.html',

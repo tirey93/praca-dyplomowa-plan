@@ -50,10 +50,13 @@ import { MatTableModule } from '@angular/material/table';
 
 import { ToolbarComponent } from "./toolbar/toolbar.component";
 import { TranslateService } from '@ngx-translate/core';
+import { GroupDetailsComponent } from './main/week-schedule/group-details/group-details.component';
+import { SyncService } from '../services/sync.service';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ToolbarComponent],
+  imports: [RouterOutlet, ToolbarComponent, MatSidenavModule, GroupDetailsComponent, AsyncPipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
@@ -61,7 +64,8 @@ export class AppComponent {
   /**
    *
    */
-  constructor(public translate: TranslateService) {
+  constructor(public translate: TranslateService, public syncService: SyncService) {
+
     translate.use('pl')
   }
 }

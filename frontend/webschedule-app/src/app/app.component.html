@@ -1,8 +1,16 @@
 <main>
   <app-toolbar class="toolbar-spacer"/>
   <div>
-      <router-outlet />
+      <mat-drawer-container class="week-drawer-container">
+        <mat-drawer class="week-drawer" mode="side" position="end" [opened]="syncService.groupSelected$ | async">
+            <app-group-details></app-group-details>
+        </mat-drawer>
+        <router-outlet />
+
+      </mat-drawer-container>
+
   </div>
+
 </main>
 
 

@@ -6,10 +6,6 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { SnackBarService } from '../../../../../../services/snackBarService';
-import { SyncService } from '../../../../../../services/sync.service';
-import { UserRepositoryService } from '../../../../../../services/user/userRepository.service';
-import { UserResponse } from '../../../../../../services/user/dtos/userResponse';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { forkJoin, groupBy, map, Observable, switchMap } from 'rxjs';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
@@ -17,12 +13,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
-import { UserGroupResponse } from '../../../../../../services/userInGroup/dtos/userGroupResponse';
-import { GroupResponse } from '../../../../../../services/group/dtos/groupResponse';
-import { GroupHelper } from '../../../../../../helpers/groupHelper';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { UserInGroupService } from '../../../../../../services/userInGroup/userInGroup.service';
-import { Role } from '../../../../../../helpers/roles';
+import { GroupHelper } from '../../../../helpers/groupHelper';
+import { Role } from '../../../../helpers/roles';
+import { GroupResponse } from '../../../../services/group/dtos/groupResponse';
+import { SnackBarService } from '../../../../services/snackBarService';
+import { SyncService } from '../../../../services/sync.service';
+import { UserResponse } from '../../../../services/user/dtos/userResponse';
+import { UserRepositoryService } from '../../../../services/user/userRepository.service';
+import { UserGroupResponse } from '../../../../services/userInGroup/dtos/userGroupResponse';
+import { UserInGroupService } from '../../../../services/userInGroup/userInGroup.service';
 
 @Component({
   selector: 'app-add-member-dialog',

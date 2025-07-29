@@ -6,11 +6,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { filter, startWith, switchMap } from 'rxjs';
-import { Role } from '../../../../../helpers/roles';
-import { SnackBarService } from '../../../../../services/snackBarService';
-import { SyncService } from '../../../../../services/sync.service';
-import { UserGroupResponse } from '../../../../../services/userInGroup/dtos/userGroupResponse';
-import { UserInGroupService } from '../../../../../services/userInGroup/userInGroup.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { RemoveFromGroupDialogComponent } from './remove-from-group-dialog/remove-from-group-dialog.component';
@@ -19,6 +14,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CandidatesListComponent } from "./candidates-list/candidates-list.component";
 import { AddMemberDialogComponent } from './add-member-dialog/add-member-dialog.component';
+import { Role } from '../../../helpers/roles';
+import { SnackBarService } from '../../../services/snackBarService';
+import { SyncService } from '../../../services/sync.service';
+import { UserGroupResponse } from '../../../services/userInGroup/dtos/userGroupResponse';
+import { UserInGroupService } from '../../../services/userInGroup/userInGroup.service';
 
 @Component({
   selector: 'app-group-members',

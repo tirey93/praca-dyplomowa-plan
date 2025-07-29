@@ -50,9 +50,9 @@ import { MatTableModule } from '@angular/material/table';
 
 import { ToolbarComponent } from "./toolbar/toolbar.component";
 import { TranslateService } from '@ngx-translate/core';
-import { GroupDetailsComponent } from './main/week-schedule/group-details/group-details.component';
 import { SyncService } from '../services/sync.service';
 import { AsyncPipe } from '@angular/common';
+import { GroupDetailsComponent } from './group-details/group-details.component';
 
 @Component({
   selector: 'app-root',

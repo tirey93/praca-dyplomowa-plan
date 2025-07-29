@@ -1,20 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MessageService } from '../../../../../services/signal-r/message.service';
 import { CommonModule } from '@angular/common';
-import { SyncService } from '../../../../../services/sync.service';
 import { filter, lastValueFrom, Subject, takeUntil } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MessageDto } from '../../../../../services/signal-r/dtos/message';
-import { MessageRepositoryService } from '../../../../../services/message/messageRepository.service';
-import { SnackBarService } from '../../../../../services/snackBarService';
-import { UserRepositoryService } from '../../../../../services/user/userRepository.service';
-import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { UserDto } from '../../../../../services/signal-r/dtos/user';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatCardModule } from '@angular/material/card';
+import { MessageRepositoryService } from '../../../services/message/messageRepository.service';
+import { MessageDto } from '../../../services/signal-r/dtos/message';
+import { UserDto } from '../../../services/signal-r/dtos/user';
+import { MessageService } from '../../../services/signal-r/message.service';
+import { SnackBarService } from '../../../services/snackBarService';
+import { SyncService } from '../../../services/sync.service';
+import { UserRepositoryService } from '../../../services/user/userRepository.service';
 
 @Component({
   selector: 'app-chat',

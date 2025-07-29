@@ -10,16 +10,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import { GroupMembersComponent } from "./group-members/group-members.component";
-import { environment } from '../../../../enviroments/enviroments';
-import { GroupHelper } from '../../../../helpers/groupHelper';
-import { SnackBarService } from '../../../../services/snackBarService';
-import { SyncService } from '../../../../services/sync.service';
-import { UserGroupResponse } from '../../../../services/userInGroup/dtos/userGroupResponse';
-import { UserInGroupService } from '../../../../services/userInGroup/userInGroup.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ChatComponent } from "./chat/chat.component";
 import { LeaveGroupDialogComponent } from './leave-group-dialog/leave-group-dialog.component';
 import { RemoveGroupDialogComponent } from './remove-group-dialog/remove-group-dialog.component';
+import { environment } from '../../enviroments/enviroments';
+import { GroupHelper } from '../../helpers/groupHelper';
+import { SnackBarService } from '../../services/snackBarService';
+import { SyncService } from '../../services/sync.service';
+import { UserGroupResponse } from '../../services/userInGroup/dtos/userGroupResponse';
+import { UserInGroupService } from '../../services/userInGroup/userInGroup.service';
+import { SessionsComponent } from "./sessions/sessions.component";
 
 
 @Component({
@@ -27,7 +28,8 @@ import { RemoveGroupDialogComponent } from './remove-group-dialog/remove-group-d
   imports: [
     MatCardModule, MatChipsModule, TranslatePipe, MatTabsModule, MatIconModule, MatMenuModule, MatButtonModule,
     ClipboardModule, GroupMembersComponent, MatTooltipModule,
-    ChatComponent
+    ChatComponent,
+    SessionsComponent
 ],
   templateUrl: './group-details.component.html',
   styleUrl: './group-details.component.scss'

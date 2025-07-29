@@ -1,16 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { UserInGroupService } from '../../../../../../services/userInGroup/userInGroup.service';
-import { SnackBarService } from '../../../../../../services/snackBarService';
-import { UserGroupResponse } from '../../../../../../services/userInGroup/dtos/userGroupResponse';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Role } from '../../../../../../helpers/roles';
-import { SyncService } from '../../../../../../services/sync.service';
+import { Role } from '../../../../helpers/roles';
+import { SnackBarService } from '../../../../services/snackBarService';
+import { SyncService } from '../../../../services/sync.service';
+import { UserGroupResponse } from '../../../../services/userInGroup/dtos/userGroupResponse';
+import { UserInGroupService } from '../../../../services/userInGroup/userInGroup.service';
 
 @Component({
   selector: 'app-candidates-list',

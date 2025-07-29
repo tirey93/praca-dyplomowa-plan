@@ -58,11 +58,11 @@
     <div style="display: flex; justify-content: space-around;">
         <div style="overflow-y: auto; max-height: 80vh;">
             <p>Zima</p>
-            <app-session-editor [springSemester]="false" (onSessionUpdate)="handleFallSessionUpdate($event)"></app-session-editor>
+            <app-session-editor [creation]="true" [springSemester]="false" (onSessionUpdate)="handleFallSessionUpdate($event)"></app-session-editor>
         </div>
         <div style="overflow-y: auto; max-height: 80vh;">
             <p>Lato</p>
-            <app-session-editor [springSemester]="true" (onSessionUpdate)="handleSpringSessionUpdate($event)"></app-session-editor>
+            <app-session-editor [creation]="true" [springSemester]="true" (onSessionUpdate)="handleSpringSessionUpdate($event)"></app-session-editor>
         </div>
     </div>
     <mat-divider style="margin: 20px 0;"></mat-divider>

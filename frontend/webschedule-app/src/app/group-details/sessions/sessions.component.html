@@ -1,10 +1,10 @@
  @if (userGroup?.group?.id) {
         <mat-tab-group style="overflow: auto; max-height: 60vh;">
                 <mat-tab label="Zima">
-                        <app-session-editor [groupId]="userGroup?.group?.id" [springSemester]="false" (onSessionUpdate)="handleFallSessionUpdate($event)"></app-session-editor>
+                        <app-session-editor [springSemester]="false" (onSessionUpdate)="handleFallSessionUpdate($event)"></app-session-editor>
                 </mat-tab>
                 <mat-tab label="Lato">
-                        <app-session-editor [groupId]="userGroup?.group?.id" [springSemester]="true" (onSessionUpdate)="handleSpringSessionUpdate($event)"></app-session-editor>
+                        <app-session-editor [springSemester]="true" (onSessionUpdate)="handleSpringSessionUpdate($event)"></app-session-editor>
                 </mat-tab>
         </mat-tab-group>
  }

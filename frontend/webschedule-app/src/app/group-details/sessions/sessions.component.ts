@@ -21,7 +21,7 @@ export class SessionsComponent {
 
   constructor(
     private groupRepository: GroupRepositoryService,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
   ) {
   }
 

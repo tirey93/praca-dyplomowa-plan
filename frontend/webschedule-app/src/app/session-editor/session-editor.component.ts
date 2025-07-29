@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -8,6 +8,8 @@ import { SessionInGroupResponse } from '../../services/sessionInGroup/dtos/sessi
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
+import { SyncService } from '../../services/sync.service';
+import { filter, Subject, switchMap, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-session-editor',
@@ -17,25 +19,32 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './session-editor.component.html',
   styleUrl: './session-editor.component.scss'
 })
-export class SessionEditorComponent implements OnInit {
+export class SessionEditorComponent implements OnInit, OnDestroy {
   isLoading = true;
   noData = false;
   displayedColumns: string[] = ['period', 'number', 'up_down'];
   sessions?: MatTableDataSource<SessionDto>;
 
   @Input() springSemester = false;
-  @Input() groupId?: number;
+  @Input() creation = false;
   @Output() onSessionUpdate = new EventEmitter<SessionDto[]>();
 
+  private destroy$ = new Subject<void>();
+  
   constructor(
-    private sessionInGroupService: SessionInGroupService
+    private sessionInGroupService: SessionInGroupService,
+    private syncService: SyncService
   ) {
   }
 
   ngOnInit(): void {
-    const subscription = this.groupId 
-      ? this.sessionInGroupService.getByGroup$(this.groupId)
-      : this.sessionInGroupService.getDefaults$();
+    const subscription = this.creation 
+      ? this.sessionInGroupService.getDefaults$()
+      : this.syncService.groupId$.pipe(
+          takeUntil(this.destroy$),
+          filter(groupId => groupId != null),
+          switchMap((groupId) => this.sessionInGroupService.getByGroup$(groupId))
+        );
 
     subscription.subscribe({
       next: (sessionsInGroupResponse) => {
@@ -48,6 +57,11 @@ export class SessionEditorComponent implements OnInit {
         this.sessions.data = this.getDataForSessions(sessionsInGroupResponse.filter(x => x.springSemester === this.springSemester));
       }
     })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private getSaturdayOfWeek(weekNumber: number, year: number = new Date().getFullYear()): Date {

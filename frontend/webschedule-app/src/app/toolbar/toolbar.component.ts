@@ -17,6 +17,8 @@ import { GroupHelper } from '../../helpers/groupHelper';
 import { PreferencesComponent } from '../preferences/preferences.component';
 import { SyncService } from '../../services/sync.service';
 import { UserInGroupService } from '../../services/userInGroup/userInGroup.service';
+import { MatDividerModule } from '@angular/material/divider';
+import { UserRepositoryService } from '../../services/user/userRepository.service';
 
 export interface GroupSelected {
   id: number;
@@ -26,15 +28,18 @@ export interface GroupSelected {
 @Component({
   selector: 'app-toolbar',
   imports: [MatButtonModule, MatToolbarModule, MatIconModule, 
-    MatMenuModule, AsyncPipe, MatCardModule, MatTooltip],
+    MatMenuModule, AsyncPipe, MatCardModule, MatTooltip, MatDividerModule
+  ],
   templateUrl: './toolbar.component.html',
   styleUrl: './toolbar.component.scss'
 })
 export class ToolbarComponent {
   groups$: Observable<GroupSelected[]>;
-  
+  userDisplayName$: Observable<string>;
+
   constructor(
       private readonly userInGroupRepository: UserInGroupService,
+      private readonly userRepository: UserRepositoryService,
       private readonly router: Router,
       private readonly dialog: MatDialog,
       public readonly loginService: LoginService,
@@ -60,6 +65,13 @@ export class ToolbarComponent {
         )
       })
     );
+
+    this.userDisplayName$ =  this.loginService.isLoggedIn$.pipe(
+      filter(isLoggedIn => isLoggedIn),
+      switchMap(() => this.userRepository.getLoggedIn$().pipe(
+        map(userResponse => userResponse.displayName)
+      ))
+    )
   }
   goToPreferences() {
     this.dialog.open(PreferencesComponent, {

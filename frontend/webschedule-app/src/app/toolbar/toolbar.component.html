@@ -37,6 +37,8 @@
       </button>
       <mat-menu #account="matMenu">
         @if (loginService.isLoggedIn$ | async) {
+          <p style="margin: 0 20px;">Witaj {{userDisplayName$ | async}}</p>
+          <mat-divider></mat-divider>
           <button mat-menu-item (click)="goToPreferences()">
             <mat-icon>settings</mat-icon>
             Preferencje

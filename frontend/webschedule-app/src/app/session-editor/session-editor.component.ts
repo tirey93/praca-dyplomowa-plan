@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -17,19 +17,27 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './session-editor.component.html',
   styleUrl: './session-editor.component.scss'
 })
-export class SessionEditorComponent {
+export class SessionEditorComponent implements OnInit {
   isLoading = true;
   noData = false;
   displayedColumns: string[] = ['period', 'number', 'up_down'];
   sessions?: MatTableDataSource<SessionDto>;
 
   @Input() springSemester = false;
+  @Input() groupId?: number;
   @Output() onSessionUpdate = new EventEmitter<SessionDto[]>();
 
   constructor(
     private sessionInGroupService: SessionInGroupService
   ) {
-    sessionInGroupService.getDefaults$().subscribe({
+  }
+
+  ngOnInit(): void {
+    const subscription = this.groupId 
+      ? this.sessionInGroupService.getByGroup$(this.groupId)
+      : this.sessionInGroupService.getDefaults$();
+
+    subscription.subscribe({
       next: (sessionsInGroupResponse) => {
         this.isLoading = false;
         if (sessionsInGroupResponse.length === 0) {

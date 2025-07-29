@@ -19,4 +19,12 @@ import { SessionInGroupResponse } from './dtos/sessionInGroupResponse';
         }
       })
     }
+
+    getByGroup$(id: number) {
+      return this.http.get<SessionInGroupResponse[]>(`${this.url}/Group/${id}`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
   }

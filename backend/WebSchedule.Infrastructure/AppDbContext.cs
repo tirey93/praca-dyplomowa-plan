@@ -13,6 +13,7 @@ namespace WebSchedule.Infrastructure
         public DbSet<StudyCourse> StudyCourses { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Session> Sessions { get; set; }
+        public DbSet<Activity> Activities { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {

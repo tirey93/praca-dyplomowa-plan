@@ -12,7 +12,7 @@ namespace WebSchedule.Domain.Entities.Study
 
         public bool SpringSemester { get; private set; }
 
-        //public ICollection<Activity> Activities { get; set; } = [];
+        public ICollection<Activity> Activities { get; set; } = [];
 
         public Session() { }
 

@@ -1,4 +1,4 @@
-﻿namespace WebSchedule.Controllers.SessionInGroup.Exceptions
+﻿namespace WebSchedule.Controllers.Session.Exceptions
 {
     public class SessionInGroupNotFoundException : ApplicationException
     {

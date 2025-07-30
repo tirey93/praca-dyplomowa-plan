@@ -3,24 +3,24 @@ using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Infrastructure.Repositories
 {
-    public class SessionInGroupRepository : Repository<SessionInGroup>, ISessionInGroupRepository
+    public class SessionRepository : Repository<Session>, ISessionRepository
     {
-        public SessionInGroupRepository(AppDbContext appDbContext)
-            : base(appDbContext, appDbContext.SessionInGroups)
+        public SessionRepository(AppDbContext appDbContext)
+            : base(appDbContext, appDbContext.Sessions)
         {
         }
 
-        public IEnumerable<SessionInGroup> GetDefaults()
+        public IEnumerable<Session> GetDefaults()
         {
             return _dbSet.Where(x => x.GroupId == null);
         }
 
-        public IEnumerable<SessionInGroup> GetByGroup(int id)
+        public IEnumerable<Session> GetByGroup(int id)
         {
             return _dbSet.Where(x => x.GroupId == id);
         }
 
-        public SessionInGroup Get(int groupId, int number, bool springSemester)
+        public Session Get(int groupId, int number, bool springSemester)
         {
             return _dbSet.FirstOrDefault(x => x.GroupId == groupId && x.Number == number && x.SpringSemester == springSemester);
         }

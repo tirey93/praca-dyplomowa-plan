@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using WebSchedule.Controllers.Group.Commands;
-using WebSchedule.Controllers.SessionInGroup.Exceptions;
+using WebSchedule.Controllers.Session.Exceptions;
 using WebSchedule.Domain.Repositories;
 
-namespace WebSchedule.Controllers.SessionInGroup.Commands
+namespace WebSchedule.Controllers.Session.Commands
 {
     public class UpdateSessionsInGroupCommand : IRequest
     {
@@ -13,20 +13,20 @@ namespace WebSchedule.Controllers.SessionInGroup.Commands
 
     public class UpdateSessionsInGroupCommandHandler : IRequestHandler<UpdateSessionsInGroupCommand>
     {
-        private readonly ISessionInGroupRepository _sessionInGroupRepository;
+        private readonly ISessionRepository _sessionRepository;
 
-        public UpdateSessionsInGroupCommandHandler(ISessionInGroupRepository sessionInGroupRepository)
+        public UpdateSessionsInGroupCommandHandler(ISessionRepository sessionRepository)
         {
-            _sessionInGroupRepository = sessionInGroupRepository;
+            _sessionRepository = sessionRepository;
         }
 
         public async Task Handle(UpdateSessionsInGroupCommand request, CancellationToken cancellationToken)
         {
-            var session = _sessionInGroupRepository.Get(request.GroupId, request.Session.Number, request.Session.SpringSemester)
+            var session = _sessionRepository.Get(request.GroupId, request.Session.Number, request.Session.SpringSemester)
                 ?? throw new SessionInGroupNotFoundException();
 
             session.UpdateWeek(request.Session.WeekNumber);
-            await _sessionInGroupRepository.SaveChangesAsync();
+            await _sessionRepository.SaveChangesAsync();
         }
     }
 }

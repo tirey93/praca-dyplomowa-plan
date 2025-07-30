@@ -14,18 +14,18 @@ namespace WebSchedule.Controllers.Message.Queries
     {
         private readonly IMessageRepostory _messageRepostory;
         private readonly IGroupRepository _groupRepository;
-        private readonly ISessionInGroupRepository _sessionInGroupRepository;
+        private readonly ISessionRepository _sessionRepository;
 
-        public GetByGroupQueryHandler(IMessageRepostory messageRepostory, IGroupRepository groupRepository, ISessionInGroupRepository sessionInGroupRepository)
+        public GetByGroupQueryHandler(IMessageRepostory messageRepostory, IGroupRepository groupRepository, ISessionRepository sessionRepository)
         {
             _messageRepostory = messageRepostory;
             _groupRepository = groupRepository;
-            _sessionInGroupRepository = sessionInGroupRepository;
+            _sessionRepository = sessionRepository;
         }
 
         public Task<IEnumerable<MessageDto>> Handle(GetByGroupQuery request, CancellationToken cancellationToken)
         {
-            var res = _sessionInGroupRepository.GetDefaults().ToList();
+            var res = _sessionRepository.GetDefaults().ToList();
             if (!_groupRepository.GroupExists(request.GroupId))
             {
                 throw new GroupNotFoundException(request.GroupId);

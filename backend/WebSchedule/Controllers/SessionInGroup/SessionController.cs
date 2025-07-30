@@ -1,19 +1,19 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebSchedule.Controllers.Responses;
-using WebSchedule.Controllers.SessionInGroup.Commands;
-using WebSchedule.Controllers.SessionInGroup.Queries;
+using WebSchedule.Controllers.Session.Commands;
+using WebSchedule.Controllers.Session.Queries;
 using WebSchedule.Domain;
 
-namespace WebSchedule.Controllers.SessionInGroup
+namespace WebSchedule.Controllers.Session
 {
     [ApiController]
     [Route("[controller]")]
-    public class SessionInGroupController : ControllerBase
+    public class SessionController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public SessionInGroupController(IMediator mediator)
+        public SessionController(IMediator mediator)
         {
             _mediator = mediator;
         }

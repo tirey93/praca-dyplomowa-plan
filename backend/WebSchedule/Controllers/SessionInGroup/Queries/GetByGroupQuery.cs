@@ -2,7 +2,7 @@
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Domain.Repositories;
 
-namespace WebSchedule.Controllers.SessionInGroup.Queries
+namespace WebSchedule.Controllers.Session.Queries
 {
     public class GetByGroupQuery : IRequest<IEnumerable<SessionInGroupResponse>>
     {
@@ -11,16 +11,16 @@ namespace WebSchedule.Controllers.SessionInGroup.Queries
 
     public class GetByGroupQueryHandler : IRequestHandler<GetByGroupQuery, IEnumerable<SessionInGroupResponse>>
     {
-        private readonly ISessionInGroupRepository _sessionInGroupRepository;
+        private readonly ISessionRepository _sessionRepository;
 
-        public GetByGroupQueryHandler(ISessionInGroupRepository sessionInGroupRepository)
+        public GetByGroupQueryHandler(ISessionRepository sessionRepository)
         {
-            _sessionInGroupRepository = sessionInGroupRepository;
+            _sessionRepository = sessionRepository;
         }
 
         public Task<IEnumerable<SessionInGroupResponse>> Handle(GetByGroupQuery request, CancellationToken cancellationToken)
         {
-            var sessions = _sessionInGroupRepository.GetByGroup(request.GroupId).OrderBy(x => x.SpringSemester).ThenBy(x => x.Number);
+            var sessions = _sessionRepository.GetByGroup(request.GroupId).OrderBy(x => x.SpringSemester).ThenBy(x => x.Number);
             return Task.FromResult(sessions.Select(session => new SessionInGroupResponse
             {
                 GroupId = session.GroupId,

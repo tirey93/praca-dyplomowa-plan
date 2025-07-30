@@ -14,11 +14,11 @@ namespace WebSchedule.Controllers.StudyCourse.Commands
 public class DeleteGroupCommandHandler : IRequestHandler<DeleteGroupCommand>
 {
     private readonly IGroupRepository _groupRepository;
-    private readonly ISessionInGroupRepository _sessionInGroupRepository;
-    public DeleteGroupCommandHandler(IGroupRepository groupRepository, ISessionInGroupRepository sessionInGroupRepository)
+    private readonly ISessionRepository _sessionRepository;
+    public DeleteGroupCommandHandler(IGroupRepository groupRepository, ISessionRepository sessionRepository)
     {
         _groupRepository = groupRepository;
-        _sessionInGroupRepository = sessionInGroupRepository;
+        _sessionRepository = sessionRepository;
     }
 
     public async Task Handle(DeleteGroupCommand request, CancellationToken cancellationToken)
@@ -26,12 +26,12 @@ public class DeleteGroupCommandHandler : IRequestHandler<DeleteGroupCommand>
         var group = _groupRepository.Get(request.GroupId)
             ?? throw new GroupNotFoundException(request.GroupId);
         group.RemoveAllMembers();
-        foreach (var session in _sessionInGroupRepository.GetByGroup(request.GroupId))
+        foreach (var session in _sessionRepository.GetByGroup(request.GroupId))
         {
-            _sessionInGroupRepository.Remove(session);
+            _sessionRepository.Remove(session);
         }
 
-        await _sessionInGroupRepository.SaveChangesAsync();
+        await _sessionRepository.SaveChangesAsync();
         _groupRepository.Remove(group);
         await _groupRepository.SaveChangesAsync();
     }

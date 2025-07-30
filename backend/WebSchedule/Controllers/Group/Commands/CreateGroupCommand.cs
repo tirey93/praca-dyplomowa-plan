@@ -28,15 +28,15 @@ public class CreateGroupCommandHandler : IRequestHandler<CreateGroupCommand, Gro
     private readonly IGroupRepository _groupRepository;
     private readonly IStudyCourseRepository _studyCourseRepository;
     private readonly IUserRepository _userRepository;
-    private readonly ISessionInGroupRepository _sessionInGroupRepository;
+    private readonly ISessionRepository _sessionRepository;
 
     public CreateGroupCommandHandler(IGroupRepository groupRepository, 
-        IStudyCourseRepository studyCourseRepository, IUserRepository userRepository, ISessionInGroupRepository sessionInGroupRepository)
+        IStudyCourseRepository studyCourseRepository, IUserRepository userRepository, ISessionRepository sessionRepository)
     {
         _groupRepository = groupRepository;
         _studyCourseRepository = studyCourseRepository;
         _userRepository = userRepository;
-        _sessionInGroupRepository = sessionInGroupRepository;
+        _sessionRepository = sessionRepository;
     }
 
     public async Task<GroupResponse> Handle(CreateGroupCommand request, CancellationToken cancellationToken)
@@ -63,13 +63,13 @@ public class CreateGroupCommandHandler : IRequestHandler<CreateGroupCommand, Gro
             user,
             int.Parse(request.Subgroup));
 
-        var defaults = _sessionInGroupRepository.GetDefaults();
+        var defaults = _sessionRepository.GetDefaults();
         foreach (var defaultSession in defaults)
         {
             var modification = request.Sessions.FirstOrDefault(x => x.SpringSemester == defaultSession.SpringSemester && x.Number == defaultSession.Number);
             var session = modification != null
-                ? new SessionInGroup(group, modification.Number, modification.WeekNumber, modification.SpringSemester)
-                : new SessionInGroup(group, defaultSession.Number, defaultSession.WeekNumber, defaultSession.SpringSemester);
+                ? new Session(group, modification.Number, modification.WeekNumber, modification.SpringSemester)
+                : new Session(group, defaultSession.Number, defaultSession.WeekNumber, defaultSession.SpringSemester);
 
             group.AddSession(session);
         }

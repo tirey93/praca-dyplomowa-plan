@@ -2,7 +2,7 @@
 
 namespace WebSchedule.Domain.Entities.Study
 {
-    public class SessionInGroup : Entity
+    public class Session : Entity
     {
         public Group Group { get; private set; }
         public int? GroupId { get; private set; }
@@ -14,9 +14,9 @@ namespace WebSchedule.Domain.Entities.Study
 
         //public ICollection<Activity> Activities { get; set; } = [];
 
-        public SessionInGroup() { }
+        public Session() { }
 
-        public SessionInGroup(Group group, int number, int weekNumber, bool springSemester)
+        public Session(Group group, int number, int weekNumber, bool springSemester)
         {
             Group = group;
             GroupId = group.Id;

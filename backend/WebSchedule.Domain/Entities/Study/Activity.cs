@@ -7,12 +7,12 @@ namespace WebSchedule.Domain.Entities.Study
         public string TeacherFullName { get; private set; }
         public int StartingHour { get; private set; }
         public int Duration { get; private set; }
-        public SessionInGroup Session { get; private set; }
+        public Session Session { get; private set; }
         public int SessionId { get; private set; }
 
         public Activity() { }
 
-        public Activity(SessionInGroup session, string name, string teacherFullName, int startingHour, int duration)
+        public Activity(Session session, string name, string teacherFullName, int startingHour, int duration)
         {
             Session = session;
             SessionId = Session.Id;

@@ -19,5 +19,10 @@ namespace WebSchedule.Infrastructure.Repositories
         {
             return _dbSet.Where(x => x.GroupId == id);
         }
+
+        public SessionInGroup Get(int groupId, int number, bool springSemester)
+        {
+            return _dbSet.FirstOrDefault(x => x.GroupId == groupId && x.Number == number && x.SpringSemester == springSemester);
+        }
     }
 }

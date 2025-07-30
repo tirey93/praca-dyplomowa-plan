@@ -27,7 +27,7 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
 
   @Input() springSemester = false;
   @Input() creation = false;
-  @Output() onSessionUpdate = new EventEmitter<SessionDto[]>();
+  @Output() onSessionUpdate = new EventEmitter<SessionDto>();
 
   private destroy$ = new Subject<void>();
   
@@ -64,23 +64,6 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private getSaturdayOfWeek(weekNumber: number, year: number = new Date().getFullYear()): Date {
-      const januaryFirst = new Date(year, 0, 1);
-      const dayOfWeek = januaryFirst.getDay();
-      const firstMonday = new Date(januaryFirst);
-      if (dayOfWeek <= 4) {
-          firstMonday.setDate(januaryFirst.getDate() - dayOfWeek + 1);
-      } else {
-          firstMonday.setDate(januaryFirst.getDate() + 8 - dayOfWeek);
-      }
-      const saturday = new Date(firstMonday);
-      saturday.setDate(firstMonday.getDate() + (weekNumber - 1) * 7 + 5);
-      if (saturday < new Date()) {
-        return this.getSaturdayOfWeek(weekNumber, year + 1);
-      }
-      return saturday;
-  }
-
   canBeMoveDown(sessionDto: SessionDto): boolean {
     if (sessionDto.index === this.sessions!.data.length - 1) {
       return false;
@@ -110,7 +93,7 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
       }
       return x;
     });
-    this.onSessionUpdate.emit(this.sessions!.data);
+    this.onSessionUpdate.emit({...sessionDto, weekNumber: this.getWeekNumber(sessionDto.weekNumber + 1)});
   }
   handleMoveUp(sessionDto: SessionDto) {
     const next = this.sessions!.data[sessionDto.index - 1];
@@ -123,9 +106,34 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
       }
       return x;
     });
-    this.onSessionUpdate.emit(this.sessions!.data);
+    this.onSessionUpdate.emit({...sessionDto, weekNumber: this.getWeekNumber(sessionDto.weekNumber - 1)});
   }
-  
+
+  private getWeekNumber(weekNumber: number): number {
+    if (weekNumber > 52){
+      return 1;
+    } else if (weekNumber < 1) {
+      return 52;
+    } else {
+      return weekNumber;
+    }
+  }
+  private getSaturdayOfWeek(weekNumber: number, year: number = new Date().getFullYear()): Date {
+      const januaryFirst = new Date(year, 0, 1);
+      const dayOfWeek = januaryFirst.getDay();
+      const firstMonday = new Date(januaryFirst);
+      if (dayOfWeek <= 4) {
+          firstMonday.setDate(januaryFirst.getDate() - dayOfWeek + 1);
+      } else {
+          firstMonday.setDate(januaryFirst.getDate() + 8 - dayOfWeek);
+      }
+      const saturday = new Date(firstMonday);
+      saturday.setDate(firstMonday.getDate() + (weekNumber - 1) * 7 + 5);
+      if (saturday < new Date()) {
+        return this.getSaturdayOfWeek(weekNumber, year + 1);
+      }
+      return saturday;
+  }
   private getPeriod(date: Date): string {
     const saturday = date.getDate().toString().padStart(2, '0');
     const sundayFull = new Date(date.getTime() + (1000 * 60 * 60 * 24));
@@ -164,11 +172,8 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
         })
       }
 
-      if (currentWeek === 52){
-        currentWeek = 1
-      } else {
-        currentWeek++;
-      }
+      const nextCurrentWeek = this.getWeekNumber(currentWeek + 1);
+      currentWeek = nextCurrentWeek;
     }
 
     result.push({

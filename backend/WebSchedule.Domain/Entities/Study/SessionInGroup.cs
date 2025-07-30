@@ -7,10 +7,10 @@ namespace WebSchedule.Domain.Entities.Study
         public Group Group { get; private set; }
         public int? GroupId { get; private set; }
 
-        public int Number { get; set; }
-        public int WeekNumber { get; set; }
+        public int Number { get; private set; }
+        public int WeekNumber { get; private set; }
 
-        public bool SpringSemester { get; set; }
+        public bool SpringSemester { get; private set; }
 
         public SessionInGroup() { }
 
@@ -21,6 +21,11 @@ namespace WebSchedule.Domain.Entities.Study
             Number = number;
             WeekNumber = weekNumber;
             SpringSemester = springSemester;
+        }
+
+        public void UpdateWeek(int newWeekNumber)
+        {
+            WeekNumber = newWeekNumber;
         }
     }
 }

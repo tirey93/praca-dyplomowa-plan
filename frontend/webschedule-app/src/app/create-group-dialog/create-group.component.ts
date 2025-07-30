@@ -137,11 +137,11 @@ export class CreateGroupComponent {
     return value && value.displayText ? value.displayText : '';
   }
 
-  handleFallSessionUpdate(sessions: SessionDto[]) {
-    this.fallSessions = [...sessions];
+  handleFallSessionUpdate(sessions: SessionDto) {
+    // this.fallSessions = [...sessions];
   }
-  handleSpringSessionUpdate(sessions: SessionDto[]) {
-    this.springSessions = [...sessions];
+  handleSpringSessionUpdate(sessions: SessionDto) {
+    // this.springSessions = [...sessions];
   }
   submit() {
     const springSessions: SessionRequest[] = this.springSessions

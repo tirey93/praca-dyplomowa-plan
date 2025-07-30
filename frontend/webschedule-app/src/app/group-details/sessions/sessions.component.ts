@@ -4,8 +4,8 @@ import { UserGroupResponse } from '../../../services/userInGroup/dtos/userGroupR
 import { MatTabsModule } from '@angular/material/tabs';
 import { SessionDto } from '../../dtos/sessionDto';
 import { SessionRequest } from '../../../services/group/dtos/sessionRequest';
-import { GroupRepositoryService } from '../../../services/group/groupRepository.service';
 import { SnackBarService } from '../../../services/snackBarService';
+import { SessionInGroupService } from '../../../services/sessionInGroup/sessionInGroup.service';
 
 @Component({
   selector: 'app-sessions',
@@ -20,20 +20,19 @@ export class SessionsComponent {
 
 
   constructor(
-    private groupRepository: GroupRepositoryService,
+    private sessionInGroupRepository: SessionInGroupService,
     private snackBarService: SnackBarService,
   ) {
   }
 
-  handleFallSessionUpdate(sessions: SessionDto[]) {
-    const fallSessions: SessionRequest[] = sessions
-      .filter(x => x.number != null)
-      .map(x => ({...x, springSemester: false }) as SessionRequest)
-
-    this.groupRepository.updateSessions$({
+  handleFallSessionUpdate(session: SessionDto) {
+    this.sessionInGroupRepository.updateSession$({
       groupId: this.userGroup?.group.id!,
-      springSemester: false,
-      sessions: fallSessions
+      session: {
+        number: session.number!,
+        weekNumber: session.weekNumber,
+        springSemester: false
+      }
     }).subscribe({
       error: (err) => {
         this.snackBarService.openError(err);
@@ -41,15 +40,15 @@ export class SessionsComponent {
     })
   }
 
-  handleSpringSessionUpdate(sessions: SessionDto[]) {
-    const springSessions: SessionRequest[] = sessions
-      .filter(x => x.number != null)
-      .map(x => ({...x, springSemester: true }) as SessionRequest)
-
-    this.groupRepository.updateSessions$({
+  handleSpringSessionUpdate(session: SessionDto) {
+    console.log(session);
+    this.sessionInGroupRepository.updateSession$({
       groupId: this.userGroup?.group.id!,
-      springSemester: true,
-      sessions: springSessions
+      session: {
+        number: session.number!,
+        weekNumber: session.weekNumber,
+        springSemester: true
+      }
     }).subscribe({
       error: (err) => {
         this.snackBarService.openError(err);

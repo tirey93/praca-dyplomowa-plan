@@ -36,5 +36,6 @@
   "LinkCopied": "Link do grupy został skopiowany.",
 
   "ExceptionContentCannotBeEmpty": "Wiadomość nie może być pusta.",
-  "ExceptionContentCannotBeThatLarge": "Wiadomość nie może być dłuższa niż {{0}} znaków."
+  "ExceptionContentCannotBeThatLarge": "Wiadomość nie może być dłuższa niż {{0}} znaków.",
+  "ExceptionSessionInGroupNotFound": "Zjazd nie został odnaleziony."
 }

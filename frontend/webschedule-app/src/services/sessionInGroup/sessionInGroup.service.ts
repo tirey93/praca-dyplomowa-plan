@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../../enviroments/enviroments';
 import { SessionInGroupResponse } from './dtos/sessionInGroupResponse';
+import { UpdateSessionsRequest } from './dtos/updateSessionsRequest';
 
 @Injectable({
     providedIn: 'root'
@@ -22,6 +23,14 @@ import { SessionInGroupResponse } from './dtos/sessionInGroupResponse';
 
     getByGroup$(id: number) {
       return this.http.get<SessionInGroupResponse[]>(`${this.url}/Group/${id}`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
+    updateSession$(request: UpdateSessionsRequest) {
+      return this.http.put(`${this.url}/Session`, request, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

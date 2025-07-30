@@ -5,7 +5,6 @@ import { environment } from '../../enviroments/enviroments';
 import { GroupRequest } from './dtos/groupRequest';
 import { GroupResponse } from './dtos/groupResponse';
 import { GroupInfoResponse } from './dtos/groupInfoResponse';
-import { UpdateSessionsRequest } from '../sessionInGroup/dtos/updateSessionsRequest';
 
 @Injectable({
     providedIn: 'root'

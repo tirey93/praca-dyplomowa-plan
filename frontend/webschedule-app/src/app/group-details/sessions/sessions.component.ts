@@ -5,7 +5,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { SessionDto } from '../../dtos/sessionDto';
 import { SessionRequest } from '../../../services/group/dtos/sessionRequest';
 import { SnackBarService } from '../../../services/snackBarService';
-import { SessionInGroupService } from '../../../services/sessionInGroup/sessionInGroup.service';
+import { SessionService } from '../../../services/session/session.service';
 
 @Component({
   selector: 'app-sessions',
@@ -20,13 +20,13 @@ export class SessionsComponent {
 
 
   constructor(
-    private sessionInGroupRepository: SessionInGroupService,
+    private sessionRepository: SessionService,
     private snackBarService: SnackBarService,
   ) {
   }
 
   handleFallSessionUpdate(session: SessionDto) {
-    this.sessionInGroupRepository.updateSession$({
+    this.sessionRepository.updateSession$({
       groupId: this.userGroup?.group.id!,
       session: {
         number: session.number!,
@@ -41,7 +41,7 @@ export class SessionsComponent {
   }
 
   handleSpringSessionUpdate(session: SessionDto) {
-    this.sessionInGroupRepository.updateSession$({
+    this.sessionRepository.updateSession$({
       groupId: this.userGroup?.group.id!,
       session: {
         number: session.number!,

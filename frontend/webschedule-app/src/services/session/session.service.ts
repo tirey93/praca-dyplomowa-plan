@@ -8,8 +8,8 @@ import { UpdateSessionsRequest } from './dtos/updateSessionsRequest';
 @Injectable({
     providedIn: 'root'
   })
-  export class SessionInGroupService {
-    protected url = `${environment.host}:${environment.port}/SessionInGroup`
+  export class SessionService {
+    protected url = `${environment.host}:${environment.port}/Session`
 
     constructor(private http: HttpClient, private cookieService: CookieService) { }
 

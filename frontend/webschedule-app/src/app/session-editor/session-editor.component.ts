@@ -3,13 +3,13 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { SessionDto } from '../dtos/sessionDto';
-import { SessionInGroupService } from '../../services/sessionInGroup/sessionInGroup.service';
-import { SessionInGroupResponse } from '../../services/sessionInGroup/dtos/sessionInGroupResponse';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { SyncService } from '../../services/sync.service';
 import { filter, Subject, switchMap, takeUntil } from 'rxjs';
+import { SessionInGroupResponse } from '../../services/session/dtos/sessionInGroupResponse';
+import { SessionService } from '../../services/session/session.service';
 
 @Component({
   selector: 'app-session-editor',
@@ -32,18 +32,18 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   
   constructor(
-    private sessionInGroupService: SessionInGroupService,
+    private sessionService: SessionService,
     private syncService: SyncService
   ) {
   }
 
   ngOnInit(): void {
     const subscription = this.creation 
-      ? this.sessionInGroupService.getDefaults$()
+      ? this.sessionService.getDefaults$()
       : this.syncService.groupId$.pipe(
           takeUntil(this.destroy$),
           filter(groupId => groupId != null),
-          switchMap((groupId) => this.sessionInGroupService.getByGroup$(groupId))
+          switchMap((groupId) => this.sessionService.getByGroup$(groupId))
         );
 
     subscription.subscribe({

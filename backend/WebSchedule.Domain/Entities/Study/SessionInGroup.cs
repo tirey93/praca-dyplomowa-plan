@@ -12,6 +12,8 @@ namespace WebSchedule.Domain.Entities.Study
 
         public bool SpringSemester { get; private set; }
 
+        //public ICollection<Activity> Activities { get; set; } = [];
+
         public SessionInGroup() { }
 
         public SessionInGroup(Group group, int number, int weekNumber, bool springSemester)

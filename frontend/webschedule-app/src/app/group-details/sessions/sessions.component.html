@@ -1,5 +1,5 @@
  @if (userGroup?.group?.id) {
-        <mat-tab-group style="overflow: auto; max-height: 60vh;">
+        <mat-tab-group style="overflow: auto; max-height: 55vh;">
                 <mat-tab label="Zima">
                         <app-session-editor [springSemester]="false" (onSessionUpdate)="handleFallSessionUpdate($event)"></app-session-editor>
                 </mat-tab>

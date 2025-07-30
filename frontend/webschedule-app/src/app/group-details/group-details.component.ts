@@ -21,6 +21,7 @@ import { SyncService } from '../../services/sync.service';
 import { UserGroupResponse } from '../../services/userInGroup/dtos/userGroupResponse';
 import { UserInGroupService } from '../../services/userInGroup/userInGroup.service';
 import { SessionsComponent } from "./sessions/sessions.component";
+import { ActivitiesComponent } from './activities/activities.component';
 
 
 @Component({
@@ -28,8 +29,7 @@ import { SessionsComponent } from "./sessions/sessions.component";
   imports: [
     MatCardModule, MatChipsModule, TranslatePipe, MatTabsModule, MatIconModule, MatMenuModule, MatButtonModule,
     ClipboardModule, GroupMembersComponent, MatTooltipModule,
-    ChatComponent,
-    SessionsComponent
+    ChatComponent, SessionsComponent, ActivitiesComponent
 ],
   templateUrl: './group-details.component.html',
   styleUrl: './group-details.component.scss'

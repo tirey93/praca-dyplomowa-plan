@@ -36,7 +36,8 @@
         <mat-tab label="Czat">
             <app-chat></app-chat>
         </mat-tab>
-        <mat-tab label="Wydarzenia">
+        <mat-tab label="Zajęcia">
+            <app-activities [userGroup]="userGroup"></app-activities>
         </mat-tab>
         <mat-tab label="Członkowie">
             <app-group-members [userGroup]="userGroup"></app-group-members>

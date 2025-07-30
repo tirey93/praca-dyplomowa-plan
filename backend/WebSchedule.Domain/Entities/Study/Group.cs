@@ -11,7 +11,7 @@ namespace WebSchedule.Domain.Entities.Study
         public StudyCourse StudyCourse { get; private set; }
         public int Subgroup { get; private set; }
 
-        public ICollection<SessionInGroup> SessionsInGroup { get; set; }
+        public ICollection<SessionInGroup> SessionsInGroup { get; set; } = [];
         public ICollection<UserInGroup> MembersInGroup { get; private set; }
 
         [NotMapped]
@@ -40,16 +40,9 @@ namespace WebSchedule.Domain.Entities.Study
             MakeAdmin(admin);
         }
 
-        public void AddSessions(IEnumerable<SessionInGroup> sessionInGroups)
+        public void AddSession(SessionInGroup sessionInGroup)
         {
-            if (SessionsInGroup == null)
-            {
-                SessionsInGroup = [];
-            }
-            foreach (var session in sessionInGroups) 
-            {
-                SessionsInGroup.Add(session);
-            }
+            SessionsInGroup.Add(sessionInGroup);
         }
 
         public void RemoveSessions(bool springSemester)

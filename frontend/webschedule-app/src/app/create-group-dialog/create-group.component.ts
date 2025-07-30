@@ -43,8 +43,7 @@ export class CreateGroupComponent {
   allCourses: SelectValue[] = [];
   nextSubgroup$: Observable<string>;
 
-  fallSessions: SessionDto[] = []
-  springSessions: SessionDto[] = []
+  sessionsRequest: SessionRequest[] = []
   
   groupForm = new FormGroup({
     year: new FormControl(this.getCurrentYear(), { validators: [Validators.min(this.getLowestYear()), Validators.max(this.getHighestYear())] }),
@@ -137,27 +136,31 @@ export class CreateGroupComponent {
     return value && value.displayText ? value.displayText : '';
   }
 
-  handleFallSessionUpdate(sessions: SessionDto) {
-    // this.fallSessions = [...sessions];
+  handleFallSessionUpdate(session: SessionDto) {
+    this.sessionsRequest = this.sessionsRequest.filter(x => x.number !== session.number || x.springSemester)
+    this.sessionsRequest.push({
+      number: session.number!,
+      weekNumber: session.weekNumber,
+      springSemester: false
+    })
+
   }
-  handleSpringSessionUpdate(sessions: SessionDto) {
-    // this.springSessions = [...sessions];
+  handleSpringSessionUpdate(session: SessionDto) {
+    this.sessionsRequest = [...this.sessionsRequest.filter(x => x.number !== session.number || !x.springSemester)]
+    this.sessionsRequest.push({
+      number: session.number!,
+      weekNumber: session.weekNumber,
+      springSemester: true
+    })
   }
+
   submit() {
-    const springSessions: SessionRequest[] = this.springSessions
-      .filter(x => x.number != null)
-      .map(x => ({...x, springSemester: true }) as SessionRequest)
-    const fallSessions: SessionRequest[] = this.fallSessions
-      .filter(x => x.number != null)
-      .map(x => ({...x, springSemester: false }) as SessionRequest)
-      
-    const sessions = springSessions.concat(fallSessions);
     this.groupService.create$({ 
       year: this.groupForm.controls.year.value!, 
       subgroup: this.groupForm.controls.subgroup.value!,
       level: this.groupForm.controls.level.value!,
       courseId: this.groupForm.controls.course.value!.id,
-      sessions: sessions
+      sessions: this.sessionsRequest
     }).subscribe({
       next: () => {
         this.router.navigateByUrl("");

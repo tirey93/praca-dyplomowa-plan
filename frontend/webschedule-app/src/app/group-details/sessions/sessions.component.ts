@@ -41,7 +41,6 @@ export class SessionsComponent {
   }
 
   handleSpringSessionUpdate(session: SessionDto) {
-    console.log(session);
     this.sessionInGroupRepository.updateSession$({
       groupId: this.userGroup?.group.id!,
       session: {

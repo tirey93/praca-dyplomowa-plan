@@ -25,6 +25,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { SessionEditorComponent } from "../session-editor/session-editor.component";
 import { SessionDto } from '../dtos/sessionDto';
 import { SessionRequest } from '../../services/group/dtos/sessionRequest';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'app-create-group',
@@ -32,7 +33,7 @@ import { SessionRequest } from '../../services/group/dtos/sessionRequest';
     MatFormFieldModule, MatLabel, MatInputModule,
     MatButtonModule, ReactiveFormsModule, CommonModule, MatIconModule, MatSelectModule, MatOptionModule,
     TranslatePipe, MatAutocompleteModule, MatTooltipModule, MatDividerModule,
-    SessionEditorComponent
+    SessionEditorComponent, MatSlideToggleModule
 ],
   templateUrl: './create-group.component.html',
   styleUrl: './create-group.component.scss'
@@ -49,7 +50,8 @@ export class CreateGroupComponent {
     year: new FormControl(this.getCurrentYear(), { validators: [Validators.min(this.getLowestYear()), Validators.max(this.getHighestYear())] }),
     subgroup: new FormControl({value: "01", disabled: true}),
     level: new FormControl(),
-    course: new FormControl<SelectValue | null>(null)
+    course: new FormControl<SelectValue | null>(null),
+    springSemester: new FormControl(false)
   });
 
   constructor(
@@ -160,7 +162,8 @@ export class CreateGroupComponent {
       subgroup: this.groupForm.controls.subgroup.value!,
       level: this.groupForm.controls.level.value!,
       courseId: this.groupForm.controls.course.value!.id,
-      sessions: this.sessionsRequest
+      sessions: this.sessionsRequest,
+      springSemester: this.groupForm.controls.springSemester.value!
     }).subscribe({
       next: () => {
         this.router.navigateByUrl("");

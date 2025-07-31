@@ -4,6 +4,7 @@ export interface GroupRequest {
     year: number,
     courseId: number,
     level: string,
-    subgroup: string
+    subgroup: string,
+    springSemester: boolean,
     sessions: SessionRequest[];
 }

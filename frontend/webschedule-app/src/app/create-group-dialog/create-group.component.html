@@ -48,6 +48,7 @@
                 <mat-label>Podgrupa</mat-label>
                 <input [value]="nextSubgroup$ | async" matInput formControlName="subgroup">
             </mat-form-field>
+            <mat-slide-toggle  style="margin-top: 10px;" formControlName="springSemester">Semestr {{groupForm.controls.springSemester.value ? "letni": "zimowy"}}</mat-slide-toggle>
         </div>
     </form>
     <mat-divider></mat-divider>
@@ -55,15 +56,14 @@
     <p class="dialog-description">
         Ustawiaj weekendy zjazdowe zgodnie z rzeczywistością. <br> Nie jesteś pewny? Zawsze możesz się tym zająć później, w ustawieniach grupy.
     </p>
-    <div style="display: flex; justify-content: space-around;">
-        <div style="overflow-y: auto; max-height: 80vh;">
-            <p>Zima</p>
-            <app-session-editor [creation]="true" [springSemester]="false" (onSessionUpdate)="handleFallSessionUpdate($event)"></app-session-editor>
-        </div>
-        <div style="overflow-y: auto; max-height: 80vh;">
+    <div style="overflow-y: auto; max-height: 80vh;">
+        @if (groupForm.controls.springSemester.value) {
             <p>Lato</p>
             <app-session-editor [creation]="true" [springSemester]="true" (onSessionUpdate)="handleSpringSessionUpdate($event)"></app-session-editor>
-        </div>
+        } @else {
+            <p>Zima</p>
+            <app-session-editor [creation]="true" [springSemester]="false" (onSessionUpdate)="handleFallSessionUpdate($event)"></app-session-editor>
+        }
     </div>
     <mat-divider style="margin: 20px 0;"></mat-divider>
     <div style="display: flex; justify-content: end;">

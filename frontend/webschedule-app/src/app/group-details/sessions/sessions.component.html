@@ -12,20 +12,23 @@
         }
 
         <mat-tab-group style="overflow: auto; max-height: calc(90vh - 330px);">
-                <mat-tab label="Zima">
-                        <app-session-editor 
-                                [isAdmin]="userGroup?.isAdmin!" 
-                                [springSemester]="false" 
-                                (onSessionUpdate)="handleFallSessionUpdate($event)">
-                        </app-session-editor>
-                </mat-tab>
-                <mat-tab label="Lato">
-                        <app-session-editor 
-                                [isAdmin]="userGroup?.isAdmin!" 
-                                [springSemester]="true" 
-                                (onSessionUpdate)="handleSpringSessionUpdate($event)">
-                        </app-session-editor>
-                </mat-tab>
+                @if (userGroup?.group?.springSemester) {
+                        <mat-tab label="Lato">
+                                <app-session-editor 
+                                        [isAdmin]="userGroup?.isAdmin!" 
+                                        [springSemester]="true" 
+                                        (onSessionUpdate)="handleSpringSessionUpdate($event)">
+                                </app-session-editor>
+                        </mat-tab>
+                } @else {
+                        <mat-tab label="Zima">
+                                <app-session-editor 
+                                        [isAdmin]="userGroup?.isAdmin!" 
+                                        [springSemester]="false" 
+                                        (onSessionUpdate)="handleFallSessionUpdate($event)">
+                                </app-session-editor>
+                        </mat-tab>
+                }
         </mat-tab-group>
  }
 

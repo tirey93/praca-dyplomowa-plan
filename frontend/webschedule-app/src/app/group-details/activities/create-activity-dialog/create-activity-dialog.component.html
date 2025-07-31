@@ -1,3 +1,24 @@
 @if (userGroup) {
-    {{userGroup.group.id}}
+    <title mat-dialog-title>Utworzenie Nowych Zajęć</title>
+    <mat-dialog-content>
+        <p class="dialog-description">
+            Tutaj możesz dodać zajęcia do grupy <b>{{getGroupName(userGroup)}}</b>. 
+            <br>Po utworzeniu pojawią się one na liście zajęć oraz w kalendarzu.
+        </p>
+        <form [formGroup]="activityForm">
+
+        </form>
+        <mat-dialog-actions>
+            <button mat-raised-button type="button" (click)="onNoClick()">Anuluj</button>
+            <div style="margin-left: 15px;" [matTooltip]="activityForm.invalid ? 'Należy podać wszystkie wymagane pola.' : ''">
+                <button 
+                    mat-flat-button
+                    type="submit" 
+                    cdkFocusInitial
+                    [disabled]="activityForm.invalid"
+                    (click)="submit()">Utwórz
+                </button>
+            </div>
+        </mat-dialog-actions>
+    </mat-dialog-content>
 }

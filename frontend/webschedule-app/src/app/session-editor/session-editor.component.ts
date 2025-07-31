@@ -22,11 +22,12 @@ import { SessionService } from '../../services/session/session.service';
 export class SessionEditorComponent implements OnInit, OnDestroy {
   isLoading = true;
   noData = false;
-  displayedColumns: string[] = ['period', 'number', 'up_down'];
+  displayedColumns: string[] = ['period', 'number'];
   sessions?: MatTableDataSource<SessionDto>;
 
   @Input() springSemester = false;
   @Input() creation = false;
+  @Input() isAdmin = true;
   @Output() onSessionUpdate = new EventEmitter<SessionDto>();
 
   private destroy$ = new Subject<void>();
@@ -52,6 +53,9 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
         if (sessionsInGroupResponse.length === 0) {
           this.noData = true;
           return;
+        }
+        if(this.isAdmin) {
+          this.displayedColumns.push('up_down');
         }
         this.sessions = new MatTableDataSource<SessionDto>();
         this.sessions.data = this.getDataForSessions(sessionsInGroupResponse.filter(x => x.springSemester === this.springSemester));

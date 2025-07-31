@@ -1,0 +1,25 @@
+<!-- <title mat-dialog-title>Opuszczenie Grupy</title>
+<mat-dialog-content>
+    @if (canLeave) {
+        <div class="dialog-description">
+            Zamierzasz właśnie opuścić grupę <b>{{getGroupName(userGroup)}}</b>.
+            <br>
+            Czy na pewno chcesz kontynuować?
+        </div>
+    } @else {
+        <div class="dialog-description">
+            Nie możesz opuścić grupy <b>{{getGroupName(userGroup)}}</b> ponieważ jesteś jej jedynym administratorem.
+            <br>
+            Nadaj swoje uprawnienie innemu członkowi grupy, aby kontynuować.
+        </div>
+    }
+    <mat-dialog-actions>
+        <button mat-raised-button type="button" (click)="onNoClick()">Anuluj</button>
+        <button style="background-color: darkred; margin-left: 15px;"
+            mat-flat-button
+            type="submit" 
+            [disabled]="!canLeave"
+            (click)="leave()">Opuść
+        </button>
+    </mat-dialog-actions>
+</mat-dialog-content> -->

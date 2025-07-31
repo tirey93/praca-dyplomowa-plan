@@ -1,10 +1,30 @@
  @if (userGroup?.group?.id) {
-        <mat-tab-group style="overflow: auto; max-height: calc(90vh - 300px);">
+        @if (userGroup?.isAdmin) {
+                <div style="direction: rtl; margin: 10px;">
+                        <button matTooltip="Opcje zjazdów" mat-icon-button [matMenuTriggerFor]="options"> <mat-icon>more_vert</mat-icon></button>
+                        <mat-menu #options="matMenu">
+                                <button mat-menu-item (click)="onChangeSemester()">
+                                        <mat-icon>change_circle</mat-icon>
+                                        Zmień semestr
+                                </button>
+                        </mat-menu>
+                </div>
+        }
+
+        <mat-tab-group style="overflow: auto; max-height: calc(90vh - 330px);">
                 <mat-tab label="Zima">
-                        <app-session-editor [springSemester]="false" (onSessionUpdate)="handleFallSessionUpdate($event)"></app-session-editor>
+                        <app-session-editor 
+                                [isAdmin]="userGroup?.isAdmin!" 
+                                [springSemester]="false" 
+                                (onSessionUpdate)="handleFallSessionUpdate($event)">
+                        </app-session-editor>
                 </mat-tab>
                 <mat-tab label="Lato">
-                        <app-session-editor [springSemester]="true" (onSessionUpdate)="handleSpringSessionUpdate($event)"></app-session-editor>
+                        <app-session-editor 
+                                [isAdmin]="userGroup?.isAdmin!" 
+                                [springSemester]="true" 
+                                (onSessionUpdate)="handleSpringSessionUpdate($event)">
+                        </app-session-editor>
                 </mat-tab>
         </mat-tab-group>
  }

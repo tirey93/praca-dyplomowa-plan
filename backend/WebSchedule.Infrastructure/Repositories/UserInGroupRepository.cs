@@ -35,6 +35,7 @@ namespace WebSchedule.Infrastructure.Repositories
                         StudyCourseName = x.Group.StudyCourse.Name,
                         StudyCourseShort = x.Group.StudyCourse.ShortName,
                         Subgroup = x.Group.Subgroup,
+                        SpringSemester = x.Group.SpringSemester,
                     },
                     User = new UserDto
                     {
@@ -64,6 +65,7 @@ namespace WebSchedule.Infrastructure.Repositories
                         StudyCourseName = x.Group.StudyCourse.Name,
                         StudyCourseShort = x.Group.StudyCourse.ShortName,
                         Subgroup = x.Group.Subgroup,
+                        SpringSemester = x.Group.SpringSemester
                     },
                     User = new UserDto
                     {

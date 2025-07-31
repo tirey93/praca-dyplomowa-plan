@@ -37,6 +37,7 @@ namespace WebSchedule.Controllers.Group.Queries
                 StudyLevel = gi.StudyLevel.ToString(),
                 Subgroup = gi.Subgroup,
                 MembersCount = gi.MembersCount,
+                SpringSemester = gi.SpringSemester,
             }));
         }
     }

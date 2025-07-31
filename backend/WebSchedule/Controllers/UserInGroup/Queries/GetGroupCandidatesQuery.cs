@@ -32,6 +32,7 @@ namespace WebSchedule.Controllers.UserInGroup.Queries
                     StudyCourseShort = userGroup.Group.StudyCourseShort,
                     StudyLevel = userGroup.Group.StudyLevel,
                     Subgroup = userGroup.Group.Subgroup,
+                    SpringSemester = userGroup.Group.SpringSemester,
                 },
                 User = new UserResponse
                 {

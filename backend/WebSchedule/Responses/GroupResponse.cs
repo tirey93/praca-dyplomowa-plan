@@ -8,5 +8,6 @@
         public string StudyCourseShort { get; set; }
         public string StudyLevel { get; set; }
         public int Subgroup { get; set; }
+        public bool SpringSemester { get; set; }
     }
 }

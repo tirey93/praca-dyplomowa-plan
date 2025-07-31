@@ -17,6 +17,7 @@ namespace WebSchedule.Controllers.StudyCourse.Commands
         public string Level { get; set; }
         public int CourseId { get; set; }
         public int UserId { get; set; }
+        public bool SpringSemester { get; set; }
 
         public List<SessionCommand> Sessions { get; set; }
     }
@@ -61,7 +62,8 @@ public class CreateGroupCommandHandler : IRequestHandler<CreateGroupCommand, Gro
             Enum.Parse<StudyLevel>(request.Level),
             studyCourse,
             user,
-            int.Parse(request.Subgroup));
+            int.Parse(request.Subgroup),
+            request.SpringSemester);
 
         var defaults = _sessionRepository.GetDefaults();
         foreach (var defaultSession in defaults)
@@ -84,7 +86,8 @@ public class CreateGroupCommandHandler : IRequestHandler<CreateGroupCommand, Gro
             StudyCourseName = studyCourse.Name,
             StudyCourseShort = studyCourse.ShortName,
             StudyLevel = group.StudyLevel.ToString(),
-            Subgroup = group.Subgroup
+            Subgroup = group.Subgroup,
+            SpringSemester = group.SpringSemester,
         };
     }
 }

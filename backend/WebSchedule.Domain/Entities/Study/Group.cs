@@ -42,6 +42,11 @@ namespace WebSchedule.Domain.Entities.Study
             SpringSemester = springSemester;
         }
 
+        public void UpdateSemester(bool springSemester)
+        {
+            SpringSemester = springSemester;
+        }
+
         public void AddSession(Session session)
         {
             Sessions.Add(session);

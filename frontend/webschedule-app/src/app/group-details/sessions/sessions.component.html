@@ -12,7 +12,7 @@
         }
 
         <mat-tab-group style="overflow: auto; max-height: calc(90vh - 330px);">
-                @if (userGroup?.group?.springSemester) {
+                @if (springSemester) {
                         <mat-tab label="Lato">
                                 <app-session-editor 
                                         [isAdmin]="userGroup?.isAdmin!" 

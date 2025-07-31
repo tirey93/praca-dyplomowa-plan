@@ -5,6 +5,7 @@ import { environment } from '../../enviroments/enviroments';
 import { GroupRequest } from './dtos/groupRequest';
 import { GroupResponse } from './dtos/groupResponse';
 import { GroupInfoResponse } from './dtos/groupInfoResponse';
+import { UpdaterSemesterRequest } from './dtos/updateSemesterRequest';
 
 @Injectable({
     providedIn: 'root'
@@ -56,6 +57,14 @@ import { GroupInfoResponse } from './dtos/groupInfoResponse';
 
     remove$(groupId: number) {
       return this.http.delete(`${this.url}/${groupId}`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
+    updateSemester$(request : UpdaterSemesterRequest) {
+      return this.http.put<GroupResponse>(`${this.url}/Semester`, request, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

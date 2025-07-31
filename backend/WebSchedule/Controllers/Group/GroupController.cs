@@ -1,9 +1,11 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebSchedule.Controllers.Group.Commands;
 using WebSchedule.Controllers.Group.Queries;
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Controllers.StudyCourse.Commands;
+using WebSchedule.Controllers.User.Commands;
 using WebSchedule.Controllers.User.Exceptions;
 using WebSchedule.Domain;
 using WebSchedule.Utils;
@@ -206,6 +208,35 @@ namespace WebSchedule.Controllers.Group
                 {
                     GroupId = id
                 });
+                return NoContent();
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
+            }
+        }
+
+        [HttpPut("Semester")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+#if !DEBUG
+        [Authorize]
+#endif
+        public async Task<ActionResult> UpdateSemester([FromBody] UpdateSemesterCommand command)
+        {
+            try
+            {
+                await _mediator.Send(command);
+
                 return NoContent();
             }
             catch (ApplicationException ex)

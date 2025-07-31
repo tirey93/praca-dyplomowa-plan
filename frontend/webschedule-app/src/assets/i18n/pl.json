@@ -34,6 +34,7 @@
 
   "UserWasCreated": "Użytkownik został utworzony.",
   "LinkCopied": "Link do grupy został skopiowany.",
+  "SemesterUpdated": "Semestr został zmieniony z powodzeniem.",
 
   "ExceptionContentCannotBeEmpty": "Wiadomość nie może być pusta.",
   "ExceptionContentCannotBeThatLarge": "Wiadomość nie może być dłuższa niż {{0}} znaków.",

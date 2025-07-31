@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { SessionEditorComponent } from "../../session-editor/session-editor.component";
 import { UserGroupResponse } from '../../../services/userInGroup/dtos/userGroupResponse';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -21,9 +21,9 @@ import { ChangeSemesterDialogComponent } from './change-semester-dialog/change-s
   templateUrl: './sessions.component.html',
   styleUrl: './sessions.component.scss'
 })
-export class SessionsComponent {
+export class SessionsComponent implements OnInit{
   @Input() userGroup?: UserGroupResponse
-
+  springSemester = false;
 
   constructor(
     private sessionRepository: SessionService,
@@ -32,12 +32,21 @@ export class SessionsComponent {
   ) {
   }
 
+  ngOnInit(): void {
+    this.springSemester = this.userGroup?.group.springSemester!;
+  }
+
   onChangeSemester() {
     this.dialog.open(ChangeSemesterDialogComponent, {
       data: {
-        userGroup: this.userGroup
+        userGroup: this.userGroup,
+        springSemester: this.springSemester
       },
-    })
+    }).afterClosed().subscribe((result:boolean) => {
+      if (result) {
+        this.springSemester = !this.springSemester;
+      }
+    });
   }
   handleFallSessionUpdate(session: SessionDto) {
     this.sessionRepository.updateSession$({

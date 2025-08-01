@@ -54,7 +54,10 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
           this.noData = true;
           return;
         }
-        if(this.isAdmin) {
+        if (!this.isAdmin){
+          this.displayedColumns = this.displayedColumns.filter(x => x !== 'up_down')
+        }
+        if(this.isAdmin && !this.displayedColumns.includes('up_down')) {
           this.displayedColumns.push('up_down');
         }
         this.sessions = new MatTableDataSource<SessionDto>();

@@ -61,6 +61,9 @@ export class GroupMembersComponent implements OnInit {
           this.noData = true;
           return;
         }
+        if (!this.userGroup?.isAdmin){
+          this.displayedColumns = this.displayedColumns.filter(x => x !== 'delete')
+        }
         if (this.userGroup?.isAdmin && !this.displayedColumns.includes('delete')) {
           this.displayedColumns.push('delete')
         }

@@ -28,6 +28,7 @@ export class CreateActivityDialogComponent implements OnInit {
   data = inject(DIALOG_DATA);
   userGroup: UserGroupResponse = this.data.userGroup;
   allSessions: SelectValue[] = [];
+  allHours: SelectValue[] = this.getAllHours();
 
   activityForm = new FormGroup({
     name: new FormControl("", {validators: [Validators.required]}),
@@ -67,9 +68,25 @@ export class CreateActivityDialogComponent implements OnInit {
     console.log(this.activityForm.controls.sessionNumber.value);
     console.log(this.activityForm.controls.name.value);
     console.log(this.activityForm.controls.teacherFullName.value);
+    console.log(this.activityForm.controls.startingHour.value);
   }
   getGroupName(userGroup: UserGroupResponse): string { return GroupHelper.groupInfoToString(userGroup.group)}
 
+  private getAllHours(): SelectValue[] {
+    const dayStart = 8;
+    const dayEnd = 20;
+
+    let currentHour = dayStart;
+    const result: SelectValue[] = []
+    for (dayStart; currentHour <= dayEnd; currentHour++) {
+      result.push({
+        id: currentHour,
+        displayText: currentHour.toString().padStart(2, '0')
+      })
+    }
+
+    return result;
+  }
   private getPeriod(weekNumber: number): string {
     return WeekHelper.getPeriod(WeekHelper.getSaturdayOfWeek(weekNumber))
   }

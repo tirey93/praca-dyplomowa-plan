@@ -39,3 +39,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   column-gap: 20px;
   margin: 8px 0;
 }
+
+.dialog-content-21-container {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  column-gap: 20px;
+  margin: 8px 0;
+}
+
+.dialog-content-flex-container {
+  display: flex;
+  gap: 20px;
+}

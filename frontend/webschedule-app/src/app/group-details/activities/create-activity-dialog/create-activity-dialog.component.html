@@ -26,6 +26,16 @@
                     </mat-select>
                 </mat-form-field>
             </div>
+            <div class="dialog-content-21-container">
+                <mat-form-field appearance="outline" class="dialog-full-width">
+                    <mat-label>Godzina rozpoczęcia</mat-label>
+                    <mat-select required formControlName="startingHour">
+                        @for (option of allHours; track $index) {
+                            <mat-option [value]="option">{{option.displayText}}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            </div>
         </form>
         <mat-dialog-actions>
             <button mat-raised-button type="button" (click)="onNoClick()">Anuluj</button>

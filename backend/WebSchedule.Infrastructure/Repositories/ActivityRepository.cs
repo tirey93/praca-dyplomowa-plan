@@ -9,5 +9,10 @@ namespace WebSchedule.Infrastructure.Repositories
             : base(appDbContext, appDbContext.Activities)
         {
         }
+
+        public IEnumerable<Activity> GetConflicts(int sessionId, int startingHour, int duration)
+        {
+            return _dbSet.Where(x => x.SessionId == sessionId && x.IsOverlapping(startingHour, duration));
+        }
     }
 }

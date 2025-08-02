@@ -22,5 +22,9 @@ namespace WebSchedule.Domain.Entities.Study
             Duration = duration;
         }
 
+        public bool IsOverlapping(int startingHour, int duration)
+        {
+            return true;
+        }
     }
 }

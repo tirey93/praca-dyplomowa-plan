@@ -35,7 +35,18 @@
                         }
                     </mat-select>
                 </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Godzina zakończenia</mat-label>
+                    <input disabled [value]="getEndHour()" type="text" matInput>
+                </mat-form-field>
             </div>
+            @if (activityForm.controls.startingHour.dirty) {
+                <label>Czas trwania</label>
+                <mat-slider min="1" max="6" showTickMarks style="width: 95%;">
+                    <input matSliderThumb formControlName="duration" #slider>
+                </mat-slider>
+            }
+                
         </form>
         <mat-dialog-actions>
             <button mat-raised-button type="button" (click)="onNoClick()">Anuluj</button>

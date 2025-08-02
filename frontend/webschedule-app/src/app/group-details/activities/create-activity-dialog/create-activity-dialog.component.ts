@@ -14,12 +14,14 @@ import { SessionService } from '../../../../services/session/session.service';
 import { SnackBarService } from '../../../../services/snackBarService';
 import { WeekHelper } from '../../../../helpers/weekHelper';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSliderModule } from '@angular/material/slider';
 
 @Component({
   selector: 'app-create-activity-dialog',
   imports: [
     MatDialogModule, ReactiveFormsModule, MatTooltipModule, MatButtonModule,
-     MatFormFieldModule, MatOptionModule, MatInputModule, MatSelectModule
+     MatFormFieldModule, MatOptionModule, MatInputModule, MatSelectModule,
+     MatSliderModule
   ],
   templateUrl: './create-activity-dialog.component.html',
   styleUrl: './create-activity-dialog.component.scss'
@@ -29,6 +31,7 @@ export class CreateActivityDialogComponent implements OnInit {
   userGroup: UserGroupResponse = this.data.userGroup;
   allSessions: SelectValue[] = [];
   allHours: SelectValue[] = this.getAllHours();
+
 
   activityForm = new FormGroup({
     name: new FormControl("", {validators: [Validators.required]}),
@@ -69,9 +72,18 @@ export class CreateActivityDialogComponent implements OnInit {
     console.log(this.activityForm.controls.name.value);
     console.log(this.activityForm.controls.teacherFullName.value);
     console.log(this.activityForm.controls.startingHour.value);
+    console.log(this.activityForm.controls.duration.value);
   }
   getGroupName(userGroup: UserGroupResponse): string { return GroupHelper.groupInfoToString(userGroup.group)}
 
+  getEndHour(): string {
+    if (this.activityForm.controls.startingHour.dirty){
+      const endHour = this.activityForm.controls.duration.value! + this.activityForm.controls.startingHour.value?.id!;
+      return endHour.toString().padStart(2, '0');
+    }
+    return '';
+  }
+  
   private getAllHours(): SelectValue[] {
     const dayStart = 8;
     const dayEnd = 20;

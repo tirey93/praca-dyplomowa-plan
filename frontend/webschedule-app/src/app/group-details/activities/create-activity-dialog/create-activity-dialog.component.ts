@@ -79,11 +79,11 @@ export class CreateActivityDialogComponent implements OnInit {
   getEndHour(): string {
     if (this.activityForm.controls.startingHour.dirty){
       const endHour = this.activityForm.controls.duration.value! + this.activityForm.controls.startingHour.value?.id!;
-      return endHour.toString().padStart(2, '0');
+      return endHour.toString().padStart(2, '0') + ':00';
     }
     return '';
   }
-  
+
   private getAllHours(): SelectValue[] {
     const dayStart = 8;
     const dayEnd = 20;
@@ -93,7 +93,7 @@ export class CreateActivityDialogComponent implements OnInit {
     for (dayStart; currentHour <= dayEnd; currentHour++) {
       result.push({
         id: currentHour,
-        displayText: currentHour.toString().padStart(2, '0')
+        displayText: currentHour.toString().padStart(2, '0') + ':00'
       })
     }
 

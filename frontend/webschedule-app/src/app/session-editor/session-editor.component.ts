@@ -12,6 +12,7 @@ import { SessionInGroupResponse } from '../../services/session/dtos/sessionInGro
 import { SessionService } from '../../services/session/session.service';
 import { WeekHelper } from '../../helpers/weekHelper';
 import { UserInGroupService } from '../../services/userInGroup/userInGroup.service';
+import { UserGroupResponse } from '../../services/userInGroup/dtos/userGroupResponse';
 
 @Component({
   selector: 'app-session-editor',
@@ -27,9 +28,7 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['period', 'number'];
   sessions?: MatTableDataSource<SessionDto>;
 
-  springSemester = false;
-  isAdmin = true;
-  
+  @Input() userGroup?: UserGroupResponse;
   @Input() creation = false;
   @Output() onSessionUpdate = new EventEmitter<SessionDto>();
 
@@ -38,7 +37,6 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
   constructor(
     private sessionService: SessionService,
     private syncService: SyncService,
-    private userInGroupService: UserInGroupService
   ) {
   }
 
@@ -47,7 +45,6 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
       filter(() => this.creation)
     ).subscribe({
       next: (sessionsInGroupResponse) => {
-        console.log('creation');
         this.loadSession(sessionsInGroupResponse);
       }
     })
@@ -55,19 +52,10 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
     this.syncService.groupId$.pipe(
       takeUntil(this.destroy$),
       filter(groupId => groupId != null && !this.creation),
-      switchMap((groupId) => this.userInGroupService.getLoggedInByGroup$(groupId!))
+      switchMap((groupId) => this.sessionService.getByGroup$(groupId!))
     ).subscribe({
-      next: (userGroupResponse) => {
-        console.log('group changed', userGroupResponse.group.id);
-        this.springSemester = userGroupResponse.group.springSemester;
-        this.isAdmin = userGroupResponse.isAdmin;
-
-        this.sessionService.getByGroup$(userGroupResponse.group.id).subscribe({
-          next: (sessionsInGroupResponse) => {
-            console.log('loadign sessions');
-            this.loadSession(sessionsInGroupResponse);
-          }
-        })
+      next: (sessionsInGroupResponse) => {
+        this.loadSession(sessionsInGroupResponse);
       }
     });
   }
@@ -128,14 +116,14 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
       this.noData = true;
       return;
     }
-    if (!this.isAdmin){
+    if (!this.userGroup?.isAdmin){
       this.displayedColumns = this.displayedColumns.filter(x => x !== 'up_down')
     }
-    if(this.isAdmin && !this.displayedColumns.includes('up_down')) {
+    if(this.userGroup?.isAdmin && !this.displayedColumns.includes('up_down')) {
       this.displayedColumns.push('up_down');
     }
     this.sessions = new MatTableDataSource<SessionDto>();
-    this.sessions.data = this.getDataForSessions(sessionsInGroupResponse.filter(x => x.springSemester === this.springSemester));
+    this.sessions.data = this.getDataForSessions(sessionsInGroupResponse.filter(x => x.springSemester === this.userGroup?.group?.springSemester));
   }
 
   private getWeekNumber(weekNumber: number): number {

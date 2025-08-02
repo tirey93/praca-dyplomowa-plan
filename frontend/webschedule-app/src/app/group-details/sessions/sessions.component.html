@@ -15,12 +15,14 @@
                 @if (userGroup?.group?.springSemester) {
                         <mat-tab label="Lato">
                                 <app-session-editor 
+                                        [userGroup]="userGroup"
                                         (onSessionUpdate)="handleSpringSessionUpdate($event)">
                                 </app-session-editor>
                         </mat-tab>
                 } @else {
                         <mat-tab label="Zima">
                                 <app-session-editor 
+                                         [userGroup]="userGroup"
                                         (onSessionUpdate)="handleFallSessionUpdate($event)">
                                 </app-session-editor>
                         </mat-tab>

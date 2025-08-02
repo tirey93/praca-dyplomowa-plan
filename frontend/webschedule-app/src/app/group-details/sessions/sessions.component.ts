@@ -31,6 +31,7 @@ export class SessionsComponent{
     private sessionRepository: SessionService,
     private snackBarService: SnackBarService,
     private readonly dialog: MatDialog,
+    private syncService: SyncService,
   ) {
   }
   onChangeSemester() {
@@ -39,6 +40,10 @@ export class SessionsComponent{
         userGroup: this.userGroup,
         springSemester: this.userGroup?.group?.springSemester
       },
+    }).afterClosed().subscribe((result:boolean) => {
+      if (result) {
+        this.syncService.selectGroup(this.userGroup?.group.id!);
+      }
     })
   }
   handleFallSessionUpdate(session: SessionDto) {

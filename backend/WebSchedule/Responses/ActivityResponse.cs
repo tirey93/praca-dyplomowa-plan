@@ -7,5 +7,6 @@
         public string TeacherFullName { get; set; }
         public int StartingHour { get; set; }
         public int Duration { get; set; }
+        public SessionInGroupResponse Session { get; set; }
     }
 }

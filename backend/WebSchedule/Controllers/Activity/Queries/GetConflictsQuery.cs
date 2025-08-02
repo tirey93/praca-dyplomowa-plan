@@ -32,7 +32,14 @@ namespace WebSchedule.Controllers.Activity.Queries
                 Name = activity.Name,
                 TeacherFullName = activity.TeacherFullName,
                 StartingHour = activity.StartingHour,
-                Duration = activity.Duration
+                Duration = activity.Duration,
+                Session = new SessionInGroupResponse
+                {
+                    GroupId = activity.Session.GroupId,
+                    Number = activity.Session.Number,
+                    WeekNumber = activity.Session.WeekNumber,
+                    SpringSemester = activity.Session.SpringSemester
+                }
             }));
         }
     }

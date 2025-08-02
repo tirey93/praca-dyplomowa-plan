@@ -1,4 +1,5 @@
 export interface SelectValue {
     id: number,
-    displayText: string
+    displayText: string;
+    additionalInfo?: string;
 }

@@ -16,15 +16,13 @@
                     <input formControlName="teacherFullName" required type="text" matInput>
                 </mat-form-field>
             </div>
-            <div class="dialog-content-flex-container">
-                <mat-form-field appearance="outline" class="dialog-full-width">
-                    <mat-label>Zjazd</mat-label>
-                    <mat-select required formControlName="sessionNumber">
-                        @for (option of allSessions; track $index) {
-                            <mat-option [value]="option">{{option.displayText}}</mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
+            <mat-divider></mat-divider>
+            <div style="margin: 30px 0; max-width: 500px;">
+                <mat-chip-set>
+                    @for (option of allSessions; track $index) {
+                        <mat-chip-option (selectionChange)="onSessionClicked(option.id, $event.selected)" [matTooltip]="option.additionalInfo" >Zjazd {{option.displayText}}</mat-chip-option>
+                    }
+                </mat-chip-set>
             </div>
             <div class="dialog-content-21-container">
                 <mat-form-field appearance="outline" class="dialog-full-width">

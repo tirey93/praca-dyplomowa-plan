@@ -12,8 +12,8 @@ import { HttpClient } from "@angular/common/http"
 
     constructor(private http: HttpClient, private cookieService: CookieService) { }
 
-    getConflicts$(groupId: number, sessionNumber: number, springSemester:boolean, startingHour: number, duration: number) {
-        return this.http.get<ActivityResponse[]>(`${this.url}/Conflicts?groupId=${groupId}&sessionNumber=${sessionNumber}&springSemester=${springSemester}&startingHour=${startingHour}&duration=${duration}`, {
+    getConflicts$(groupId: number, sessionNumbers: number[], springSemester:boolean, startingHour: number, duration: number) {
+        return this.http.get<ActivityResponse[]>(`${this.url}/Conflicts?groupId=${groupId}&sessionNumbers=${sessionNumbers}&springSemester=${springSemester}&startingHour=${startingHour}&duration=${duration}`, {
             headers: {
             authorization: `Bearer ${this.cookieService.get("token")}`
             }

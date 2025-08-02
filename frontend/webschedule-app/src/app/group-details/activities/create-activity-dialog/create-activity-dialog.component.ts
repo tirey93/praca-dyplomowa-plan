@@ -16,13 +16,15 @@ import { WeekHelper } from '../../../../helpers/weekHelper';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { ActivityRepositoryService } from '../../../../services/activity/activityRepository.service';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-create-activity-dialog',
   imports: [
     MatDialogModule, ReactiveFormsModule, MatTooltipModule, MatButtonModule,
      MatFormFieldModule, MatOptionModule, MatInputModule, MatSelectModule,
-     MatSliderModule
+     MatSliderModule, MatChipsModule, MatDividerModule
   ],
   templateUrl: './create-activity-dialog.component.html',
   styleUrl: './create-activity-dialog.component.scss'
@@ -31,7 +33,7 @@ export class CreateActivityDialogComponent implements OnInit {
 test() {
   this.activityRepository.getConflicts$(
     this.userGroup.group.id,
-    this.activityForm.controls.sessionNumber.value?.id!,
+    this.sessionsSelected,
     this.userGroup.group.springSemester,
     this.activityForm.controls.startingHour.value?.id!,
     this.activityForm.controls.duration.value! 
@@ -46,13 +48,13 @@ test() {
   allSessions: SelectValue[] = [];
   allHours: SelectValue[] = this.getAllHours();
 
+  sessionsSelected: number[] = [];
 
   activityForm = new FormGroup({
     name: new FormControl("", {validators: [Validators.required]}),
     teacherFullName: new FormControl("", {validators: [Validators.required]}),
     duration: new FormControl(2, {validators: [Validators.required, Validators.min(1), Validators.max(6)]}),
     startingHour: new FormControl<SelectValue | null>(null),
-    sessionNumber: new FormControl<SelectValue | null>(null),
   });
 
   constructor(
@@ -70,7 +72,8 @@ test() {
           .filter(x => x.springSemester === this.userGroup.group.springSemester)
           .map(x => ({
             id: x.number,
-            displayText: `${x.number.toString().padStart(2, '0')}: ${this.getPeriod(x.weekNumber)}`
+            displayText: `${x.number.toString().padStart(2, '0')}`,
+            additionalInfo: this.getPeriod(x.weekNumber)
           }) as SelectValue)
       }, error: (err) => {
         this.snackBarService.openError(err);
@@ -83,11 +86,19 @@ test() {
   }
 
   submit() {
-    console.log(this.activityForm.controls.sessionNumber.value);
+    console.log(this.sessionsSelected);
     console.log(this.activityForm.controls.name.value);
     console.log(this.activityForm.controls.teacherFullName.value);
     console.log(this.activityForm.controls.startingHour.value);
     console.log(this.activityForm.controls.duration.value);
+  }
+
+  onSessionClicked(sessionNumber: number, selected: boolean) {
+    this.sessionsSelected = this.sessionsSelected.filter(x => x !== sessionNumber);
+    if (selected) {
+      this.sessionsSelected.push(sessionNumber);
+    }
+    console.log(this.sessionsSelected);
   }
   getGroupName(userGroup: UserGroupResponse): string { return GroupHelper.groupInfoToString(userGroup.group)}
 

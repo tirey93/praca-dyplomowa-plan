@@ -24,7 +24,7 @@ export class ActivitiesComponent {
 
   addActivity() {
     this.dialog.open(CreateActivityDialogComponent, {
-      maxWidth: '100vw',
+      maxWidth: '50vw',
       autoFocus: false,
       data: {
         userGroup: this.userGroup

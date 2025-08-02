@@ -12,6 +12,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog } from '@angular/material/dialog';
 import { ChangeSemesterDialogComponent } from './change-semester-dialog/change-semester-dialog.component';
+import { SyncService } from '../../../services/sync.service';
+import { filter, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-sessions',
@@ -21,32 +23,23 @@ import { ChangeSemesterDialogComponent } from './change-semester-dialog/change-s
   templateUrl: './sessions.component.html',
   styleUrl: './sessions.component.scss'
 })
-export class SessionsComponent implements OnInit{
+export class SessionsComponent{
   @Input() userGroup?: UserGroupResponse
-  springSemester = false;
 
+  private destroy$ = new Subject<void>();
   constructor(
     private sessionRepository: SessionService,
     private snackBarService: SnackBarService,
     private readonly dialog: MatDialog,
   ) {
   }
-
-  ngOnInit(): void {
-    this.springSemester = this.userGroup?.group.springSemester!;
-  }
-
   onChangeSemester() {
     this.dialog.open(ChangeSemesterDialogComponent, {
       data: {
         userGroup: this.userGroup,
-        springSemester: this.springSemester
+        springSemester: this.userGroup?.group?.springSemester
       },
-    }).afterClosed().subscribe((result:boolean) => {
-      if (result) {
-        this.springSemester = !this.springSemester;
-      }
-    });
+    })
   }
   handleFallSessionUpdate(session: SessionDto) {
     this.sessionRepository.updateSession$({

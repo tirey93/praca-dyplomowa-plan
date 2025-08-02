@@ -10,6 +10,8 @@ import { SyncService } from '../../services/sync.service';
 import { filter, Subject, switchMap, takeUntil } from 'rxjs';
 import { SessionInGroupResponse } from '../../services/session/dtos/sessionInGroupResponse';
 import { SessionService } from '../../services/session/session.service';
+import { WeekHelper } from '../../helpers/weekHelper';
+import { UserInGroupService } from '../../services/userInGroup/userInGroup.service';
 
 @Component({
   selector: 'app-session-editor',
@@ -25,45 +27,49 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['period', 'number'];
   sessions?: MatTableDataSource<SessionDto>;
 
-  @Input() springSemester = false;
+  springSemester = false;
+  isAdmin = true;
+  
   @Input() creation = false;
-  @Input() isAdmin = true;
   @Output() onSessionUpdate = new EventEmitter<SessionDto>();
 
   private destroy$ = new Subject<void>();
   
   constructor(
     private sessionService: SessionService,
-    private syncService: SyncService
+    private syncService: SyncService,
+    private userInGroupService: UserInGroupService
   ) {
   }
 
   ngOnInit(): void {
-    const subscription = this.creation 
-      ? this.sessionService.getDefaults$()
-      : this.syncService.groupId$.pipe(
-          takeUntil(this.destroy$),
-          filter(groupId => groupId != null),
-          switchMap((groupId) => this.sessionService.getByGroup$(groupId))
-        );
-
-    subscription.subscribe({
+    this.sessionService.getDefaults$().pipe(
+      filter(() => this.creation)
+    ).subscribe({
       next: (sessionsInGroupResponse) => {
-        this.isLoading = false;
-        if (sessionsInGroupResponse.length === 0) {
-          this.noData = true;
-          return;
-        }
-        if (!this.isAdmin){
-          this.displayedColumns = this.displayedColumns.filter(x => x !== 'up_down')
-        }
-        if(this.isAdmin && !this.displayedColumns.includes('up_down')) {
-          this.displayedColumns.push('up_down');
-        }
-        this.sessions = new MatTableDataSource<SessionDto>();
-        this.sessions.data = this.getDataForSessions(sessionsInGroupResponse.filter(x => x.springSemester === this.springSemester));
+        console.log('creation');
+        this.loadSession(sessionsInGroupResponse);
       }
     })
+
+    this.syncService.groupId$.pipe(
+      takeUntil(this.destroy$),
+      filter(groupId => groupId != null && !this.creation),
+      switchMap((groupId) => this.userInGroupService.getLoggedInByGroup$(groupId!))
+    ).subscribe({
+      next: (userGroupResponse) => {
+        console.log('group changed', userGroupResponse.group.id);
+        this.springSemester = userGroupResponse.group.springSemester;
+        this.isAdmin = userGroupResponse.isAdmin;
+
+        this.sessionService.getByGroup$(userGroupResponse.group.id).subscribe({
+          next: (sessionsInGroupResponse) => {
+            console.log('loadign sessions');
+            this.loadSession(sessionsInGroupResponse);
+          }
+        })
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -116,6 +122,22 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
     this.onSessionUpdate.emit({...sessionDto, weekNumber: this.getWeekNumber(sessionDto.weekNumber - 1)});
   }
 
+  private loadSession(sessionsInGroupResponse: SessionInGroupResponse[]) {
+    this.isLoading = false;
+    if (sessionsInGroupResponse.length === 0) {
+      this.noData = true;
+      return;
+    }
+    if (!this.isAdmin){
+      this.displayedColumns = this.displayedColumns.filter(x => x !== 'up_down')
+    }
+    if(this.isAdmin && !this.displayedColumns.includes('up_down')) {
+      this.displayedColumns.push('up_down');
+    }
+    this.sessions = new MatTableDataSource<SessionDto>();
+    this.sessions.data = this.getDataForSessions(sessionsInGroupResponse.filter(x => x.springSemester === this.springSemester));
+  }
+
   private getWeekNumber(weekNumber: number): number {
     if (weekNumber > 52){
       return 1;
@@ -125,30 +147,8 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
       return weekNumber;
     }
   }
-  private getSaturdayOfWeek(weekNumber: number, year: number = new Date().getFullYear()): Date {
-      const januaryFirst = new Date(year, 0, 1);
-      const dayOfWeek = januaryFirst.getDay();
-      const firstMonday = new Date(januaryFirst);
-      if (dayOfWeek <= 4) {
-          firstMonday.setDate(januaryFirst.getDate() - dayOfWeek + 1);
-      } else {
-          firstMonday.setDate(januaryFirst.getDate() + 8 - dayOfWeek);
-      }
-      const saturday = new Date(firstMonday);
-      saturday.setDate(firstMonday.getDate() + (weekNumber - 1) * 7 + 5);
-      if (saturday < new Date()) {
-        return this.getSaturdayOfWeek(weekNumber, year + 1);
-      }
-      return saturday;
-  }
-  private getPeriod(date: Date): string {
-    const saturday = date.getDate().toString().padStart(2, '0');
-    const sundayFull = new Date(date.getTime() + (1000 * 60 * 60 * 24));
-    const sunday = sundayFull.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const year = date.getFullYear();
-    return `${saturday}-${sunday}.${month}.${year}`
-  }
+  
+  
 
   private getDataForSessions(sessionsInGroupResponse: SessionInGroupResponse[]): SessionDto[] {
     const result: SessionDto[] = [];
@@ -158,7 +158,7 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
 
     result.push({
       index: result.length,
-      period: this.getPeriod(this.getSaturdayOfWeek(currentWeek - 1)),
+      period: WeekHelper.getPeriod(WeekHelper.getSaturdayOfWeek(currentWeek - 1)),
       weekNumber: currentWeek - 1
     })
 
@@ -166,7 +166,7 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
       if (currentWeek === sessionsInGroupResponse[currentSessionIndex].weekNumber) {
         result.push({
           index: result.length,
-          period: this.getPeriod(this.getSaturdayOfWeek(currentWeek)),
+          period: WeekHelper.getPeriod(WeekHelper.getSaturdayOfWeek(currentWeek)),
           number: sessionsInGroupResponse[currentSessionIndex].number,
           weekNumber: currentWeek
         })
@@ -174,7 +174,7 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
       } else {
         result.push({
           index: result.length,
-          period: this.getPeriod(this.getSaturdayOfWeek(currentWeek)),
+          period: WeekHelper.getPeriod(WeekHelper.getSaturdayOfWeek(currentWeek)),
           weekNumber: currentWeek
         })
       }
@@ -185,18 +185,18 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
 
     result.push({
       index: result.length,
-      period: this.getPeriod(this.getSaturdayOfWeek(currentWeek)),
+      period: WeekHelper.getPeriod(WeekHelper.getSaturdayOfWeek(currentWeek)),
       number: sessionsInGroupResponse[currentSessionIndex].number,
       weekNumber: currentWeek
     })
     result.push({
       index: result.length,
-      period: this.getPeriod(this.getSaturdayOfWeek(currentWeek + 1)),
+      period: WeekHelper.getPeriod(WeekHelper.getSaturdayOfWeek(currentWeek + 1)),
       weekNumber: currentWeek + 1
     })
     result.push({
       index: result.length,
-      period: this.getPeriod(this.getSaturdayOfWeek(currentWeek + 2)),
+      period: WeekHelper.getPeriod(WeekHelper.getSaturdayOfWeek(currentWeek + 2)),
       weekNumber: currentWeek + 2
     })
     return result;

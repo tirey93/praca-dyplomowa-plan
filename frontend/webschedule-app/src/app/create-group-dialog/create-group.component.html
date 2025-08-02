@@ -59,10 +59,10 @@
     <div style="overflow-y: auto; max-height: 80vh;">
         @if (groupForm.controls.springSemester.value) {
             <p>Lato</p>
-            <app-session-editor [creation]="true" [springSemester]="true" (onSessionUpdate)="handleSpringSessionUpdate($event)"></app-session-editor>
+            <app-session-editor [creation]="true" (onSessionUpdate)="handleSpringSessionUpdate($event)"></app-session-editor>
         } @else {
             <p>Zima</p>
-            <app-session-editor [creation]="true" [springSemester]="false" (onSessionUpdate)="handleFallSessionUpdate($event)"></app-session-editor>
+            <app-session-editor [creation]="true" (onSessionUpdate)="handleFallSessionUpdate($event)"></app-session-editor>
         }
     </div>
     <mat-divider style="margin: 20px 0;"></mat-divider>

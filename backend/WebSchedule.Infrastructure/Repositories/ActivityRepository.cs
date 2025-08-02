@@ -1,4 +1,5 @@
-﻿using WebSchedule.Domain.Entities.Study;
+﻿using Microsoft.EntityFrameworkCore;
+using WebSchedule.Domain.Entities.Study;
 using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Infrastructure.Repositories
@@ -10,9 +11,11 @@ namespace WebSchedule.Infrastructure.Repositories
         {
         }
 
-        public IEnumerable<Activity> GetConflicts(int sessionId, int startingHour, int duration)
+        public IEnumerable<Activity> GetActivitiesForSession(int groupId, int sessionNumber)
         {
-            return _dbSet.Where(x => x.SessionId == sessionId && x.IsOverlapping(startingHour, duration));
+            return _dbSet
+                .Include(x => x.Session)
+                .Where(x => x.Session.GroupId == groupId && x.Session.Number == sessionNumber);
         }
     }
 }

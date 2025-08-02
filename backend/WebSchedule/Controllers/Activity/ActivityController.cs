@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using WebSchedule.Controllers.Activity.Queries;
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Controllers.Session.Queries;
 using WebSchedule.Domain;
@@ -25,13 +26,20 @@ namespace WebSchedule.Controllers.Activity
         [Authorize]
 #endif
         public async Task<ActionResult<IEnumerable<ActivityResponse>>> GetConflicts(
-            [FromQuery] int sessionId,
+            [FromQuery] int groupId,
+            [FromQuery] int sessionNumber,
             [FromQuery] int startingHour,
             [FromQuery] int duration)
         {
             try
             {
-                return Ok(await _mediator.Send(new GetDefaultQuery()));
+                return Ok(await _mediator.Send(new GetConflictsQuery
+                {
+                    GroupId = groupId,
+                    SessionNumber = sessionNumber,
+                    StartingHour = startingHour,
+                    Duration = duration
+                }));
             }
             catch (ApplicationException ex)
             {

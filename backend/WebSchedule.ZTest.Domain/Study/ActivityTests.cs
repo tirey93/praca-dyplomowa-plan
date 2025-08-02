@@ -16,6 +16,8 @@ namespace WebSchedule.ZTest.Domain.Study
 
         [Theory]
         [InlineData(13, 2)]
+        [InlineData(14, 2)]
+        [InlineData(15, 2)]
         public void IsOverlapping_Should_BeTrue(int startingHour, int duration)
         {
             var result = _activity.IsOverlapping(startingHour, duration);
@@ -24,7 +26,10 @@ namespace WebSchedule.ZTest.Domain.Study
         }
 
         [Theory]
-        [InlineData(13, 2)]
+        [InlineData(11, 2)]
+        [InlineData(12, 2)]
+        [InlineData(16, 2)]
+        [InlineData(17, 2)]
         public void IsOverlapping_Should_BeFalse(int startingHour, int duration)
         {
             var result = _activity.IsOverlapping(startingHour, duration);

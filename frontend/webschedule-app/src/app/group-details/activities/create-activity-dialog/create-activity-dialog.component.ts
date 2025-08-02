@@ -15,6 +15,7 @@ import { SnackBarService } from '../../../../services/snackBarService';
 import { WeekHelper } from '../../../../helpers/weekHelper';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
+import { ActivityRepositoryService } from '../../../../services/activity/activityRepository.service';
 
 @Component({
   selector: 'app-create-activity-dialog',
@@ -27,6 +28,18 @@ import { MatSliderModule } from '@angular/material/slider';
   styleUrl: './create-activity-dialog.component.scss'
 })
 export class CreateActivityDialogComponent implements OnInit {
+test() {
+  this.activityRepository.getConflicts$(
+    this.userGroup.group.id,
+    this.activityForm.controls.sessionNumber.value?.id!,
+    this.activityForm.controls.startingHour.value?.id!,
+    this.activityForm.controls.duration.value! 
+  ).subscribe({
+    next: (activityResponse) => {
+      console.log(activityResponse);
+    }
+  })
+}
   data = inject(DIALOG_DATA);
   userGroup: UserGroupResponse = this.data.userGroup;
   allSessions: SelectValue[] = [];
@@ -44,7 +57,8 @@ export class CreateActivityDialogComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<CreateActivityDialogComponent>,
     private sessionRepository: SessionService,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private activityRepository: ActivityRepositoryService
   ) {
   }
 

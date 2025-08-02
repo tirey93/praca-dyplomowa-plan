@@ -6,7 +6,8 @@ namespace WebSchedule.Controllers.Activity.Queries
 {
     public class GetConflictsQuery : IRequest<IEnumerable<ActivityResponse>>
     {
-        public int SessionId { get; set; }
+        public int GroupId { get; set; }
+        public int SessionNumber { get; set; }
         public int StartingHour { get; set; }
         public int Duration { get; set; }
     }
@@ -22,13 +23,15 @@ namespace WebSchedule.Controllers.Activity.Queries
 
         public Task<IEnumerable<ActivityResponse>> Handle(GetConflictsQuery request, CancellationToken cancellationToken)
         {
-            var sessions = _sessionRepository.GetDefaults().OrderBy(x => x.SpringSemester).ThenBy(x => x.Number);
-            return Task.FromResult(sessions.Select(session => new SessionInGroupResponse
+            var activities = _activityRepository.GetActivitiesForSession(request.GroupId, request.SessionNumber).ToList()
+                .Where(x => x.IsOverlapping(request.StartingHour, request.Duration));
+            return Task.FromResult(activities.Select(activity => new ActivityResponse
             {
-                GroupId = session.GroupId,
-                Number = session.Number,
-                WeekNumber = session.WeekNumber,
-                SpringSemester = session.SpringSemester,
+                ActivityId = activity.Id,
+                Name = activity.Name,
+                TeacherFullName = activity.TeacherFullName,
+                StartingHour = activity.StartingHour,
+                Duration = activity.Duration
             }));
         }
     }

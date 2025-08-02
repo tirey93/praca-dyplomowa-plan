@@ -24,7 +24,10 @@ namespace WebSchedule.Domain.Entities.Study
 
         public bool IsOverlapping(int startingHour, int duration)
         {
-            return true;
+            int currentActivityEnd = StartingHour + Duration;
+            int newActivityEnd = startingHour + duration;
+
+            return startingHour < currentActivityEnd && newActivityEnd > StartingHour;
         }
     }
 }

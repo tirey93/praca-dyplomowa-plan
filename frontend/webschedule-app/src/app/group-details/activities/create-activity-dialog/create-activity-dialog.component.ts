@@ -32,6 +32,7 @@ test() {
   this.activityRepository.getConflicts$(
     this.userGroup.group.id,
     this.activityForm.controls.sessionNumber.value?.id!,
+    this.userGroup.group.springSemester,
     this.activityForm.controls.startingHour.value?.id!,
     this.activityForm.controls.duration.value! 
   ).subscribe({

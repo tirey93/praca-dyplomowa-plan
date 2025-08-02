@@ -28,6 +28,7 @@ namespace WebSchedule.Controllers.Activity
         public async Task<ActionResult<IEnumerable<ActivityResponse>>> GetConflicts(
             [FromQuery] int groupId,
             [FromQuery] int sessionNumber,
+            [FromQuery] bool springSemester,
             [FromQuery] int startingHour,
             [FromQuery] int duration)
         {
@@ -37,6 +38,7 @@ namespace WebSchedule.Controllers.Activity
                 {
                     GroupId = groupId,
                     SessionNumber = sessionNumber,
+                    SpringSemester = springSemester,
                     StartingHour = startingHour,
                     Duration = duration
                 }));

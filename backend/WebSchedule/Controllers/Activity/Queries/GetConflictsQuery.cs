@@ -8,6 +8,7 @@ namespace WebSchedule.Controllers.Activity.Queries
     {
         public int GroupId { get; set; }
         public int SessionNumber { get; set; }
+        public bool SpringSemester { get; set; }
         public int StartingHour { get; set; }
         public int Duration { get; set; }
     }
@@ -23,8 +24,8 @@ namespace WebSchedule.Controllers.Activity.Queries
 
         public Task<IEnumerable<ActivityResponse>> Handle(GetConflictsQuery request, CancellationToken cancellationToken)
         {
-            var activities = _activityRepository.GetActivitiesForSession(request.GroupId, request.SessionNumber).ToList()
-                .Where(x => x.IsOverlapping(request.StartingHour, request.Duration));
+            var activities = _activityRepository.GetActivitiesForSession(request.GroupId, request.SessionNumber, request.SpringSemester)
+                .ToList().Where(x => x.IsOverlapping(request.StartingHour, request.Duration));
             return Task.FromResult(activities.Select(activity => new ActivityResponse
             {
                 ActivityId = activity.Id,

@@ -20,5 +20,10 @@ namespace WebSchedule.Infrastructure.Repositories
                     && x.WeekDay == weekDay
                     && sessionNumbers.Contains(x.Session.Number));
         }
+
+        public async Task AddActivity(Activity activity)
+        {
+            await _dbSet.AddAsync(activity);
+        }
     }
 }

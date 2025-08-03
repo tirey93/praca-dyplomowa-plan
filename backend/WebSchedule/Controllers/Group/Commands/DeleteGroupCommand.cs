@@ -1,9 +1,9 @@
 ﻿using MediatR;
+using WebSchedule.Controllers.Group.Commands;
 using WebSchedule.Controllers.Group.Exceptions;
-using WebSchedule.Controllers.StudyCourse.Commands;
 using WebSchedule.Domain.Repositories;
 
-namespace WebSchedule.Controllers.StudyCourse.Commands
+namespace WebSchedule.Controllers.Group.Commands
 {
     public class DeleteGroupCommand : IRequest
     {

@@ -120,12 +120,27 @@ export class CreateActivityDialogComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.sessionsSelected);
-    console.log(this.activityForm.controls.weekDay.value);
-    console.log(this.activityForm.controls.name.value);
-    console.log(this.activityForm.controls.teacherFullName.value);
-    console.log(this.activityForm.controls.startingHour.value);
-    console.log(this.activityForm.controls.duration.value);
+    this.activityRepository.create$({ 
+      groupId: this.userGroup.group.id!,
+      name: this.activityForm.controls.name.value!,
+      teacherFullName: this.activityForm.controls.teacherFullName.value!,
+      sessionNumbers: this.sessionsSelected,
+      weekDay: this.activityForm.controls.weekDay.value!,
+      springSemester: this.userGroup.group.springSemester,
+      startingHour: this.activityForm.controls.startingHour.value!.id,
+      duration: this.activityForm.controls.duration.value!
+    }).subscribe({
+      next: () => {
+        // this.syncService.refreshGroups$.next();
+        //sync activity lists
+        this.snackBarService.openMessage("ActivityCreated");
+        this.dialogRef.close();
+      },
+      error: (err) => {
+        this.snackBarService.openError(err);
+        this.activityForm.setErrors({'incorrect': true})
+      }
+    })
   }
 
   onSessionClicked(sessionNumber: number, selected: boolean) {

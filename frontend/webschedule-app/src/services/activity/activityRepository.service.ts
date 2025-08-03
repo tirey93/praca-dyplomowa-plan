@@ -3,6 +3,7 @@ import { environment } from "../../enviroments/enviroments"
 import { CookieService } from "ngx-cookie-service"
 import { ActivityResponse } from "./dtos/activityResponse"
 import { HttpClient } from "@angular/common/http"
+import { ActivityRequest } from "./dtos/activityRequest"
 
 @Injectable({
     providedIn: 'root'
@@ -16,6 +17,14 @@ import { HttpClient } from "@angular/common/http"
         return this.http.get<ActivityResponse[]>(`${this.url}/Conflicts?groupId=${groupId}&sessionNumbers=${sessionNumbers}&springSemester=${springSemester}&startingHour=${startingHour}&duration=${duration}&weekDay=${weekDay}`, {
             headers: {
             authorization: `Bearer ${this.cookieService.get("token")}`
+            }
+        })
+    }
+
+    create$(activityRequest: ActivityRequest) {
+        return this.http.post(`${this.url}`, activityRequest, {
+            headers: {
+                authorization: `Bearer ${this.cookieService.get("token")}`
             }
         })
     }

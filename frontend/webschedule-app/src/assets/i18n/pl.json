@@ -35,11 +35,10 @@
   "UserWasCreated": "Użytkownik został utworzony.",
   "LinkCopied": "Link do grupy został skopiowany.",
   "SemesterUpdated": "Semestr został zmieniony z powodzeniem.",
+  "ActivityCreated": "Zajęcia zostały dodane z powodzeniem.",
 
   "ExceptionContentCannotBeEmpty": "Wiadomość nie może być pusta.",
   "ExceptionContentCannotBeThatLarge": "Wiadomość nie może być dłuższa niż {{0}} znaków.",
-  "ExceptionSessionInGroupNotFound": "Zjazd nie został odnaleziony.",
+  "ExceptionSessionInGroupNotFound": "Zjazd nie został odnaleziony."
 
-  "saturday": "Sobota",
-  "sunday": "Niedziela"
 }

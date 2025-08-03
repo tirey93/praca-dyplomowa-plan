@@ -2,13 +2,12 @@
 using WebSchedule.Controllers.Group.Commands;
 using WebSchedule.Controllers.Group.Exceptions;
 using WebSchedule.Controllers.Responses;
-using WebSchedule.Controllers.StudyCourse.Commands;
 using WebSchedule.Controllers.StudyCourse.Exceptions;
 using WebSchedule.Controllers.User.Exceptions;
 using WebSchedule.Domain.Entities.Study;
 using WebSchedule.Domain.Repositories;
 
-namespace WebSchedule.Controllers.StudyCourse.Commands
+namespace WebSchedule.Controllers.Group.Commands
 {
     public class CreateGroupCommand : IRequest<GroupResponse>
     {

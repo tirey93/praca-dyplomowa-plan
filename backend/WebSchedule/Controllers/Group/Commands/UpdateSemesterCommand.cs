@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using WebSchedule.Controllers.Group.Exceptions;
-using WebSchedule.Controllers.User.Exceptions;
 using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Controllers.Group.Commands

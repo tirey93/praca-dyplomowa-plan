@@ -44,10 +44,26 @@
                     <input matSliderThumb formControlName="duration" #slider>
                 </mat-slider>
             }
-                
+            @if (activitiesConflicted$ | async; as activities) {
+                @if (activities.length > 0) {
+                    <mat-error>
+                        <span class="danger">Wybrany termin jest zajęty przez następujące zajęcia:</span>
+                        <ul>
+                            @for (activity of activities; track $index) {
+                                <li>
+                                    <b>Zjazd {{parseSessionNumber(activity.session.number)}}</b> 
+                                    {{this.formatHour(activity.startingHour)}} - 
+                                    {{getEndHourWithParams(activity.duration, activity.startingHour)}}
+                                    {{getPeriod(activity.session.weekNumber)}}: 
+                                    {{activity.name}}({{activity.teacherFullName}})
+                                </li>
+                            }
+                        </ul>
+                    </mat-error>
+                }
+            }            
         </form>
         <mat-dialog-actions>
-            <button mat-raised-button type="button" (click)="test()">Test</button>
             <button mat-raised-button type="button" (click)="onNoClick()">Anuluj</button>
             <div style="margin-left: 15px;" [matTooltip]="activityForm.invalid ? 'Należy podać wszystkie wymagane pola.' : ''">
                 <button 

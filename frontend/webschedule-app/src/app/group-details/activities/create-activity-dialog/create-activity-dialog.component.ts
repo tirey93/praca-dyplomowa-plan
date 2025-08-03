@@ -18,37 +18,28 @@ import { MatSliderModule } from '@angular/material/slider';
 import { ActivityRepositoryService } from '../../../../services/activity/activityRepository.service';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
+import { combineLatest, debounceTime, filter, map, Observable, startWith, switchMap } from 'rxjs';
+import { ActivityResponse } from '../../../../services/activity/dtos/activityResponse';
+import { AsyncPipe, CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-create-activity-dialog',
   imports: [
     MatDialogModule, ReactiveFormsModule, MatTooltipModule, MatButtonModule,
      MatFormFieldModule, MatOptionModule, MatInputModule, MatSelectModule,
-     MatSliderModule, MatChipsModule, MatDividerModule
+     MatSliderModule, MatChipsModule, MatDividerModule, AsyncPipe, CommonModule
   ],
   templateUrl: './create-activity-dialog.component.html',
   styleUrl: './create-activity-dialog.component.scss'
 })
 export class CreateActivityDialogComponent implements OnInit {
-test() {
-  this.activityRepository.getConflicts$(
-    this.userGroup.group.id,
-    this.sessionsSelected,
-    this.userGroup.group.springSemester,
-    this.activityForm.controls.startingHour.value?.id!,
-    this.activityForm.controls.duration.value! 
-  ).subscribe({
-    next: (activityResponse) => {
-      console.log(activityResponse);
-    }
-  })
-}
   data = inject(DIALOG_DATA);
   userGroup: UserGroupResponse = this.data.userGroup;
   allSessions: SelectValue[] = [];
   allHours: SelectValue[] = this.getAllHours();
 
   sessionsSelected: number[] = [];
+  activitiesConflicted$: Observable<ActivityResponse[]>
 
   activityForm = new FormGroup({
     name: new FormControl("", {validators: [Validators.required]}),
@@ -64,6 +55,30 @@ test() {
     private snackBarService: SnackBarService,
     private activityRepository: ActivityRepositoryService
   ) {
+      this.activitiesConflicted$ = combineLatest([
+        this.activityForm.controls.duration.valueChanges.pipe(startWith(this.activityForm.controls.duration.value)),
+        this.activityForm.controls.startingHour.valueChanges.pipe(
+          startWith(this.activityForm.controls.startingHour.value),
+          map(value => (typeof value === 'object' && value !== null && 'id' in value ? (value as SelectValue).id : null))
+        ),
+        this.activityForm.controls.sessions.valueChanges.pipe(startWith(this.activityForm.controls.sessions.value)),
+      ]).pipe(
+        debounceTime(50),
+        filter(([duration, startingHour, sessions]) => {
+          const areApiParamsReady =
+            duration !== null && duration !== undefined &&
+            startingHour !== null && startingHour !== undefined && typeof startingHour === 'number' &&
+            sessions !== null && sessions !== undefined && sessions.length > 0
+          return areApiParamsReady;
+        }),
+        switchMap(([duration, startingHour, sessions]) => this.activityRepository.getConflicts$(
+            this.userGroup.group.id,
+            sessions!,
+            this.userGroup.group.springSemester,
+            startingHour!,
+            duration! 
+          )),
+      );
   }
 
   ngOnInit(): void {
@@ -103,12 +118,29 @@ test() {
   }
   getGroupName(userGroup: UserGroupResponse): string { return GroupHelper.groupInfoToString(userGroup.group)}
 
+  parseSessionNumber(sessionNumber: number): string {
+    return sessionNumber.toString().padStart(2, '0') 
+  }
+
   getEndHour(): string {
     if (this.activityForm.controls.startingHour.dirty){
-      const endHour = this.activityForm.controls.duration.value! + this.activityForm.controls.startingHour.value?.id!;
-      return endHour.toString().padStart(2, '0') + ':00';
+      return this.getEndHourWithParams(
+        this.activityForm.controls.duration.value!,
+        this.activityForm.controls.startingHour.value?.id!
+      )
     }
     return '';
+  }
+
+  getEndHourWithParams(duration: number, startingHour: number): string {
+    const endHour = duration + startingHour;
+    return this.formatHour(endHour);
+  }
+  getPeriod(weekNumber: number): string {
+    return WeekHelper.getPeriod(WeekHelper.getSaturdayOfWeek(weekNumber))
+  }
+  formatHour(hour: number): string {
+    return hour.toString().padStart(2, '0') + ':00';
   }
 
   private getAllHours(): SelectValue[] {
@@ -120,14 +152,11 @@ test() {
     for (dayStart; currentHour <= dayEnd; currentHour++) {
       result.push({
         id: currentHour,
-        displayText: currentHour.toString().padStart(2, '0') + ':00'
+        displayText: this.formatHour(currentHour)
       })
     }
 
     return result;
-  }
-  private getPeriod(weekNumber: number): string {
-    return WeekHelper.getPeriod(WeekHelper.getSaturdayOfWeek(weekNumber))
   }
 }
 

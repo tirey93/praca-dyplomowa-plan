@@ -27,17 +27,18 @@ namespace WebSchedule.Controllers.Activity
 #endif
         public async Task<ActionResult<IEnumerable<ActivityResponse>>> GetConflicts(
             [FromQuery] int groupId,
-            [FromQuery] int sessionNumber,
+            [FromQuery] string sessionNumbers,
             [FromQuery] bool springSemester,
             [FromQuery] int startingHour,
             [FromQuery] int duration)
         {
             try
             {
+                sessionNumbers ??= string.Empty;
                 return Ok(await _mediator.Send(new GetConflictsQuery
                 {
                     GroupId = groupId,
-                    SessionNumber = sessionNumber,
+                    SessionNumbers = [.. sessionNumbers.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(int.Parse)],
                     SpringSemester = springSemester,
                     StartingHour = startingHour,
                     Duration = duration

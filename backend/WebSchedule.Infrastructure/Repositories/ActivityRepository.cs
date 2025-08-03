@@ -11,13 +11,13 @@ namespace WebSchedule.Infrastructure.Repositories
         {
         }
 
-        public IEnumerable<Activity> GetActivitiesForSession(int groupId, int sessionNumber, bool springSemester)
+        public IEnumerable<Activity> GetActivitiesForSession(int groupId, int[] sessionNumbers, bool springSemester)
         {
             return _dbSet
                 .Include(x => x.Session)
                 .Where(x => x.Session.GroupId == groupId 
                     && x.Session.SpringSemester == springSemester
-                    && x.Session.Number == sessionNumber);
+                    && sessionNumbers.Contains(x.Session.Number));
         }
     }
 }

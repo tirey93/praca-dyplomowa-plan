@@ -55,6 +55,7 @@ test() {
     teacherFullName: new FormControl("", {validators: [Validators.required]}),
     duration: new FormControl(2, {validators: [Validators.required, Validators.min(1), Validators.max(6)]}),
     startingHour: new FormControl<SelectValue | null>(null),
+    sessions: new FormControl<number[] | null>(null, [Validators.minLength(1), Validators.required])
   });
 
   constructor(
@@ -98,7 +99,7 @@ test() {
     if (selected) {
       this.sessionsSelected.push(sessionNumber);
     }
-    console.log(this.sessionsSelected);
+    this.activityForm.get('sessions')?.setValue(this.sessionsSelected);
   }
   getGroupName(userGroup: UserGroupResponse): string { return GroupHelper.groupInfoToString(userGroup.group)}
 

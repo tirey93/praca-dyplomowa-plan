@@ -75,7 +75,7 @@
                     mat-flat-button
                     type="submit" 
                     cdkFocusInitial
-                    [disabled]="activityForm.invalid"
+                    [disabled]="activityForm.invalid || isLoading"
                     (click)="submit()">Utwórz
                 </button>
             </div>

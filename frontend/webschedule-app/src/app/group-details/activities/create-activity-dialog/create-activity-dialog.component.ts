@@ -39,6 +39,7 @@ export class CreateActivityDialogComponent implements OnInit {
   userGroup: UserGroupResponse = this.data.userGroup;
   allSessions: SelectValue[] = [];
   allHours: SelectValue[] = this.getAllHours();
+  isLoading = false;
 
   sessionsSelected: number[] = [];
   activitiesConflicted: ActivityResponse[] = []
@@ -68,29 +69,32 @@ export class CreateActivityDialogComponent implements OnInit {
         ),
         this.activityForm.controls.sessions.valueChanges.pipe(startWith(this.activityForm.controls.sessions.value)),
       ]).pipe(
-        debounceTime(50),
         filter(([duration, weekDay, startingHour, sessions]) => {
           const areApiParamsReady =
             duration !== null && duration !== undefined &&
-            weekDay !== null && weekDay !== undefined && weekDay.length > 0
+            weekDay !== null && weekDay !== undefined && weekDay.length > 0 &&
             startingHour !== null && startingHour !== undefined && typeof startingHour === 'number' &&
             sessions !== null && sessions !== undefined && sessions.length > 0
           return areApiParamsReady;
         }),
-        switchMap(([duration, weekDay, startingHour, sessions]) => this.activityRepository.getConflicts$(
+        switchMap(([duration, weekDay, startingHour, sessions]) => {
+          this.isLoading = true;
+          return this.activityRepository.getConflicts$(
             this.userGroup.group.id,
             sessions!,
             this.userGroup.group.springSemester,
             startingHour!,
             duration!,
             weekDay!
-          )),
+          )}),
+        
       ).subscribe({
         next:(activities) => {
           this.activitiesConflicted = [...activities];
           if (activities.length > 0) {
             this.activityForm.setErrors({'incorrect': true});
           }
+          this.isLoading = false;
         }
       });
   }

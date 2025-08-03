@@ -6,5 +6,6 @@ export interface ActivityResponse {
     teacherFullName: string;
     startingHour: number;
     duration: number;
+    weekDay: string;
     session: SessionInGroupResponse
 }

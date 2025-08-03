@@ -24,6 +24,13 @@
                     }
                 </mat-chip-set>
             </div>
+            <div style="margin-bottom: 20px;">
+                <mat-radio-group formControlName="weekDay">
+                    <mat-radio-button value="saturday">Sobota</mat-radio-button>
+                    <mat-radio-button value="sunday">Niedziela</mat-radio-button>
+                </mat-radio-group>
+            </div>
+
             <div class="dialog-content-21-container">
                 <mat-form-field appearance="outline" class="dialog-full-width">
                     <mat-label>Godzina rozpoczęcia</mat-label>
@@ -53,7 +60,7 @@
                                 <b>Zjazd {{parseSessionNumber(activity.session.number)}}</b> 
                                 {{this.formatHour(activity.startingHour)}} - 
                                 {{getEndHourWithParams(activity.duration, activity.startingHour)}}
-                                {{getPeriod(activity.session.weekNumber)}} 
+                                {{getDay(activity.session.weekNumber, activity.weekDay)}} 
                                 {{activity.name}}({{activity.teacherFullName}})
                             </li>
                         }

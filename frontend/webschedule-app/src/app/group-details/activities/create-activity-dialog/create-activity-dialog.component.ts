@@ -21,13 +21,15 @@ import { MatDividerModule } from '@angular/material/divider';
 import { combineLatest, debounceTime, filter, map, Observable, startWith, switchMap } from 'rxjs';
 import { ActivityResponse } from '../../../../services/activity/dtos/activityResponse';
 import { AsyncPipe, CommonModule } from '@angular/common';
+import { MatRadioModule } from '@angular/material/radio';
 
 @Component({
   selector: 'app-create-activity-dialog',
   imports: [
     MatDialogModule, ReactiveFormsModule, MatTooltipModule, MatButtonModule,
      MatFormFieldModule, MatOptionModule, MatInputModule, MatSelectModule,
-     MatSliderModule, MatChipsModule, MatDividerModule, CommonModule
+     MatSliderModule, MatChipsModule, MatDividerModule, CommonModule,
+     MatRadioModule
   ],
   templateUrl: './create-activity-dialog.component.html',
   styleUrl: './create-activity-dialog.component.scss'
@@ -47,7 +49,8 @@ export class CreateActivityDialogComponent implements OnInit {
     duration: new FormControl(2, {validators: [Validators.required, Validators.min(1), Validators.max(6)]}),
     startingHour: new FormControl<SelectValue | null>(null),
     sessions: new FormControl<number[] | null>(null, [Validators.minLength(1), Validators.required]),
-    hasConflicts: new FormControl(false)
+    hasConflicts: new FormControl(false),
+    weekDay: new FormControl("", [Validators.required])
   });
 
   constructor(
@@ -58,6 +61,7 @@ export class CreateActivityDialogComponent implements OnInit {
   ) {
       combineLatest([
         this.activityForm.controls.duration.valueChanges.pipe(startWith(this.activityForm.controls.duration.value)),
+        this.activityForm.controls.weekDay.valueChanges.pipe(startWith(this.activityForm.controls.weekDay.value)),
         this.activityForm.controls.startingHour.valueChanges.pipe(
           startWith(this.activityForm.controls.startingHour.value),
           map(value => (typeof value === 'object' && value !== null && 'id' in value ? (value as SelectValue).id : null))
@@ -65,19 +69,21 @@ export class CreateActivityDialogComponent implements OnInit {
         this.activityForm.controls.sessions.valueChanges.pipe(startWith(this.activityForm.controls.sessions.value)),
       ]).pipe(
         debounceTime(50),
-        filter(([duration, startingHour, sessions]) => {
+        filter(([duration, weekDay, startingHour, sessions]) => {
           const areApiParamsReady =
             duration !== null && duration !== undefined &&
+            weekDay !== null && weekDay !== undefined && weekDay.length > 0
             startingHour !== null && startingHour !== undefined && typeof startingHour === 'number' &&
             sessions !== null && sessions !== undefined && sessions.length > 0
           return areApiParamsReady;
         }),
-        switchMap(([duration, startingHour, sessions]) => this.activityRepository.getConflicts$(
+        switchMap(([duration, weekDay, startingHour, sessions]) => this.activityRepository.getConflicts$(
             this.userGroup.group.id,
             sessions!,
             this.userGroup.group.springSemester,
             startingHour!,
-            duration! 
+            duration!,
+            weekDay!
           )),
       ).subscribe({
         next:(activities) => {
@@ -111,6 +117,7 @@ export class CreateActivityDialogComponent implements OnInit {
 
   submit() {
     console.log(this.sessionsSelected);
+    console.log(this.activityForm.controls.weekDay.value);
     console.log(this.activityForm.controls.name.value);
     console.log(this.activityForm.controls.teacherFullName.value);
     console.log(this.activityForm.controls.startingHour.value);
@@ -149,6 +156,9 @@ export class CreateActivityDialogComponent implements OnInit {
   }
   formatHour(hour: number): string {
     return hour.toString().padStart(2, '0') + ':00';
+  }
+  getDay(weekNumber: number, weekDay: string): string {
+    return WeekHelper.getWeekendDay(WeekHelper.getSaturdayOfWeek(weekNumber), weekDay.toLowerCase() === "sunday");
   }
 
   private getAllHours(): SelectValue[] {

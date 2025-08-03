@@ -30,6 +30,7 @@ namespace WebSchedule.Controllers.Activity
             [FromQuery] string sessionNumbers,
             [FromQuery] bool springSemester,
             [FromQuery] int startingHour,
+            [FromQuery] string weekDay,
             [FromQuery] int duration)
         {
             try
@@ -41,6 +42,7 @@ namespace WebSchedule.Controllers.Activity
                     SessionNumbers = [.. sessionNumbers.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(int.Parse)],
                     SpringSemester = springSemester,
                     StartingHour = startingHour,
+                    WeekDay = weekDay,
                     Duration = duration
                 }));
             }

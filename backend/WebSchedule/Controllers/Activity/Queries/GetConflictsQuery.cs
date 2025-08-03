@@ -26,7 +26,9 @@ namespace WebSchedule.Controllers.Activity.Queries
 
         public Task<IEnumerable<ActivityResponse>> Handle(GetConflictsQuery request, CancellationToken cancellationToken)
         {
-            var activities = _activityRepository.GetActivitiesForDay(request.GroupId, request.SessionNumbers, request.SpringSemester, Enum.Parse<WeekDay>(request.WeekDay))
+            var activities = _activityRepository.GetActivitiesForDay(
+                    request.GroupId, request.SessionNumbers, 
+                    request.SpringSemester, Enum.Parse<WeekDay>(request.WeekDay, true))
                 .ToList().Where(x => x.IsOverlapping(request.StartingHour, request.Duration));
             return Task.FromResult(activities.Select(activity => new ActivityResponse
             {
@@ -35,6 +37,7 @@ namespace WebSchedule.Controllers.Activity.Queries
                 TeacherFullName = activity.TeacherFullName,
                 StartingHour = activity.StartingHour,
                 Duration = activity.Duration,
+                WeekDay = activity.WeekDay.ToString(),
                 Session = new SessionInGroupResponse
                 {
                     GroupId = activity.Session.GroupId,

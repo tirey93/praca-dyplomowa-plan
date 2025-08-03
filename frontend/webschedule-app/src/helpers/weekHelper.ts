@@ -23,5 +23,17 @@ export class WeekHelper {
         const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const year = date.getFullYear();
         return `${saturday}-${sunday}.${month}.${year}`
-      }
+    }
+
+    static getWeekendDay(date: Date, isSunday: boolean): string {
+        let day = date.getDate().toString().padStart(2, '0');
+        if (isSunday) {
+            const sundayFull = new Date(date.getTime() + (1000 * 60 * 60 * 24));
+            const sunday = sundayFull.getDate().toString().padStart(2, '0');
+            day = sunday;
+        }
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}.${month}.${year}`
+    }
 }

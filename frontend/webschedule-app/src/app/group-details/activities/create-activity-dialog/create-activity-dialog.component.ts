@@ -27,7 +27,7 @@ import { AsyncPipe, CommonModule } from '@angular/common';
   imports: [
     MatDialogModule, ReactiveFormsModule, MatTooltipModule, MatButtonModule,
      MatFormFieldModule, MatOptionModule, MatInputModule, MatSelectModule,
-     MatSliderModule, MatChipsModule, MatDividerModule, AsyncPipe, CommonModule
+     MatSliderModule, MatChipsModule, MatDividerModule, CommonModule
   ],
   templateUrl: './create-activity-dialog.component.html',
   styleUrl: './create-activity-dialog.component.scss'
@@ -39,14 +39,15 @@ export class CreateActivityDialogComponent implements OnInit {
   allHours: SelectValue[] = this.getAllHours();
 
   sessionsSelected: number[] = [];
-  activitiesConflicted$: Observable<ActivityResponse[]>
+  activitiesConflicted: ActivityResponse[] = []
 
   activityForm = new FormGroup({
     name: new FormControl("", {validators: [Validators.required]}),
     teacherFullName: new FormControl("", {validators: [Validators.required]}),
     duration: new FormControl(2, {validators: [Validators.required, Validators.min(1), Validators.max(6)]}),
     startingHour: new FormControl<SelectValue | null>(null),
-    sessions: new FormControl<number[] | null>(null, [Validators.minLength(1), Validators.required])
+    sessions: new FormControl<number[] | null>(null, [Validators.minLength(1), Validators.required]),
+    hasConflicts: new FormControl(false)
   });
 
   constructor(
@@ -55,7 +56,7 @@ export class CreateActivityDialogComponent implements OnInit {
     private snackBarService: SnackBarService,
     private activityRepository: ActivityRepositoryService
   ) {
-      this.activitiesConflicted$ = combineLatest([
+      combineLatest([
         this.activityForm.controls.duration.valueChanges.pipe(startWith(this.activityForm.controls.duration.value)),
         this.activityForm.controls.startingHour.valueChanges.pipe(
           startWith(this.activityForm.controls.startingHour.value),
@@ -78,7 +79,14 @@ export class CreateActivityDialogComponent implements OnInit {
             startingHour!,
             duration! 
           )),
-      );
+      ).subscribe({
+        next:(activities) => {
+          this.activitiesConflicted = [...activities];
+          if (activities.length > 0) {
+            this.activityForm.setErrors({'incorrect': true});
+          }
+        }
+      });
   }
 
   ngOnInit(): void {

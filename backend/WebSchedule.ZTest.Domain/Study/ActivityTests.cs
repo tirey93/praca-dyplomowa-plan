@@ -11,7 +11,7 @@ namespace WebSchedule.ZTest.Domain.Study
         public ActivityTests()
         {
             var sessionMock = new Mock<Session>();
-            _activity = new Activity(sessionMock.Object, "name", "teacher", 14, 2);
+            _activity = new Activity(sessionMock.Object, "name", "teacher", 14, 2, WeekDay.Saturday);
         }
 
         [Theory]

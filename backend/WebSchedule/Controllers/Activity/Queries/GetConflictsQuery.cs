@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using WebSchedule.Controllers.Responses;
+using WebSchedule.Domain.Entities.Study;
 using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Controllers.Activity.Queries
@@ -10,6 +11,7 @@ namespace WebSchedule.Controllers.Activity.Queries
         public int[] SessionNumbers { get; set; }
         public bool SpringSemester { get; set; }
         public int StartingHour { get; set; }
+        public string WeekDay { get; set; }
         public int Duration { get; set; }
     }
 
@@ -24,7 +26,7 @@ namespace WebSchedule.Controllers.Activity.Queries
 
         public Task<IEnumerable<ActivityResponse>> Handle(GetConflictsQuery request, CancellationToken cancellationToken)
         {
-            var activities = _activityRepository.GetActivitiesForSession(request.GroupId, request.SessionNumbers, request.SpringSemester)
+            var activities = _activityRepository.GetActivitiesForDay(request.GroupId, request.SessionNumbers, request.SpringSemester, Enum.Parse<WeekDay>(request.WeekDay))
                 .ToList().Where(x => x.IsOverlapping(request.StartingHour, request.Duration));
             return Task.FromResult(activities.Select(activity => new ActivityResponse
             {

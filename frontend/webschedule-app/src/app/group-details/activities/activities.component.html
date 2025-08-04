@@ -1,11 +1,11 @@
-<div style="direction: rtl; margin: 20px;">
+<div style="direction: rtl; margin: 20px 20px 12px 20px;">
     <button (click)="addActivity()" matTooltip="Utwórz zajęcia" mat-mini-fab type="button"><mat-icon>add</mat-icon></button>
 </div>
 <div class="activities-container">
     @for (session of activitiesInSessions; track $index) {
-        <app-divider>Zjazd {{session.sessionNumber.toString().padStart(2, '0')}}</app-divider>
+        <app-divider style="margin: 20px 0;">Zjazd {{session.sessionNumber.toString().padStart(2, '0')}}</app-divider>
         @for (activity of session.activities; track $index) {
-            <mat-card style="margin: 15px;">
+            <mat-card style="margin: 10px;">
                 <mat-card-content>
                     <mat-card-title style="display: flex; justify-content: space-between;">
                         <div style="display: flex; gap: 5px;">

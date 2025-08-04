@@ -51,18 +51,17 @@
             <mat-slide-toggle  style="margin-top: 10px;" formControlName="springSemester">Semestr {{groupForm.controls.springSemester.value ? "letni": "zimowy"}}</mat-slide-toggle>
         </div>
     </form>
-    <mat-divider></mat-divider>
-    <h2>Zjazdy</h2>
+    <app-divider>Zjazdy</app-divider>
     <p class="dialog-description">
         Ustawiaj weekendy zjazdowe zgodnie z rzeczywistością. <br> Nie jesteś pewny? Zawsze możesz się tym zająć później, w ustawieniach grupy.
     </p>
     <div style="overflow-y: auto; max-height: 80vh;">
         @if (groupForm.controls.springSemester.value) {
             <p>Lato</p>
-            <app-session-editor [creation]="true" (onSessionUpdate)="handleSpringSessionUpdate($event)"></app-session-editor>
+            <app-session-editor [springSemester]="true" [creation]="true" (onSessionUpdate)="handleSpringSessionUpdate($event)"></app-session-editor>
         } @else {
             <p>Zima</p>
-            <app-session-editor [creation]="true" (onSessionUpdate)="handleFallSessionUpdate($event)"></app-session-editor>
+            <app-session-editor [springSemester]="false" [creation]="true" (onSessionUpdate)="handleFallSessionUpdate($event)"></app-session-editor>
         }
     </div>
     <mat-divider style="margin: 20px 0;"></mat-divider>

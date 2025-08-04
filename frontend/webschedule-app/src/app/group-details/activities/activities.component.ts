@@ -5,12 +5,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CreateActivityDialogComponent } from './create-activity-dialog/create-activity-dialog.component';
 import { UserGroupResponse } from '../../../services/userInGroup/dtos/userGroupResponse';
+import { MatDividerModule } from '@angular/material/divider';
+import { DividerComponent } from "../../divider/divider.component";
 
 @Component({
   selector: 'app-activities',
   imports: [
-    MatButtonModule, MatTooltipModule, MatIconModule
-  ],
+    MatButtonModule, MatTooltipModule, MatIconModule, MatDividerModule,
+    DividerComponent
+],
   templateUrl: './activities.component.html',
   styleUrl: './activities.component.scss'
 })

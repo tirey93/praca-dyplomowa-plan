@@ -22,15 +22,18 @@ import { combineLatest, debounceTime, filter, map, Observable, startWith, switch
 import { ActivityResponse } from '../../../../services/activity/dtos/activityResponse';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
+import { SyncService } from '../../../../services/sync.service';
+import { DividerComponent } from "../../../divider/divider.component";
 
 @Component({
   selector: 'app-create-activity-dialog',
   imports: [
     MatDialogModule, ReactiveFormsModule, MatTooltipModule, MatButtonModule,
-     MatFormFieldModule, MatOptionModule, MatInputModule, MatSelectModule,
-     MatSliderModule, MatChipsModule, MatDividerModule, CommonModule,
-     MatRadioModule
-  ],
+    MatFormFieldModule, MatOptionModule, MatInputModule, MatSelectModule,
+    MatSliderModule, MatChipsModule, MatDividerModule, CommonModule,
+    MatRadioModule,
+    DividerComponent
+],
   templateUrl: './create-activity-dialog.component.html',
   styleUrl: './create-activity-dialog.component.scss'
 })
@@ -58,7 +61,8 @@ export class CreateActivityDialogComponent implements OnInit {
     private dialogRef: MatDialogRef<CreateActivityDialogComponent>,
     private sessionRepository: SessionService,
     private snackBarService: SnackBarService,
-    private activityRepository: ActivityRepositoryService
+    private activityRepository: ActivityRepositoryService,
+    private syncService: SyncService
   ) {
       combineLatest([
         this.activityForm.controls.duration.valueChanges.pipe(startWith(this.activityForm.controls.duration.value)),
@@ -131,8 +135,7 @@ export class CreateActivityDialogComponent implements OnInit {
       duration: this.activityForm.controls.duration.value!
     }).subscribe({
       next: () => {
-        // this.syncService.refreshGroups$.next();
-        //sync activity lists
+        this.syncService.refreshActivities$.next();
         this.snackBarService.openMessage("ActivityCreated");
         this.dialogRef.close();
       },

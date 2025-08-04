@@ -11,6 +11,7 @@ import { BehaviorSubject, Observable, of, Subject, switchMap } from "rxjs";
         switchMap((groupId) => groupId ? of(true) : of(false))
     );
     refreshGroups$ = new Subject<void>();
+    refreshActivities$ = new Subject<void>();
 
     selectGroup(groupId: number) {
         this._groupId.next(groupId);

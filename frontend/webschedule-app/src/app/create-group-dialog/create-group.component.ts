@@ -26,6 +26,7 @@ import { SessionEditorComponent } from "../session-editor/session-editor.compone
 import { SessionDto } from '../dtos/sessionDto';
 import { SessionRequest } from '../../services/group/dtos/sessionRequest';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { DividerComponent } from "../divider/divider.component";
 
 @Component({
   selector: 'app-create-group',
@@ -33,7 +34,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatFormFieldModule, MatLabel, MatInputModule,
     MatButtonModule, ReactiveFormsModule, CommonModule, MatIconModule, MatSelectModule, MatOptionModule,
     TranslatePipe, MatAutocompleteModule, MatTooltipModule, MatDividerModule,
-    SessionEditorComponent, MatSlideToggleModule
+    SessionEditorComponent, MatSlideToggleModule,
+    DividerComponent
 ],
   templateUrl: './create-group.component.html',
   styleUrl: './create-group.component.scss'

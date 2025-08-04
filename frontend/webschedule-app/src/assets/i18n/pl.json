@@ -39,6 +39,8 @@
 
   "ExceptionContentCannotBeEmpty": "Wiadomość nie może być pusta.",
   "ExceptionContentCannotBeThatLarge": "Wiadomość nie może być dłuższa niż {{0}} znaków.",
-  "ExceptionSessionInGroupNotFound": "Zjazd nie został odnaleziony."
+  "ExceptionSessionInGroupNotFound": "Zjazd nie został odnaleziony.",
 
+  "Saturday": "Sobota",
+  "Sunday": "Niedziela"
 }

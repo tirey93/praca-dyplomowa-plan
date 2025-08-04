@@ -23,7 +23,7 @@ import { ActivityInSessionResponse } from "./dtos/activityInSessionResponse"
     }
 
     getByCurrentDate$(groupId: number, springSemester:boolean, sessionCount: number) {
-        return this.http.get<ActivityInSessionResponse[]>(`${this.url}/Group?groupId=${groupId}&springSemester=${springSemester}&sessionCount=${sessionCount}`, {
+        return this.http.get<ActivityInSessionResponse[]>(`${this.url}/Group/${groupId}/ByCurrentDate?springSemester=${springSemester}&sessionCount=${sessionCount}`, {
             headers: {
             authorization: `Bearer ${this.cookieService.get("token")}`
             }

@@ -14,20 +14,23 @@ import { ActivityRepositoryService } from '../../../services/activity/activityRe
 import { SyncService } from '../../../services/sync.service';
 import { filter, Subject, switchMap, takeUntil } from 'rxjs';
 import { UserInGroupService } from '../../../services/userInGroup/userInGroup.service';
+import { ActivityInSessionResponse } from '../../../services/activity/dtos/activityInSessionResponse';
+import { TranslatePipe } from '@ngx-translate/core';
+import { WeekHelper } from '../../../helpers/weekHelper';
 
 @Component({
   selector: 'app-activities',
   imports: [
     MatButtonModule, MatTooltipModule, MatIconModule, MatDividerModule,
     DividerComponent, MatCardModule, MatChipsModule, MatButtonModule,
-    MatIconModule, MatMenuModule, MatTooltipModule
+    MatIconModule, MatMenuModule, MatTooltipModule, TranslatePipe
 ],
   templateUrl: './activities.component.html',
   styleUrl: './activities.component.scss'
 })
 export class ActivitiesComponent implements OnDestroy{
   userGroup?: UserGroupResponse
-
+  activitiesInSessions: ActivityInSessionResponse[] = []
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -39,9 +42,22 @@ export class ActivitiesComponent implements OnDestroy{
     syncService.currentUserGroup$.pipe(
       takeUntil(this.destroy$),
       filter(userGroup => userGroup != null),
+      switchMap((userGroup) => {
+        this.userGroup = userGroup;
+        return activityService.getByCurrentDate$(userGroup.group.id, userGroup.group.springSemester, 3);
+      })
     ).subscribe({
-      next: (userGroupResponse) => {
-        this.userGroup = userGroupResponse;
+      next: (activitiesInSessions) => {
+        this.activitiesInSessions = activitiesInSessions;
+      },
+    })
+
+    syncService.refreshActivities$.pipe(
+      takeUntil(this.destroy$),
+      switchMap(() => activityService.getByCurrentDate$(this.userGroup!.group.id, this.userGroup!.group.springSemester, 3))
+    ).subscribe({
+      next: (activitiesInSessions) => {
+        this.activitiesInSessions = activitiesInSessions;
       },
     })
   }
@@ -60,4 +76,8 @@ export class ActivitiesComponent implements OnDestroy{
       },
     })
   }
+
+  getDay(weekNumber: number, weekDay: string): string {
+      return WeekHelper.getWeekendDay(WeekHelper.getSaturdayOfWeek(weekNumber), weekDay.toLowerCase() === "sunday");
+    }
 }

@@ -1,4 +1,5 @@
-﻿using WebSchedule.Domain.Entities.Study;
+﻿using System.Globalization;
+using WebSchedule.Domain.Entities.Study;
 using WebSchedule.Domain.Repositories;
 
 namespace WebSchedule.Infrastructure.Repositories
@@ -10,6 +11,14 @@ namespace WebSchedule.Infrastructure.Repositories
         {
         }
 
+        public Session GetCurrentSession(int groupId, bool springSemester)
+        {
+            int isoWeekNumber = ISOWeek.GetWeekOfYear(DateTime.Today);
+            return _dbSet
+                .Where(x => x.GroupId == groupId && x.SpringSemester == springSemester && x.WeekNumber >= isoWeekNumber)
+                .OrderBy(x => x.Number)
+                .FirstOrDefault();
+        }
         public IEnumerable<Session> GetDefaults()
         {
             return _dbSet.Where(x => x.GroupId == null);

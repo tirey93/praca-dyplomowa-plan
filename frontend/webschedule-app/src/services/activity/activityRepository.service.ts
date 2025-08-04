@@ -21,6 +21,14 @@ import { ActivityRequest } from "./dtos/activityRequest"
         })
     }
 
+    getByCurrentDate$(groupId: number, springSemester:boolean, sessionCount: number) {
+        return this.http.get<ActivityResponse[]>(`${this.url}/Group?groupId=${groupId}&springSemester=${springSemester}&sessionCount=${sessionCount}`, {
+            headers: {
+            authorization: `Bearer ${this.cookieService.get("token")}`
+            }
+        })
+    }
+
     create$(activityRequest: ActivityRequest) {
         return this.http.post(`${this.url}`, activityRequest, {
             headers: {

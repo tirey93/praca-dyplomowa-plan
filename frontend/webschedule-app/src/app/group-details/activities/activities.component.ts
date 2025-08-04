@@ -10,6 +10,7 @@ import { DividerComponent } from "../../divider/divider.component";
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatMenuModule } from '@angular/material/menu';
+import { ActivityRepositoryService } from '../../../services/activity/activityRepository.service';
 
 @Component({
   selector: 'app-activities',
@@ -25,7 +26,8 @@ export class ActivitiesComponent {
   @Input() userGroup?: UserGroupResponse
 
   constructor(
-    private readonly dialog: MatDialog
+    private readonly dialog: MatDialog,
+    private activityService: ActivityRepositoryService
   ) {    
   }
 

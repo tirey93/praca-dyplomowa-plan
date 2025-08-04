@@ -21,6 +21,19 @@ namespace WebSchedule.Infrastructure.Repositories
                     && sessionNumbers.Contains(x.Session.Number));
         }
 
+        public IEnumerable<Activity> GetBySessionNumber(int groupId, int sessionCount, bool springSemester, int sessionNumber)
+        {
+            return _dbSet
+                .Include(x => x.Session)
+                .Where(x => x.Session.GroupId == groupId
+                    && x.Session.SpringSemester == springSemester
+                    && x.Session.Number >= sessionNumber
+                    && x.Session.Number < sessionNumber + sessionCount)
+                .OrderBy(x => x.Session.Number)
+                .ThenBy(x => x.WeekDay)
+                .ThenBy(x => x.StartingHour);
+        }
+
         public async Task AddActivity(Activity activity)
         {
             await _dbSet.AddAsync(activity);

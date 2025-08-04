@@ -7,6 +7,7 @@ namespace WebSchedule.Domain.Repositories
     {
         Session Get(int groupId, int number, bool springSemester);
         IEnumerable<Session> GetByGroup(int id);
+        Session GetCurrentSession(int groupId, bool springSemester);
         IEnumerable<Session> GetDefaults();
     }
 }

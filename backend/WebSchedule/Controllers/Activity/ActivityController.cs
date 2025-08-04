@@ -64,6 +64,40 @@ namespace WebSchedule.Controllers.Activity
             }
         }
 
+        [HttpGet("Group/{id}/ByCurrentDate")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+#if !DEBUG
+        [Authorize]
+#endif
+        public async Task<ActionResult<IEnumerable<ActivityResponse>>> GetByCurrentDate(int id,
+            [FromQuery] bool springSemester,
+            [FromQuery] int sessionCount)
+        {
+            try
+            {
+                return Ok(await _mediator.Send(new GetByCurrentDateQuery
+                {
+                    GroupId = id,
+                    SessionCount = sessionCount,
+                    SpringSemester = springSemester
+                }));
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
+            }
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -7,12 +7,16 @@ import { CreateActivityDialogComponent } from './create-activity-dialog/create-a
 import { UserGroupResponse } from '../../../services/userInGroup/dtos/userGroupResponse';
 import { MatDividerModule } from '@angular/material/divider';
 import { DividerComponent } from "../../divider/divider.component";
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'app-activities',
   imports: [
     MatButtonModule, MatTooltipModule, MatIconModule, MatDividerModule,
-    DividerComponent
+    DividerComponent, MatCardModule, MatChipsModule, MatButtonModule,
+    MatIconModule, MatMenuModule, MatTooltipModule
 ],
   templateUrl: './activities.component.html',
   styleUrl: './activities.component.scss'

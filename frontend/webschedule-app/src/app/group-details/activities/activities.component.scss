@@ -1,0 +1,6 @@
+.activities-container {
+    overflow-y: auto; 
+    max-height: calc(90vh - 420px);
+    display: flex; 
+    flex-direction: column;
+}

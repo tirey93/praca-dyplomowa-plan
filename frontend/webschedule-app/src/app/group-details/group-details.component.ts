@@ -40,15 +40,13 @@ export class GroupDetailsComponent implements OnDestroy{
   private destroy$ = new Subject<void>();
 
   constructor(
-    private userInGroupRepository: UserInGroupService,
     private syncService: SyncService,
     private readonly dialog: MatDialog,
     public snackBarService: SnackBarService,
   ) {
-    syncService.groupId$.pipe(
+    syncService.currentUserGroup$.pipe(
       takeUntil(this.destroy$),
-      filter(groupId => groupId != null),
-      switchMap((groupId) => this.userInGroupRepository.getLoggedInByGroup$(groupId))
+      filter(userGroup => userGroup != null),
     ).subscribe({
       next: (userGroupResponse) => {
         this.userGroup = userGroupResponse;

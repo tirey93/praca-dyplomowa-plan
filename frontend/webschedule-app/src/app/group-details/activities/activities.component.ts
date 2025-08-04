@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,6 +11,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatMenuModule } from '@angular/material/menu';
 import { ActivityRepositoryService } from '../../../services/activity/activityRepository.service';
+import { SyncService } from '../../../services/sync.service';
+import { filter, Subject, switchMap, takeUntil } from 'rxjs';
+import { UserInGroupService } from '../../../services/userInGroup/userInGroup.service';
 
 @Component({
   selector: 'app-activities',
@@ -22,13 +25,30 @@ import { ActivityRepositoryService } from '../../../services/activity/activityRe
   templateUrl: './activities.component.html',
   styleUrl: './activities.component.scss'
 })
-export class ActivitiesComponent {
-  @Input() userGroup?: UserGroupResponse
+export class ActivitiesComponent implements OnDestroy{
+  userGroup?: UserGroupResponse
+
+  private destroy$ = new Subject<void>();
 
   constructor(
     private readonly dialog: MatDialog,
-    private activityService: ActivityRepositoryService
-  ) {    
+    private activityService: ActivityRepositoryService,
+    private userInGroupRepository: UserInGroupService,
+    private syncService: SyncService
+  ) {
+    syncService.currentUserGroup$.pipe(
+      takeUntil(this.destroy$),
+      filter(userGroup => userGroup != null),
+    ).subscribe({
+      next: (userGroupResponse) => {
+        this.userGroup = userGroupResponse;
+      },
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   addActivity() {

@@ -37,7 +37,6 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
   
   constructor(
     private sessionService: SessionService,
-    private userInGroupRepository: UserInGroupService,
     private syncService: SyncService,
   ) {
   }
@@ -51,14 +50,13 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
       }
     })
 
-    this.syncService.groupId$.pipe(
+    this.syncService.currentUserGroup$.pipe(
       takeUntil(this.destroy$),
-      filter(groupId => groupId != null && !this.creation),
-      switchMap((groupId) => this.userInGroupRepository.getLoggedInByGroup$(groupId!)),
+      filter(userGroup => userGroup != null && !this.creation),
       switchMap((userGroup) => {
-        this.isAdmin = userGroup.isAdmin;
-        this.springSemester = userGroup.group.springSemester;
-        return this.sessionService.getByGroup$(userGroup.group.id)
+        this.isAdmin = userGroup!.isAdmin;
+        this.springSemester = userGroup!.group.springSemester;
+        return this.sessionService.getByGroup$(userGroup!.group.id)
       })
     ).subscribe({
       next: (sessionsInGroupResponse) => {

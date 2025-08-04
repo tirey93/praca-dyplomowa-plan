@@ -72,7 +72,19 @@ export class ActivitiesComponent implements OnDestroy{
       maxWidth: '50vw',
       autoFocus: false,
       data: {
-        userGroup: this.userGroup
+        userGroup: this.userGroup,
+        activityId: null
+      },
+    })
+  }
+
+  modifyActivity(activityId: number) {
+    this.dialog.open(CreateActivityDialogComponent, {
+      maxWidth: '50vw',
+      autoFocus: false,
+      data: {
+        userGroup: this.userGroup,
+        activityId: activityId
       },
     })
   }

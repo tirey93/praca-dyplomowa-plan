@@ -1,10 +1,12 @@
 @if (userGroup) {
-    <title mat-dialog-title>Utworzenie Nowych Zajęć</title>
+    <title mat-dialog-title>{{activityId ? "Modifikacja" : 'Utworzenie Nowych'}} Zajęć</title>
     <mat-dialog-content>
         <p class="dialog-description">
-            Tutaj możesz dodać zajęcia do grupy <b>{{getGroupName(userGroup)}}</b>. 
+        @if(!activityId)  {
+            Tutaj możesz mod zajęcia do grupy <b>{{getGroupName(userGroup)}}</b>. 
             <br>Po utworzeniu pojawią się one na liście zajęć oraz w kalendarzu.
-        </p>
+        }
+        </p>    
         <form [formGroup]="activityForm">
             <div class="dialog-content-half-container">
                 <mat-form-field appearance="outline">
@@ -20,7 +22,7 @@
             <div style="margin: 30px 0; max-width: 500px;">
                 <mat-chip-set>
                     @for (option of allSessions; track $index) {
-                        <mat-chip-option (selectionChange)="onSessionClicked(option.id, $event.selected)" [matTooltip]="option.additionalInfo" >Zjazd {{option.displayText}}</mat-chip-option>
+                        <mat-chip-option [disabled]="activityId" [selected]="activity && option.id === activity.session!.number" (selectionChange)="onSessionClicked(option.id, $event.selected)" [matTooltip]="option.additionalInfo" >Zjazd {{option.displayText}}</mat-chip-option>
                     }
                 </mat-chip-set>
             </div>
@@ -36,7 +38,7 @@
                     <mat-label>Godzina rozpoczęcia</mat-label>
                     <mat-select required formControlName="startingHour">
                         @for (option of allHours; track $index) {
-                            <mat-option [value]="option">{{option.displayText}}</mat-option>
+                            <mat-option [value]="option">{{option}}:00</mat-option>
                         }
                     </mat-select>
                 </mat-form-field>
@@ -70,7 +72,7 @@
         </form>
         <mat-dialog-actions>
             <button mat-raised-button type="button" (click)="onNoClick()">Anuluj</button>
-            <div style="margin-left: 15px;" [matTooltip]="activityForm.invalid ? 'Należy podać wszystkie wymagane pola.' : ''">
+            <div style="margin-left: 15px;">
                 <button 
                     mat-flat-button
                     type="submit" 

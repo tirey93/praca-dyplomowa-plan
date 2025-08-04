@@ -11,6 +11,13 @@ namespace WebSchedule.Infrastructure.Repositories
         {
         }
 
+        public Activity Get(int id)
+        {
+            return _dbSet
+                .Include(x => x.Session)
+                .FirstOrDefault(x => x.Id == id);
+        }
+
         public IEnumerable<Activity> GetActivitiesForDay(int groupId, int[] sessionNumbers, bool springSemester, WeekDay weekDay)
         {
             return _dbSet

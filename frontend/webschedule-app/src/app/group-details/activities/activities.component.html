@@ -1,6 +1,8 @@
-<div style="direction: rtl; margin: 20px 20px 12px 20px;">
-    <button (click)="addActivity()" matTooltip="Utwórz zajęcia" mat-mini-fab type="button"><mat-icon>add</mat-icon></button>
-</div>
+@if(userGroup?.isAdmin) {
+    <div style="direction: rtl; margin: 20px 20px 12px 20px;">
+        <button (click)="addActivity()" matTooltip="Utwórz zajęcia" mat-mini-fab type="button"><mat-icon>add</mat-icon></button>
+    </div>
+}
 <div class="activities-container">
     @for (session of activitiesInSessions; track $index) {
         <app-divider style="margin: 20px 0;">Zjazd {{session.sessionNumber.toString().padStart(2, '0')}}</app-divider>
@@ -12,13 +14,15 @@
                             <mat-chip [matTooltip]="getDay(activity.session.weekNumber, activity.weekDay)">{{activity.weekDay | translate}}</mat-chip>
                             <mat-chip>{{activity.startingHour}}:00 - {{activity.startingHour + activity.duration}}:00</mat-chip>
                         </div>
-                        <button matTooltip="Ustawienia" mat-icon-button [matMenuTriggerFor]="settings"> <mat-icon>more_vert</mat-icon></button>
-                        <mat-menu #settings="matMenu">
-                            <button mat-menu-item>
-                                <mat-icon>group_remove</mat-icon>
-                                Opuść grupę
-                            </button>
-                        </mat-menu>
+                        @if (userGroup?.isAdmin) {
+                            <button matTooltip="Ustawienia" mat-icon-button [matMenuTriggerFor]="settings"> <mat-icon>more_vert</mat-icon></button>
+                            <mat-menu #settings="matMenu">
+                                <button mat-menu-item (click)="modifyActivity(activity.activityId)">
+                                    <mat-icon>edit</mat-icon>
+                                    Modyfikuj zajęcia
+                                </button>
+                            </mat-menu>
+                        }
                     </mat-card-title>
                     <mat-card-subtitle style="display: flex; justify-content: space-between; margin-top: 20px;">
                         <label style="max-width: 15vw;">{{activity.teacherFullName}}</label>

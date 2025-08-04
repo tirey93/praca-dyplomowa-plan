@@ -14,6 +14,14 @@ import { ActivityInSessionResponse } from "./dtos/activityInSessionResponse"
 
     constructor(private http: HttpClient, private cookieService: CookieService) { }
 
+    getById$(activityId: number) {
+        return this.http.get<ActivityResponse>(`${this.url}/${activityId}`, {
+            headers: {
+            authorization: `Bearer ${this.cookieService.get("token")}`
+            }
+        })
+    }
+
     getConflicts$(groupId: number, sessionNumbers: number[], springSemester:boolean, startingHour: number, duration: number, weekDay: string) {
         return this.http.get<ActivityResponse[]>(`${this.url}/Conflicts?groupId=${groupId}&sessionNumbers=${sessionNumbers}&springSemester=${springSemester}&startingHour=${startingHour}&duration=${duration}&weekDay=${weekDay}`, {
             headers: {

@@ -40,8 +40,10 @@ import { DividerComponent } from "../../../divider/divider.component";
 export class CreateActivityDialogComponent implements OnInit {
   data = inject(DIALOG_DATA);
   userGroup: UserGroupResponse = this.data.userGroup;
+  activityId: number | null = this.data.activityId;
+  activity: ActivityResponse | null = null;
   allSessions: SelectValue[] = [];
-  allHours: SelectValue[] = this.getAllHours();
+  allHours: number[] = this.getAllHours();
   isLoading = false;
 
   sessionsSelected: number[] = [];
@@ -51,7 +53,8 @@ export class CreateActivityDialogComponent implements OnInit {
     name: new FormControl("", {validators: [Validators.required]}),
     teacherFullName: new FormControl("", {validators: [Validators.required]}),
     duration: new FormControl(2, {validators: [Validators.required, Validators.min(1), Validators.max(6)]}),
-    startingHour: new FormControl<SelectValue | null>(null),
+    startingHour: new FormControl<number | null>(null),
+    endingHour: new FormControl<SelectValue | null>(null),
     sessions: new FormControl<number[] | null>(null, [Validators.minLength(1), Validators.required]),
     hasConflicts: new FormControl(false),
     weekDay: new FormControl("", [Validators.required])
@@ -67,22 +70,19 @@ export class CreateActivityDialogComponent implements OnInit {
       combineLatest([
         this.activityForm.controls.duration.valueChanges.pipe(startWith(this.activityForm.controls.duration.value)),
         this.activityForm.controls.weekDay.valueChanges.pipe(startWith(this.activityForm.controls.weekDay.value)),
-        this.activityForm.controls.startingHour.valueChanges.pipe(
-          startWith(this.activityForm.controls.startingHour.value),
-          map(value => (typeof value === 'object' && value !== null && 'id' in value ? (value as SelectValue).id : null))
-        ),
+        this.activityForm.controls.startingHour.valueChanges.pipe(startWith(this.activityForm.controls.startingHour.value)),
         this.activityForm.controls.sessions.valueChanges.pipe(startWith(this.activityForm.controls.sessions.value)),
       ]).pipe(
         filter(([duration, weekDay, startingHour, sessions]) => {
+          this.isLoading = true;
           const areApiParamsReady =
             duration !== null && duration !== undefined &&
             weekDay !== null && weekDay !== undefined && weekDay.length > 0 &&
-            startingHour !== null && startingHour !== undefined && typeof startingHour === 'number' &&
+            startingHour !== null && startingHour !== undefined &&
             sessions !== null && sessions !== undefined && sessions.length > 0
-          return areApiParamsReady;
+          return areApiParamsReady && !this.activityForm.pristine;
         }),
         switchMap(([duration, weekDay, startingHour, sessions]) => {
-          this.isLoading = true;
           return this.activityRepository.getConflicts$(
             this.userGroup.group.id,
             sessions!,
@@ -117,6 +117,23 @@ export class CreateActivityDialogComponent implements OnInit {
         this.snackBarService.openError(err);
       }
     })
+
+    if(this.activityId) {
+      this.isLoading = true;
+      this.activityRepository.getById$(this.activityId).subscribe({
+        next: (activity) => {
+          this.activity = activity;
+          this.activityForm.controls.name.setValue(activity.name);
+          this.activityForm.controls.teacherFullName.setValue(activity.teacherFullName);
+          this.activityForm.controls.weekDay.setValue(activity.weekDay.toLowerCase());
+          this.activityForm.controls.startingHour.setValue(activity.startingHour);
+          this.activityForm.controls.duration.setValue(activity.duration);
+          this.isLoading = false;
+        }, error: (err) => {
+          this.snackBarService.openError(err);
+        }
+      })
+    }
   }
 
   onNoClick() {
@@ -131,7 +148,7 @@ export class CreateActivityDialogComponent implements OnInit {
       sessionNumbers: this.sessionsSelected,
       weekDay: this.activityForm.controls.weekDay.value!,
       springSemester: this.userGroup.group.springSemester,
-      startingHour: this.activityForm.controls.startingHour.value!.id,
+      startingHour: this.activityForm.controls.startingHour.value!,
       duration: this.activityForm.controls.duration.value!
     }).subscribe({
       next: () => {
@@ -160,10 +177,17 @@ export class CreateActivityDialogComponent implements OnInit {
   }
 
   getEndHour(): string {
+    if (this.activityId) {
+      return this.getEndHourWithParams(
+        this.activityForm.controls.duration.value!,
+        this.activityForm.controls.startingHour.value!
+      )
+    }
+
     if (this.activityForm.controls.startingHour.dirty){
       return this.getEndHourWithParams(
         this.activityForm.controls.duration.value!,
-        this.activityForm.controls.startingHour.value?.id!
+        this.activityForm.controls.startingHour.value!
       )
     }
     return '';
@@ -183,17 +207,14 @@ export class CreateActivityDialogComponent implements OnInit {
     return WeekHelper.getWeekendDay(WeekHelper.getSaturdayOfWeek(weekNumber), weekDay.toLowerCase() === "sunday");
   }
 
-  private getAllHours(): SelectValue[] {
+  private getAllHours(): number[] {
     const dayStart = 8;
     const dayEnd = 20;
 
     let currentHour = dayStart;
-    const result: SelectValue[] = []
+    const result: number[] = []
     for (dayStart; currentHour <= dayEnd; currentHour++) {
-      result.push({
-        id: currentHour,
-        displayText: this.formatHour(currentHour)
-      })
+      result.push(currentHour)
     }
 
     return result;

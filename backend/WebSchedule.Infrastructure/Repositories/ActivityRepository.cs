@@ -28,10 +28,7 @@ namespace WebSchedule.Infrastructure.Repositories
                 .Where(x => x.Session.GroupId == groupId
                     && x.Session.SpringSemester == springSemester
                     && x.Session.Number >= sessionNumber
-                    && x.Session.Number < sessionNumber + sessionCount)
-                .OrderBy(x => x.Session.Number)
-                .ThenBy(x => x.WeekDay)
-                .ThenBy(x => x.StartingHour);
+                    && x.Session.Number < sessionNumber + sessionCount);
         }
 
         public async Task AddActivity(Activity activity)

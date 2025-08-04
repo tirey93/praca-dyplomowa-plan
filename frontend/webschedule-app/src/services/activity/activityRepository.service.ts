@@ -4,6 +4,7 @@ import { CookieService } from "ngx-cookie-service"
 import { ActivityResponse } from "./dtos/activityResponse"
 import { HttpClient } from "@angular/common/http"
 import { ActivityRequest } from "./dtos/activityRequest"
+import { ActivityInSessionResponse } from "./dtos/activityInSessionResponse"
 
 @Injectable({
     providedIn: 'root'
@@ -22,7 +23,7 @@ import { ActivityRequest } from "./dtos/activityRequest"
     }
 
     getByCurrentDate$(groupId: number, springSemester:boolean, sessionCount: number) {
-        return this.http.get<ActivityResponse[]>(`${this.url}/Group?groupId=${groupId}&springSemester=${springSemester}&sessionCount=${sessionCount}`, {
+        return this.http.get<ActivityInSessionResponse[]>(`${this.url}/Group?groupId=${groupId}&springSemester=${springSemester}&sessionCount=${sessionCount}`, {
             headers: {
             authorization: `Bearer ${this.cookieService.get("token")}`
             }

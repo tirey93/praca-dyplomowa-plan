@@ -71,7 +71,7 @@ namespace WebSchedule.Controllers.Activity
 #if !DEBUG
         [Authorize]
 #endif
-        public async Task<ActionResult<IEnumerable<ActivityResponse>>> GetByCurrentDate(int id,
+        public async Task<ActionResult<IOrderedEnumerable<ActivityInSessionResponse>>> GetByCurrentDate(int id,
             [FromQuery] bool springSemester,
             [FromQuery] int sessionCount)
         {

@@ -11,7 +11,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { SessionService } from '../../../services/session/session.service';
-import { SessionInGroupResponse } from '../../../services/session/dtos/sessionInGroupResponse';
+import { SessionResponse } from '../../../services/session/dtos/sessionResponse';
 import { SnackBarService } from '../../../services/snackBarService';
 import { WeekHelper } from '../../../helpers/weekHelper';
 import { GroupHelper } from '../../../helpers/groupHelper';
@@ -32,7 +32,7 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
   sidenavOpened$: Observable<boolean>;
 
   groupsToDisplay: GroupResponse[] = []
-  session?: SessionInGroupResponse;
+  session?: SessionResponse;
 
   private destroy$ = new Subject<void>();
   

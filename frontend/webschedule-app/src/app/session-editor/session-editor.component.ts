@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { SyncService } from '../../services/sync.service';
 import { filter, Subject, switchMap, takeUntil } from 'rxjs';
-import { SessionInGroupResponse } from '../../services/session/dtos/sessionInGroupResponse';
+import { SessionResponse } from '../../services/session/dtos/sessionResponse';
 import { SessionService } from '../../services/session/session.service';
 import { WeekHelper } from '../../helpers/weekHelper';
 import { UserGroupResponse } from '../../services/userInGroup/dtos/userGroupResponse';
@@ -115,7 +115,7 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
     this.onSessionUpdate.emit({...sessionDto, weekNumber: this.getWeekNumber(sessionDto.weekNumber - 1)});
   }
 
-  private loadSession(sessionsInGroupResponse: SessionInGroupResponse[]) {
+  private loadSession(sessionsInGroupResponse: SessionResponse[]) {
     this.isLoading = false;
     if (sessionsInGroupResponse.length === 0) {
       this.noData = true;
@@ -143,7 +143,7 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
   
   
 
-  private getDataForSessions(sessionsInGroupResponse: SessionInGroupResponse[]): SessionDto[] {
+  private getDataForSessions(sessionsInGroupResponse: SessionResponse[]): SessionDto[] {
     const result: SessionDto[] = [];
     let currentSessionIndex = 0;
     let currentWeek = sessionsInGroupResponse[currentSessionIndex].weekNumber;

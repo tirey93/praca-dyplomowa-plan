@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { environment } from '../../enviroments/enviroments';
-import { SessionInGroupResponse } from './dtos/sessionInGroupResponse';
+import { SessionResponse } from './dtos/sessionResponse';
 import { UpdateSessionsRequest } from './dtos/updateSessionsRequest';
 
 @Injectable({
@@ -14,7 +14,7 @@ import { UpdateSessionsRequest } from './dtos/updateSessionsRequest';
     constructor(private http: HttpClient, private cookieService: CookieService) { }
 
     getDefaults$() {
-      return this.http.get<SessionInGroupResponse[]>(`${this.url}/Default`, {
+      return this.http.get<SessionResponse[]>(`${this.url}/Default`, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }
@@ -22,7 +22,7 @@ import { UpdateSessionsRequest } from './dtos/updateSessionsRequest';
     }
 
     getCurrent$(groupId: number) {
-      return this.http.get<SessionInGroupResponse>(`${this.url}/Group/${groupId}/Current`, {
+      return this.http.get<SessionResponse>(`${this.url}/Group/${groupId}/Current`, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }
@@ -30,7 +30,7 @@ import { UpdateSessionsRequest } from './dtos/updateSessionsRequest';
     }
 
     getNext$(sessionId: number) {
-      return this.http.get<SessionInGroupResponse>(`${this.url}/${sessionId}/Next`, {
+      return this.http.get<SessionResponse>(`${this.url}/${sessionId}/Next`, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }
@@ -38,7 +38,7 @@ import { UpdateSessionsRequest } from './dtos/updateSessionsRequest';
     }
 
     getPrevious$(sessionId: number) {
-      return this.http.get<SessionInGroupResponse>(`${this.url}/${sessionId}/Previous`, {
+      return this.http.get<SessionResponse>(`${this.url}/${sessionId}/Previous`, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }
@@ -46,7 +46,7 @@ import { UpdateSessionsRequest } from './dtos/updateSessionsRequest';
     }
 
     getByGroup$(id: number) {
-      return this.http.get<SessionInGroupResponse[]>(`${this.url}/Group/${id}`, {
+      return this.http.get<SessionResponse[]>(`${this.url}/Group/${id}`, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

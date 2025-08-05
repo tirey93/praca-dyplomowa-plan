@@ -1,4 +1,4 @@
-export interface SessionInGroupResponse {
+export interface SessionResponse {
     sessionId: number;
     groupId?: number;
     number: number;

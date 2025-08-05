@@ -1,4 +1,4 @@
-import { SessionInGroupResponse } from "../../session/dtos/sessionInGroupResponse";
+import { SessionResponse } from "../../session/dtos/sessionResponse";
 
 export interface ActivityResponse {
     activityId: number;
@@ -7,5 +7,5 @@ export interface ActivityResponse {
     startingHour: number;
     duration: number;
     weekDay: string;
-    session: SessionInGroupResponse
+    session: SessionResponse
 }

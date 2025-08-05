@@ -1,2 +1,177 @@
+/* Używamy zmiennych, aby łatwo zarządzać wymiarami. */
+:host {
+  --sidebar-width: 180px; /* Szerokość bocznej kolumny (na razie tylko pusty róg) */
+  --hour-width: 80px;      /* Szerokość każdej kolumny z godziną */
+  --header-height: 50px;   /* Wysokość całego paska z godzinami */
+  --body-height: calc(90vh - 85px);     /* Wysokość głównego obszaru kalendarza */
+}
 
+/* Główny kontener - na razie tylko dla estetyki */
+.schedule-container {
+  margin: 20px;
+  padding: 0; /* Usuwamy domyślny padding z mat-card, aby mieć pełną kontrolę */
+}
 
+/* 1. Nagłówek (kontener na pusty róg i oś czasu) */
+.schedule-header {
+  display: flex; /* Ustawia dzieci (.corner-space i .timeline-wrapper) obok siebie */
+  height: var(--header-height);
+  border-bottom: 1px solid #e0e0e0; /* Dolna krawędź jak na rysunku */
+}
+
+/* 2. Pusty róg w lewym górnym rogu */
+.corner-space {
+  width: var(--sidebar-width);
+  flex-shrink: 0; /* Zapobiega kurczeniu się tego elementu, gdy brakuje miejsca */
+}
+
+/* 3. Wrapper na oś czasu - klucz do przewijania */
+.timeline-wrapper {
+  flex-grow: 1; /* Powoduje, że ten element zajmuje całą pozostałą szerokość */
+//   overflow-x: auto; /* MAGIC! Włącza poziomy pasek przewijania, gdy zawartość się nie mieści */
+  border-left: 1px solid #e0e0e0; /* Linia oddzielająca od bocznej kolumny */
+}
+
+/* 4. Właściwa oś czasu */
+.timeline {
+  display: flex; /* Układa wszystkie godziny (.hour-slot) w jednym rzędzie */
+  height: 100%;
+}
+
+/* 5. Pojedynczy slot na godzinę */
+.hour-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--hour-width);
+  flex-shrink: 0; /* Ważne! Zapobiega kurczeniu się godzin, zachowują stałą szerokość */
+  color: #555;
+  font-size: 14px;
+}
+
+/* Stylizacja pudełka z numerem godziny, jak na rysunku */
+.hour-slot span {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 4px 12px;
+  background-color: #f9f9f9;
+}
+
+/* Główna treść kalendarza (kontener na sidebar i siatkę) */
+.schedule-body {
+  display: flex; /* Ustawia sidebar i placeholder siatki obok siebie */
+  height: var(--body-height);
+}
+
+/* Boczna kolumna z dniami i grupami */
+.schedule-sidebar {
+  width: var(--sidebar-width);
+  flex-shrink: 0; /* Zapobiega kurczeniu się sidebara */
+  display: flex; /* Dzieli przestrzeń wewnątrz na sekcje dni */
+  flex-direction: column; /* Układa sekcje dni jedna pod drugą */
+  border-top: none; /* Usuwamy podwójną ramkę */
+}
+
+/* Pojedyncza sekcja dnia (np. cała Sobota) */
+.day-section {
+  flex: 1; /* MAGIC! Każda sekcja zajmuje równo połowę dostępnej wysokości */
+  display: flex; /* Ustawia nazwę dnia i listę grup obok siebie */
+  min-height: 0; /* Ważny trik flexboxa, zapobiega "rozpychaniu" przez zawartość */
+}
+
+/* Wrapper na nazwę dnia - potrzebny do pionowego tekstu */
+.day-name-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-right: 1px solid #e0e0e0;
+}
+
+/* Właściwa nazwa dnia, obrócona */
+.day-name {
+  writing-mode: vertical-rl; /* Ustawia tekst pionowo */
+  transform: rotate(180deg);  /* Obraca litery do prawidłowej orientacji */
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Kontener na listę grup */
+.group-list {
+  display: flex;
+  flex-direction: column; /* Układa grupy jedna pod drugą */
+  justify-content: space-around; /* Rozkłada grupy równomiernie w pionie */
+  flex-grow: 1; /* Zajmuje całą pozostałą szerokość w .day-section */
+}
+
+/* Pojedynczy slot na grupę */
+.group-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  text-align: center;
+  font-size: 12px;
+  font-family: 'Courier New', Courier, monospace; /* Dla wyglądu "technicznego" */
+  color: #555;
+}
+
+/* Linia oddzielająca */
+mat-divider {
+  border-top-color: #000; /* Pogrubiamy linię, żeby była bardziej widoczna */
+}
+
+/* Wrapper dla obszaru siatki - przejmuje rolę placeholdera */
+.grid-wrapper {
+  flex-grow: 1; /* Zajmuje całą dostępną szerokość */
+//   overflow-x: auto; /* Włącza poziome przewijanie dla siatki */
+  border-left: 1px solid #e0e0e0;
+}
+
+/* Kontener na obie siatki (Sobota + Niedziela) */
+.grid-area {
+  display: flex;
+  flex-direction: column; /* Układa siatki jedna pod drugą */
+  height: 100%;
+  /* Szerokość jest zdefiniowana przez sumę szerokości kolumn w siatce */
+  /* 15 godzin * 80px/godzinę = 1200px */
+  width: calc(15 * var(--hour-width));
+}
+
+/* Pojedyncza siatka dnia (wspólne style dla Soboty i Niedzieli) */
+.day-grid {
+  flex: 1; /* Każda siatka zajmuje połowę wysokości w .grid-area */
+  min-height: 0;
+  display: grid; /* MAGIC! To jest nasza siatka */
+
+  /* Definiujemy kolumny: 15 kolumn, każda o szerokości zdefiniowanej w zmiennej */
+  grid-template-columns: repeat(15, var(--hour-width));
+
+  /* Definiujemy wiersze: 3 wiersze, każdy zajmuje równą część dostępnej przestrzeni */
+  grid-template-rows: repeat(3, 1fr);
+
+  /* Dodajemy delikatne tło, aby linie siatki były widoczne */
+  background-image:
+    repeating-linear-gradient(to right, #e0e0e0 0, #e0e0e0 1px, transparent 1px, transparent var(--hour-width)),
+    repeating-linear-gradient(to bottom, #f0f0f0 0, #f0f0f0 1px, transparent 1px, transparent calc(100% / 3));
+  background-size: var(--hour-width) calc(100% / 3);
+}
+
+/* Styl dla kafelka z przedmiotem */
+.class-tile {
+  /* Ważne - usuwamy domyślny padding z mat-card, żeby tekst był wyśrodkowany */
+  padding: 0 !important;
+  margin: 4px; /* Drobny margines, żeby kafelki się nie stykały */
+  border: 1px solid #B71C1C; /* Ciemnoczerwona ramka */
+  background-color: #FFEBEE; /* Jasnoczerwone tło */
+  color: #B71C1C;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.2;
+  border-radius: 8px;
+  z-index: 10; /* Upewniamy się, że kafelek jest nad liniami siatki */
+}

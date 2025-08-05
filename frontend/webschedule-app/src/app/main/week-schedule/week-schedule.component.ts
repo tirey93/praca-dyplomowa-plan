@@ -7,12 +7,14 @@ import { SyncService } from '../../../services/sync.service';
 import { Observable, Subject, switchMap, takeUntil } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserInGroupService } from '../../../services/userInGroup/userInGroup.service';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-week-schedule',
   imports: [
     MatButtonModule, MatSidenavModule,
-    MatTooltipModule
+    MatTooltipModule, MatCardModule, MatDividerModule
   ],
   templateUrl: './week-schedule.component.html',
   styleUrl: './week-schedule.component.scss'

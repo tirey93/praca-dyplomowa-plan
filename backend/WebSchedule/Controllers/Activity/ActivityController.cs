@@ -155,6 +155,35 @@ namespace WebSchedule.Controllers.Activity
                 return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
             }
         }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+#if !DEBUG
+        [Authorize]
+#endif
+        public async Task<ActionResult> Update(int id, [FromBody] UpdateActivityCommand command)
+        {
+            try
+            {
+                command.ActivityId = id;
+                await _mediator.Send(command);
+                return NoContent();
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
+            }
+        }
     }
 
 }

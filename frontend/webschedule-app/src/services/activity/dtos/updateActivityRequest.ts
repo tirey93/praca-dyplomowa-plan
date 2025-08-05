@@ -1,9 +1,7 @@
-export interface ActivityRequest {
+export interface UpdateActivityRequest {
+    activityId: number;
     name: string;
     teacherFullName: string;
-    groupId: number;
-    sessionNumbers: number[];
-    springSemester: boolean;
     startingHour: number;
     weekDay: string;
     duration: number;

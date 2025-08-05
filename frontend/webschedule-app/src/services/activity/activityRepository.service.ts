@@ -3,8 +3,9 @@ import { environment } from "../../enviroments/enviroments"
 import { CookieService } from "ngx-cookie-service"
 import { ActivityResponse } from "./dtos/activityResponse"
 import { HttpClient } from "@angular/common/http"
-import { ActivityRequest } from "./dtos/activityRequest"
+import { CreateActivityRequest } from "./dtos/createActivityRequest"
 import { ActivityInSessionResponse } from "./dtos/activityInSessionResponse"
+import { UpdateActivityRequest } from "./dtos/updateActivityRequest"
 
 @Injectable({
     providedIn: 'root'
@@ -38,8 +39,16 @@ import { ActivityInSessionResponse } from "./dtos/activityInSessionResponse"
         })
     }
 
-    create$(activityRequest: ActivityRequest) {
+    create$(activityRequest: CreateActivityRequest) {
         return this.http.post(`${this.url}`, activityRequest, {
+            headers: {
+                authorization: `Bearer ${this.cookieService.get("token")}`
+            }
+        })
+    }
+
+    update$(activityRequest: UpdateActivityRequest) {
+        return this.http.put(`${this.url}/${activityRequest.activityId}`, activityRequest, {
             headers: {
                 authorization: `Bearer ${this.cookieService.get("token")}`
             }

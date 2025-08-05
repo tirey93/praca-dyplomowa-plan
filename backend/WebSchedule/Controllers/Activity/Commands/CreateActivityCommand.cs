@@ -1,8 +1,5 @@
 ﻿using MediatR;
 using WebSchedule.Controllers.Group.Exceptions;
-using WebSchedule.Controllers.Responses;
-using WebSchedule.Controllers.StudyCourse.Exceptions;
-using WebSchedule.Controllers.User.Exceptions;
 using WebSchedule.Domain.Entities.Study;
 using WebSchedule.Domain.Repositories;
 
@@ -20,13 +17,13 @@ namespace WebSchedule.Controllers.Activity.Commands
         public int Duration { get; set; }
     }
 
-    public class CreateGroupCommandHandler : IRequestHandler<CreateActivityCommand>
+    public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand>
     {
         private readonly IActivityRepository _activityRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly ISessionRepository _sessionRepository;
 
-        public CreateGroupCommandHandler(IActivityRepository activityRepository, IGroupRepository groupRepository, ISessionRepository sessionRepository)
+        public CreateActivityCommandHandler(IActivityRepository activityRepository, IGroupRepository groupRepository, ISessionRepository sessionRepository)
         {
             _activityRepository = activityRepository;
             _groupRepository = groupRepository;

@@ -36,6 +36,7 @@
   "LinkCopied": "Link do grupy został skopiowany.",
   "SemesterUpdated": "Semestr został zmieniony z powodzeniem.",
   "ActivityCreated": "Zajęcia zostały dodane z powodzeniem.",
+  "ActivityUpdated": "Zajęcia zostały zmienione z powodzeniem.",
 
   "ExceptionContentCannotBeEmpty": "Wiadomość nie może być pusta.",
   "ExceptionContentCannotBeThatLarge": "Wiadomość nie może być dłuższa niż {{0}} znaków.",

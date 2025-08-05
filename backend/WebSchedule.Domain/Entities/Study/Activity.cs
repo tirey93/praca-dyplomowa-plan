@@ -31,5 +31,30 @@ namespace WebSchedule.Domain.Entities.Study
 
             return startingHour < currentActivityEnd && newActivityEnd > StartingHour;
         }
+
+        public void SetName(string name)
+        {
+            Name = name;
+        }
+
+        public void SetTeachFullName(string teacherFullName)
+        {
+            TeacherFullName = teacherFullName;
+        }
+
+        public void SetStartingHour(int startingHour)
+        {
+            StartingHour = startingHour;
+        }
+
+        public void SetDuration(int duration)
+        {
+            Duration = duration;
+        }
+
+        public void SetWeekDay(WeekDay weekDay)
+        {
+            WeekDay = weekDay;
+        }
     }
 }

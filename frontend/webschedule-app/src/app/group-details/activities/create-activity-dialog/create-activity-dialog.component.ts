@@ -80,7 +80,8 @@ export class CreateActivityDialogComponent implements OnInit {
             weekDay !== null && weekDay !== undefined && weekDay.length > 0 &&
             startingHour !== null && startingHour !== undefined &&
             sessions !== null && sessions !== undefined && sessions.length > 0
-          return areApiParamsReady && !this.activityForm.pristine;
+          const result = areApiParamsReady && !this.activityForm.pristine;
+          return result;
         }),
         switchMap(([duration, weekDay, startingHour, sessions]) => {
           return this.activityRepository.getConflicts$(
@@ -94,6 +95,9 @@ export class CreateActivityDialogComponent implements OnInit {
         
       ).subscribe({
         next:(activities) => {
+          if (this.activityId) {
+            activities = activities.filter(x => x.activityId !== this.activityId)
+          }
           this.activitiesConflicted = [...activities];
           if (activities.length > 0) {
             this.activityForm.setErrors({'incorrect': true});
@@ -129,6 +133,7 @@ export class CreateActivityDialogComponent implements OnInit {
           this.activityForm.controls.startingHour.setValue(activity.startingHour);
           this.activityForm.controls.duration.setValue(activity.duration);
           this.isLoading = false;
+          this.activityForm.setErrors({'incorrect': true})
         }, error: (err) => {
           this.snackBarService.openError(err);
         }
@@ -141,26 +146,47 @@ export class CreateActivityDialogComponent implements OnInit {
   }
 
   submit() {
-    this.activityRepository.create$({ 
-      groupId: this.userGroup.group.id!,
-      name: this.activityForm.controls.name.value!,
-      teacherFullName: this.activityForm.controls.teacherFullName.value!,
-      sessionNumbers: this.sessionsSelected,
-      weekDay: this.activityForm.controls.weekDay.value!,
-      springSemester: this.userGroup.group.springSemester,
-      startingHour: this.activityForm.controls.startingHour.value!,
-      duration: this.activityForm.controls.duration.value!
-    }).subscribe({
-      next: () => {
-        this.syncService.refreshActivities$.next();
-        this.snackBarService.openMessage("ActivityCreated");
-        this.dialogRef.close();
-      },
-      error: (err) => {
-        this.snackBarService.openError(err);
-        this.activityForm.setErrors({'incorrect': true})
-      }
-    })
+    if (this.activityId) {
+      this.activityRepository.update$({
+        activityId: this.activityId,
+        name: this.activityForm.controls.name.value!,
+        teacherFullName: this.activityForm.controls.teacherFullName.value!,
+        weekDay: this.activityForm.controls.weekDay.value!,
+        startingHour: this.activityForm.controls.startingHour.value!,
+        duration: this.activityForm.controls.duration.value!
+      }).subscribe({
+        next: () => {
+          this.syncService.refreshActivities$.next();
+          this.snackBarService.openMessage("ActivityUpdated");
+          this.dialogRef.close();
+        },
+        error: (err) => {
+          this.snackBarService.openError(err);
+          this.activityForm.setErrors({'incorrect': true})
+        }
+      })
+    } else {
+      this.activityRepository.create$({ 
+        groupId: this.userGroup.group.id!,
+        name: this.activityForm.controls.name.value!,
+        teacherFullName: this.activityForm.controls.teacherFullName.value!,
+        sessionNumbers: this.sessionsSelected,
+        weekDay: this.activityForm.controls.weekDay.value!,
+        springSemester: this.userGroup.group.springSemester,
+        startingHour: this.activityForm.controls.startingHour.value!,
+        duration: this.activityForm.controls.duration.value!
+      }).subscribe({
+        next: () => {
+          this.syncService.refreshActivities$.next();
+          this.snackBarService.openMessage("ActivityCreated");
+          this.dialogRef.close();
+        },
+        error: (err) => {
+          this.snackBarService.openError(err);
+          this.activityForm.setErrors({'incorrect': true})
+        }
+      })
+    }
   }
 
   onSessionClicked(sessionNumber: number, selected: boolean) {

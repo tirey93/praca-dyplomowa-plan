@@ -47,7 +47,7 @@
                     <input disabled [value]="getEndHour()" type="text" matInput>
                 </mat-form-field>
             </div>
-            @if (activityForm.controls.startingHour.dirty) {
+            @if (activityForm.controls.startingHour.dirty || activityId) {
                 <label>Czas trwania (h)</label>
                 <mat-slider min="1" max="6" discrete showTickMarks style="width: 95%;">
                     <input matSliderThumb formControlName="duration" #slider>
@@ -78,7 +78,7 @@
                     type="submit" 
                     cdkFocusInitial
                     [disabled]="activityForm.invalid || isLoading"
-                    (click)="submit()">Utwórz
+                    (click)="submit()">{{activityId ? 'Zmień' : 'Utwórz'}}
                 </button>
             </div>
         </mat-dialog-actions>

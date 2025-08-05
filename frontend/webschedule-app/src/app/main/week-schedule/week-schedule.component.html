@@ -1,119 +1,78 @@
-<!-- Główny kontener, który będzie trzymał cały kalendarz.
-     Używamy mat-card, aby od razu mieć ładne obramowanie i cień. -->
 <div class="schedule-container">
-
-  <!-- ETAP 1: Pasek nagłówka z godzinami -->
-  <header class="schedule-header">
-
-    <!-- 1. Pusty róg
-         Ten element zajmuje miejsce nad przyszłą kolumną z nazwami dni.
-         Jego szerokość musi być taka sama jak tej kolumny. -->
-    <div class="corner-space"></div>
-
-    <!-- 2. Kontener na oś czasu, który umożliwia przewijanie
-         To jest kluczowy element. Ma overflow-x: auto, więc jeśli
-         wewnętrzny .timeline będzie szerszy, pojawi się suwak. -->
-    <div class="timeline-wrapper">
-
-      <!-- 3. Właściwa oś czasu z godzinami
-           Ten element będzie bardzo szeroki i będzie się przewijał
-           wewnątrz .timeline-wrapper. -->
-      <div class="timeline">
-        <!-- W docelowej aplikacji te elementy wygenerujesz pętlą *ngFor -->
-        <div class="hour-slot"><span>08</span></div>
-        <div class="hour-slot"><span>09</span></div>
-        <div class="hour-slot"><span>10</span></div>
-        <div class="hour-slot"><span>11</span></div>
-        <div class="hour-slot"><span>12</span></div>
-        <div class="hour-slot"><span>13</span></div>
-        <div class="hour-slot"><span>14</span></div>
-        <div class="hour-slot"><span>15</span></div>
-        <div class="hour-slot"><span>16</span></div>
-        <div class="hour-slot"><span>17</span></div>
-        <div class="hour-slot"><span>18</span></div>
-        <div class="hour-slot"><span>19</span></div>
-        <div class="hour-slot"><span>20</span></div>
-        <div class="hour-slot"><span>21</span></div>
-        <div class="hour-slot"><span>22</span></div>
-      </div>
-
-    </div>
-  </header>
-  <main class="schedule-body">
-
-    <!-- 1. Boczna kolumna z nazwami dni i grupami -->
-    <aside class="schedule-sidebar">
-
-      <!-- Sekcja dla Soboty -->
-      <div class="day-section">
-        <div class="day-name-wrapper">
-          <div class="day-name">Sobota</div>
+  @if(session) {
+    <header class="schedule-header">
+        <div class="corner-space-wrapper">
+            <div style="font-size: small;">
+                Semester {{session.springSemester ? "letni" : "zimowy"}}
+            </div>
+            <div class="corner-space-middle-wrapper">
+                <button mat-icon-button [disabled]="session.number === 1" (click)="setPreviousSession()"> <mat-icon>arrow_left</mat-icon></button>
+                <div class="corner-middle-space" [matTooltip]="getPeriod(session.weekNumber)">Zjazd {{session.number.toString().padStart(2, '0')}}</div>
+                <button mat-icon-button [disabled]="session.number === 10" (click)="setNextSession()"> <mat-icon>arrow_right</mat-icon></button>
+            </div>
         </div>
-        <div class="group-list">
-          <!-- W docelowej aplikacji te elementy wygenerujesz pętlą *ngFor -->
-          <div class="group-slot">23MISR01</div>
-          <div class="group-slot">23LMCT02</div>
-          <div class="group-slot">15LINF01</div>
-        </div>
-      </div>
-
-      <!-- Linia oddzielająca Sobotę od Niedzieli -->
-      <mat-divider></mat-divider>
-
-      <!-- Sekcja dla Niedzieli -->
-      <div class="day-section">
-        <div class="day-name-wrapper">
-          <div class="day-name">Niedziela</div>
-        </div>
-        <div class="group-list">
-          <!-- W docelowej aplikacji te elementy wygenerujesz pętlą *ngFor -->
-          <div class="group-slot">15LINF01</div>
-          <div class="group-slot">23LMCT02</div>
-          <div class="group-slot">23MISR01</div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- NOWA CZĘŚĆ: Zastępujemy placeholder prawdziwą siatką -->
-    <div class="grid-wrapper">
-      <div class="grid-area">
-
-        <!-- Siatka dla Soboty -->
-        <div class="day-grid">
-          <!-- Tutaj umieszczamy kafelki z zajęciami dla Soboty -->
-          <!-- Każdy kafelek to mat-card z klasą .class-tile -->
-          <!-- Pozycję ustawiamy za pomocą inline'owego stylu [style] lub [ngStyle] -->
-
-          <!-- Grupa: 23MISR01 (wiersz 1), Godz: 13:00 (kolumna 6), Czas: 2h -->
-          <mat-card class="class-tile" style="grid-row: 1; grid-column: 6 / span 2;">Biologia</mat-card>
-
-          <!-- Grupa: 23LMCT02 (wiersz 2), Godz: 11:00 (kolumna 4), Czas: 3h -->
-          <mat-card class="class-tile" style="grid-row: 2; grid-column: 4 / span 3;">Automatyka i sterowanie</mat-card>
-
-          <!-- Grupa: 15LINF01 (wiersz 3), Godz: 10:00 (kolumna 3), Czas: 4h -->
-          <mat-card class="class-tile" style="grid-row: 3; grid-column: 3 / span 4;">Podstawy sztucznej inteligencji</mat-card>
-
-          <!-- Grupa: 15LINF01 (wiersz 3), Godz: 17:00 (kolumna 10), Czas: 4h -->
-          <mat-card class="class-tile" style="grid-row: 3; grid-column: 10 / span 4;">Programowanie sieciowe</mat-card>
+        <div class="timeline-wrapper">
+        <div class="timeline">
+            <div class="hour-slot"><span>08</span></div>
+            <div class="hour-slot"><span>09</span></div>
+            <div class="hour-slot"><span>10</span></div>
+            <div class="hour-slot"><span>11</span></div>
+            <div class="hour-slot"><span>12</span></div>
+            <div class="hour-slot"><span>13</span></div>
+            <div class="hour-slot"><span>14</span></div>
+            <div class="hour-slot"><span>15</span></div>
+            <div class="hour-slot"><span>16</span></div>
+            <div class="hour-slot"><span>17</span></div>
+            <div class="hour-slot"><span>18</span></div>
+            <div class="hour-slot"><span>19</span></div>
+            <div class="hour-slot"><span>20</span></div>
+            <div class="hour-slot"><span>21</span></div>
+            <div class="hour-slot"><span>22</span></div>
         </div>
 
+        </div>
+    </header>
+    <main class="schedule-body">
+        <aside class="schedule-sidebar">
+        <div class="day-section">
+            <div class="day-name-wrapper">
+            <div class="day-name">Sobota</div>
+            </div>
+            <div class="group-list">
+            <div class="group-slot">23MISR01</div>
+            <div class="group-slot">23LMCT02</div>
+            <div class="group-slot">15LINF01</div>
+            </div>
+        </div>
         <mat-divider></mat-divider>
-
-        <!-- Siatka dla Niedzieli -->
-        <div class="day-grid">
-          <!-- Tutaj umieszczamy kafelki z zajęciami dla Niedzieli -->
-
-          <!-- Grupa: 15LINF01 (wiersz 1), Godz: 09:00 (kolumna 2), Czas: 3h -->
-          <mat-card class="class-tile" style="grid-row: 1; grid-column: 2 / span 3;">Projekt kompetencyjny</mat-card>
-
-          <!-- Grupa: 23LMCT02 (wiersz 2), Godz: 15:00 (kolumna 8), Czas: 4h -->
-          <mat-card class="class-tile" style="grid-row: 2; grid-column: 8 / span 4;">Wychowanie fizyczne</mat-card>
-
-          <!-- Grupa: 23MISR01 (wiersz 3), Godz: 08:00 (kolumna 1), Czas: 2h -->
-          <mat-card class="class-tile" style="grid-row: 3; grid-column: 1 / span 2;">Język angielski</mat-card>
+        <div class="day-section">
+            <div class="day-name-wrapper">
+            <div class="day-name">Niedziela</div>
+            </div>
+            <div class="group-list">
+            <div class="group-slot">15LINF01</div>
+            <div class="group-slot">23LMCT02</div>
+            <div class="group-slot">23MISR01</div>
+            </div>
         </div>
+        </aside>
 
-      </div>
-    </div>
-  </main>
+        <div class="grid-wrapper">
+        <div class="grid-area">
+            <div class="day-grid">
+            <mat-card class="class-tile" style="grid-row: 1; grid-column: 6 / span 2;">Biologia</mat-card>
+            <mat-card class="class-tile" style="grid-row: 2; grid-column: 4 / span 3;">Automatyka i sterowanie</mat-card>
+            <mat-card class="class-tile" style="grid-row: 3; grid-column: 3 / span 4;">Podstawy sztucznej inteligencji</mat-card>
+            <mat-card class="class-tile" style="grid-row: 3; grid-column: 10 / span 4;">Programowanie sieciowe</mat-card>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="day-grid">
+            <mat-card class="class-tile" style="grid-row: 1; grid-column: 2 / span 3;">Projekt kompetencyjny</mat-card>
+            <mat-card class="class-tile" style="grid-row: 2; grid-column: 8 / span 4;">Wychowanie fizyczne</mat-card>
+            <mat-card class="class-tile" style="grid-row: 3; grid-column: 1 / span 2;">Język angielski</mat-card>
+            </div>
+        </div>
+        </div>
+    </main>
+  }
 </div>

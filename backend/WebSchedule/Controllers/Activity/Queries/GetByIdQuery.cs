@@ -34,6 +34,7 @@ namespace WebSchedule.Controllers.Activity.Queries
                 WeekDay = activity.WeekDay.ToString(),
                 Session = new SessionInGroupResponse
                 {
+                    SessionId = activity.SessionId,
                     GroupId = activity.Session.GroupId,
                     Number = activity.Session.Number,
                     WeekNumber = activity.Session.WeekNumber,

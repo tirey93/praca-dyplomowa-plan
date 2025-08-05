@@ -21,6 +21,30 @@ import { UpdateSessionsRequest } from './dtos/updateSessionsRequest';
       })
     }
 
+    getCurrent$(groupId: number) {
+      return this.http.get<SessionInGroupResponse>(`${this.url}/Group/${groupId}/Current`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
+    getNext$(sessionId: number) {
+      return this.http.get<SessionInGroupResponse>(`${this.url}/${sessionId}/Next`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
+    getPrevious$(sessionId: number) {
+      return this.http.get<SessionInGroupResponse>(`${this.url}/${sessionId}/Previous`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
     getByGroup$(id: number) {
       return this.http.get<SessionInGroupResponse[]>(`${this.url}/Group/${id}`, {
         headers: {

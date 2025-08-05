@@ -23,6 +23,7 @@ namespace WebSchedule.Controllers.Session.Queries
             var sessions = _sessionRepository.GetByGroup(request.GroupId).OrderBy(x => x.SpringSemester).ThenBy(x => x.Number);
             return Task.FromResult(sessions.Select(session => new SessionInGroupResponse
             {
+                SessionId = session.Id,
                 GroupId = session.GroupId,
                 Number = session.Number,
                 WeekNumber = session.WeekNumber,

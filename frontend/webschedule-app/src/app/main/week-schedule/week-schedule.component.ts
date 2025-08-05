@@ -1,20 +1,25 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { GroupRepositoryService } from '../../../services/group/groupRepository.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SyncService } from '../../../services/sync.service';
-import { Observable, Subject, switchMap, takeUntil } from 'rxjs';
+import { filter, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserInGroupService } from '../../../services/userInGroup/userInGroup.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { SessionService } from '../../../services/session/session.service';
+import { SessionInGroupResponse } from '../../../services/session/dtos/sessionInGroupResponse';
+import { SnackBarService } from '../../../services/snackBarService';
+import { WeekHelper } from '../../../helpers/weekHelper';
 
 @Component({
   selector: 'app-week-schedule',
   imports: [
     MatButtonModule, MatSidenavModule,
-    MatTooltipModule, MatCardModule, MatDividerModule
+    MatTooltipModule, MatCardModule, MatDividerModule, MatIconModule
   ],
   templateUrl: './week-schedule.component.html',
   styleUrl: './week-schedule.component.scss'
@@ -25,6 +30,7 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
   sidenavOpened$: Observable<boolean>;
 
   groupsToDisplay: number[] = []
+  session?: SessionInGroupResponse;
 
   private destroy$ = new Subject<void>();
   
@@ -32,7 +38,10 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     private groupRepository: GroupRepositoryService,
     userInGroupRepository: UserInGroupService,
     private router: Router,
+    private route: ActivatedRoute,
     private syncService: SyncService,
+    private sessionRepository: SessionService,
+    private snackBarService: SnackBarService
   ) {  
     this.sidenavOpened$ = syncService.groupSelected$;
 
@@ -50,14 +59,22 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
 
 
   ngOnInit(): void {
+    console.log(this.route.snapshot.queryParams);
     if (this.groupId) {
-      this.groupRepository.isGroupExists$(this.groupId).subscribe({
-        next: (exist) => {
+      this.groupRepository.isGroupExists$(this.groupId).pipe(
+        switchMap((exist) => {
           if (exist) {
             this.groupsToDisplay = [this.groupId!]
+            return this.sessionRepository.getCurrent$(this.groupId!);
           } else {
             this.router.navigateByUrl("");
+            return of(null);
           }
+        }),
+        filter(session => session != null)
+      ) .subscribe({
+        next: (session) => {
+          this.session = session;
         },
         error: () => {
           this.router.navigateByUrl("");
@@ -71,5 +88,43 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  setNextSession() {
+    if (!this.session)
+      return;
+
+    this.router.navigate([], { 
+      queryParams: { session: this.session.number + 1 } 
+    });
+    this.sessionRepository.getNext$(this.session.sessionId).subscribe({
+      next:(session) => {
+        this.session = {...session};
+      },
+      error: (err) => {
+        this.snackBarService.openError(err);
+      }
+    })
+  }
+
+  setPreviousSession() {
+    if (!this.session)
+      return;
+
+    this.router.navigate([], { 
+      queryParams: { session: this.session.number - 1 } 
+    });
+    this.sessionRepository.getPrevious$(this.session.sessionId).subscribe({
+      next:(session) => {
+        this.session = {...session};
+      },
+      error: (err) => {
+        this.snackBarService.openError(err);
+      }
+    })
+  }
+
+  getPeriod(weekNumber: number): string {
+    return WeekHelper.getPeriod(WeekHelper.getSaturdayOfWeek(weekNumber))
   }
 }

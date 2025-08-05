@@ -2,6 +2,7 @@
 {
     public class SessionInGroupResponse
     {
+        public int SessionId { get; set; }
         public int? GroupId { get; set; }
         public int Number { get; set; }
         public int WeekNumber { get; set; }

@@ -144,9 +144,6 @@ mat-divider {
 .class-tile {
   padding: 0 !important;
   margin: 4px;
-  border: 1px solid #B71C1C;
-  background-color: #FFEBEE;
-  color: #B71C1C;
   font-size: 14px;
   display: flex;
   align-items: center;
@@ -155,4 +152,16 @@ mat-divider {
   line-height: 1.2;
   border-radius: 8px;
   z-index: 10;
+}
+
+.class-tile--red {
+  border: 1px solid #B71C1C;
+  background-color: #FFEBEE;
+  color: #B71C1C;
+}
+
+.class-tile--green {
+  border: 1px solid #1B5E20;      /* Ciemny zielony (Material Design Green 900) */
+  background-color: #E8F5E9;  /* Jasny zielony (Material Design Green 50) */
+  color: #1B5E20;
 }

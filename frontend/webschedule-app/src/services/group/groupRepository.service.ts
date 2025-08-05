@@ -31,6 +31,14 @@ import { UpdaterSemesterRequest } from './dtos/updateSemesterRequest';
       })
     }
 
+    getGroupsById$(ids: number[]) {
+      return this.http.get<GroupInfoResponse[]>(`${this.url}/ByIds?ids=${ids}`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
     isGroupExists$(groupId: number | undefined) {
       return this.http.get<boolean>(`${this.url}/${groupId}/Exists`, {
         headers: {

@@ -47,6 +47,15 @@ namespace WebSchedule.Infrastructure.Repositories
                 .FirstOrDefault(x => x.Id == groupId);
         }
 
+        public IEnumerable<Group> Get(int[] groupIds)
+        {
+            return _dbSet
+                .Include(x => x.StudyCourse)
+                .Include(x => x.MembersInGroup).ThenInclude(x => x.User)
+                .Include(x => x.Sessions)
+                .Where(x => groupIds.Contains(x.Id));
+        }
+
         public int? GetNextSubgroup(int year, StudyLevel studyLevel, int courseId)
         {
             var group = _dbSet

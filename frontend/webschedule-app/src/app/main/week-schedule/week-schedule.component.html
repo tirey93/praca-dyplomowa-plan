@@ -12,47 +12,46 @@
             </div>
         </div>
         <div class="timeline-wrapper">
-        <div class="timeline">
-            <div class="hour-slot"><span>08</span></div>
-            <div class="hour-slot"><span>09</span></div>
-            <div class="hour-slot"><span>10</span></div>
-            <div class="hour-slot"><span>11</span></div>
-            <div class="hour-slot"><span>12</span></div>
-            <div class="hour-slot"><span>13</span></div>
-            <div class="hour-slot"><span>14</span></div>
-            <div class="hour-slot"><span>15</span></div>
-            <div class="hour-slot"><span>16</span></div>
-            <div class="hour-slot"><span>17</span></div>
-            <div class="hour-slot"><span>18</span></div>
-            <div class="hour-slot"><span>19</span></div>
-            <div class="hour-slot"><span>20</span></div>
-            <div class="hour-slot"><span>21</span></div>
-            <div class="hour-slot"><span>22</span></div>
-        </div>
-
+            <div class="timeline">
+                <div class="hour-slot"><span>08</span></div>
+                <div class="hour-slot"><span>09</span></div>
+                <div class="hour-slot"><span>10</span></div>
+                <div class="hour-slot"><span>11</span></div>
+                <div class="hour-slot"><span>12</span></div>
+                <div class="hour-slot"><span>13</span></div>
+                <div class="hour-slot"><span>14</span></div>
+                <div class="hour-slot"><span>15</span></div>
+                <div class="hour-slot"><span>16</span></div>
+                <div class="hour-slot"><span>17</span></div>
+                <div class="hour-slot"><span>18</span></div>
+                <div class="hour-slot"><span>19</span></div>
+                <div class="hour-slot"><span>20</span></div>
+                <div class="hour-slot"><span>21</span></div>
+                <div class="hour-slot"><span>22</span></div>
+            </div>
         </div>
     </header>
     <main class="schedule-body">
         <aside class="schedule-sidebar">
         <div class="day-section">
             <div class="day-name-wrapper">
-            <div class="day-name">Sobota</div>
+                <div class="day-name">Sobota</div>
             </div>
             <div class="group-list">
-            <div class="group-slot">23MISR01</div>
-            <div class="group-slot">23LMCT02</div>
-            <div class="group-slot">15LINF01</div>
+                @for (group of groupsToDisplay; track $index) {
+                    <div class="group-slot">{{getGroupName(group)}}</div>
+                }
             </div>
         </div>
         <mat-divider></mat-divider>
         <div class="day-section">
             <div class="day-name-wrapper">
-            <div class="day-name">Niedziela</div>
+                <div class="day-name">Niedziela</div>
             </div>
             <div class="group-list">
-            <div class="group-slot">15LINF01</div>
-            <div class="group-slot">23LMCT02</div>
-            <div class="group-slot">23MISR01</div>
+                @for (group of groupsToDisplay.reverse(); track $index) {
+                    <div class="group-slot">{{getGroupName(group)}}</div>
+                }
             </div>
         </div>
         </aside>
@@ -60,19 +59,17 @@
         <div class="grid-wrapper">
         <div class="grid-area">
             <div class="day-grid">
-            <mat-card class="class-tile" style="grid-row: 1; grid-column: 6 / span 2;">Biologia</mat-card>
-            <mat-card class="class-tile" style="grid-row: 2; grid-column: 4 / span 3;">Automatyka i sterowanie</mat-card>
-            <mat-card class="class-tile" style="grid-row: 3; grid-column: 3 / span 4;">Podstawy sztucznej inteligencji</mat-card>
-            <mat-card class="class-tile" style="grid-row: 3; grid-column: 10 / span 4;">Programowanie sieciowe</mat-card>
+                <mat-card class="class-tile class-tile--red" style="grid-row: 3; grid-column: 3 / span 4;">Podstawy sztucznej inteligencji</mat-card>
+                <mat-card class="class-tile class-tile--red" style="grid-row: 3; grid-column: 10 / span 4;">Programowanie sieciowe</mat-card>
             </div>
             <mat-divider></mat-divider>
             <div class="day-grid">
-            <mat-card class="class-tile" style="grid-row: 1; grid-column: 2 / span 3;">Projekt kompetencyjny</mat-card>
-            <mat-card class="class-tile" style="grid-row: 2; grid-column: 8 / span 4;">Wychowanie fizyczne</mat-card>
-            <mat-card class="class-tile" style="grid-row: 3; grid-column: 1 / span 2;">Język angielski</mat-card>
+                <mat-card class="class-tile class-tile--green" style="grid-row: 1; grid-column: 2 / span 3;">Projekt kompetencyjny</mat-card>
             </div>
         </div>
         </div>
     </main>
+  } @else {
+    Brak danych
   }
 </div>

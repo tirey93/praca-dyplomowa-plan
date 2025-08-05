@@ -54,4 +54,12 @@ import { UpdateActivityRequest } from "./dtos/updateActivityRequest"
             }
         })
     }
+
+    delete$(activityId: number) {
+        return this.http.delete(`${this.url}/${activityId}`, {
+            headers: {
+                authorization: `Bearer ${this.cookieService.get("token")}`
+            }
+        })
+    }
 }

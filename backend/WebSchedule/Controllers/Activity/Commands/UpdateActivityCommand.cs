@@ -16,11 +16,11 @@ namespace WebSchedule.Controllers.Activity.Commands
         public int Duration { get; set; }
     }
 
-    public class CreateGroupCommandHandler : IRequestHandler<UpdateActivityCommand>
+    public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand>
     {
         private readonly IActivityRepository _activityRepository;
 
-        public CreateGroupCommandHandler(IActivityRepository activityRepository)
+        public UpdateActivityCommandHandler(IActivityRepository activityRepository)
         {
             _activityRepository = activityRepository;
         }

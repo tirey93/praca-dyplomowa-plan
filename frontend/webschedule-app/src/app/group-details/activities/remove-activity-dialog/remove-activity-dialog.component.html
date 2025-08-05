@@ -1,0 +1,22 @@
+<title mat-dialog-title>Usunięcie Zajęć</title>
+<mat-dialog-content>
+    @if(activity) {
+        <div class="dialog-description">
+            Zamierzasz właśnie usunąć zajęcia: <b>{{activity.name}}</b>.
+            <br>
+            Które miały się odbyć w terminie: {{getDay(activity.session.weekNumber, activity.weekDay)}}, 
+            {{activity.weekDay | translate}}
+            w godzinach: {{activity.startingHour}}:00 - {{activity.startingHour + activity.duration}}:00.
+            <br>
+            Czy na pewno chcesz kontynuować?
+        </div>
+    }
+    <mat-dialog-actions>
+        <button mat-raised-button type="button" (click)="onNoClick()">Anuluj</button>
+        <button style="background-color: darkred; margin-left: 15px;"
+            mat-flat-button
+            type="submit" 
+            (click)="remove()">Usuń
+        </button>
+    </mat-dialog-actions>
+</mat-dialog-content>

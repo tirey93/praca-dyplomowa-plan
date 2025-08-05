@@ -21,6 +21,10 @@
                                     <mat-icon>edit</mat-icon>
                                     Modyfikuj zajęcia
                                 </button>
+                                <button mat-menu-item (click)="removeActivity(activity.activityId)">
+                                    <mat-icon>remove</mat-icon>
+                                    Usuń zajęcia
+                                </button>
                             </mat-menu>
                         }
                     </mat-card-title>

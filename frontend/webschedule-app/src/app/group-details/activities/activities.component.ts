@@ -17,6 +17,7 @@ import { UserInGroupService } from '../../../services/userInGroup/userInGroup.se
 import { ActivityInSessionResponse } from '../../../services/activity/dtos/activityInSessionResponse';
 import { TranslatePipe } from '@ngx-translate/core';
 import { WeekHelper } from '../../../helpers/weekHelper';
+import { RemoveActivityDialogComponent } from './remove-activity-dialog/remove-activity-dialog.component';
 
 @Component({
   selector: 'app-activities',
@@ -88,8 +89,18 @@ export class ActivitiesComponent implements OnDestroy{
       },
     })
   }
+  removeActivity(activityId: number) {
+    this.dialog.open(RemoveActivityDialogComponent, {
+      maxWidth: '50vw',
+      autoFocus: false,
+      data: {
+        userGroup: this.userGroup,
+        activityId: activityId
+      },
+    })
+  }
 
   getDay(weekNumber: number, weekDay: string): string {
-      return WeekHelper.getWeekendDay(WeekHelper.getSaturdayOfWeek(weekNumber), weekDay.toLowerCase() === "sunday");
-    }
+    return WeekHelper.getWeekendDay(WeekHelper.getSaturdayOfWeek(weekNumber), weekDay.toLowerCase() === "sunday");
+  }
 }

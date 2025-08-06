@@ -118,7 +118,9 @@ namespace WebSchedule.Controllers.Session
         [Authorize]
 #endif
         public async Task<ActionResult<SessionResponse>> GetNext(
+            [FromQuery] int sessionNumber,
             [FromQuery] int weekNumber,
+            [FromQuery] bool springSemester,
             [FromQuery] string groupIds)
         {
             try
@@ -127,7 +129,9 @@ namespace WebSchedule.Controllers.Session
 
                 return Ok(await _mediator.Send(new GetNextQuery
                 {
+                    SessionNumber = sessionNumber,
                     WeekNumber = weekNumber,
+                    SpringSemester = springSemester,
                     GroupIds = [.. groupIds.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(int.Parse)],
                 }));
             }

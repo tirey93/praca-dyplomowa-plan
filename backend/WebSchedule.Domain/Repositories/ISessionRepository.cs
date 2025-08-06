@@ -12,7 +12,8 @@ namespace WebSchedule.Domain.Repositories
         IEnumerable<Session> GetDefaults();
         Session GetFirstSession(int groupId, bool springSemester);
         Session GetFirstWeekSession(int groupId, bool springSemester);
-        Session GetNext(int groupId, int weekNumber);
+        Session GetNext(int groupId, bool springSemester, int sessionNumber, int weekNumber);
         Session GetPrevious(Session session);
+        bool IsLastWeekInGroup(int groupId, int weekNumber);
     }
 }

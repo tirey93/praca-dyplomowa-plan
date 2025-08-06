@@ -3,13 +3,14 @@
     <header class="schedule-header">
         <div class="corner-space-wrapper">
             <div style="font-size: small;">
-                Semester {{session.springSemester ? "letni" : "zimowy"}}
+                Semester {{session.springSemester ? "letni" : "zimowy"}}, tydzień {{session.weekNumber}}
             </div>
             <div class="corner-space-middle-wrapper">
                 <button mat-icon-button [disabled]="session.number === 1" (click)="setPreviousSession()"> <mat-icon>arrow_left</mat-icon></button>
                 <div class="corner-middle-space" [matTooltip]="getPeriod(session.weekNumber)">Zjazd {{session.number.toString().padStart(2, '0')}}</div>
                 <button mat-icon-button [disabled]="session.number === 10 && session.springSemester" (click)="setNextSession()"> <mat-icon>arrow_right</mat-icon></button>
             </div>
+            
         </div>
         <div class="timeline-wrapper">
             <div class="timeline">
@@ -37,7 +38,7 @@
             <div class="day-name-wrapper">
                 <div class="day-name">Sobota</div>
             </div>
-            <div class="group-list">
+            <div class="group-list" style="flex-direction: column;">
                 @for (group of groupsToDisplay; track $index) {
                     <div class="group-slot">{{getGroupName(group)}}</div>
                 }
@@ -48,8 +49,8 @@
             <div class="day-name-wrapper">
                 <div class="day-name">Niedziela</div>
             </div>
-            <div class="group-list">
-                @for (group of groupsToDisplay.reverse(); track $index) {
+            <div class="group-list" style="flex-direction: column-reverse;">
+                @for (group of groupsToDisplay; track $index) {
                     <div class="group-slot">{{getGroupName(group)}}</div>
                 }
             </div>

@@ -10,7 +10,9 @@ namespace WebSchedule.Controllers.Session.Queries
 {
     public class GetNextQuery : IRequest<SessionResponse>
     {
+        public int SessionNumber { get; set; }
         public int WeekNumber { get; set; }
+        public bool SpringSemester { get; set; }
         public int[] GroupIds { get; set; }
     }
 
@@ -42,9 +44,26 @@ namespace WebSchedule.Controllers.Session.Queries
         private Domain.Entities.Study.Session GetNextSession(GetNextQuery request)
         {
             var session = request.GroupIds
-                .Select(x => _sessionRepository.GetNext(x, request.WeekNumber))
+                .Select(x => _sessionRepository.GetNext(x, request.SpringSemester, request.SessionNumber, request.WeekNumber))
+                .Where(x => x != null)
                 .OrderBy(x => x.Number).ThenBy(x => x.WeekNumber)
                 .FirstOrDefault();
+            if (session == null)
+            {
+                session = request.GroupIds
+                    .Select(x => _sessionRepository.GetNext(x, request.SpringSemester, request.SessionNumber + 1, request.WeekNumber))
+                    .Where(x => x != null)
+                    .OrderBy(x => x.Number).ThenBy(x => x.WeekNumber)
+                    .FirstOrDefault();
+            }
+            if (session == null && request.GroupIds.Select(x => _sessionRepository.IsLastWeekInGroup(x, request.WeekNumber)).All(x => x))
+            {
+                session = request.GroupIds
+                    .Select(x => _sessionRepository.GetNext(x, request.SpringSemester, request.SessionNumber + 1, 0))
+                    .Where(x => x != null)
+                    .OrderBy(x => x.Number).ThenBy(x => x.WeekNumber)
+                    .FirstOrDefault();
+            }
             if (session == null)
             {
                 session = request.GroupIds

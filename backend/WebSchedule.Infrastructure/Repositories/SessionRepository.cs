@@ -63,14 +63,21 @@ namespace WebSchedule.Infrastructure.Repositories
                 .FirstOrDefault(x => x.Id == sessionId);
         }
 
-
-        public Session GetNext(int groupId, int weekNumber)
+        public Session GetNext(int groupId, bool springSemester, int sessionNumber,  int weekNumber)
         {
             return _dbSet
                 .Include(x => x.Group)
-                .Where(x => x.GroupId == groupId && x.SpringSemester == x.Group.SpringSemester && x.WeekNumber > weekNumber)
+                .Where(x => x.GroupId == groupId && x.SpringSemester == springSemester && x.Number == sessionNumber && x.WeekNumber > weekNumber)
                 .OrderBy(x => x.Number)
                 .FirstOrDefault();
+        }
+
+        public bool IsLastWeekInGroup(int groupId, int weekNumber)
+        {
+            return !_dbSet
+                .Include(x => x.Group)
+                .Where(x => x.GroupId == groupId && !x.SpringSemester && x.WeekNumber > weekNumber)
+                .Any();
         }
 
         public Session GetPrevious(Session session)

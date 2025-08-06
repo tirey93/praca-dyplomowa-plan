@@ -17,12 +17,6 @@ import { WeekHelper } from '../../../helpers/weekHelper';
 import { GroupHelper } from '../../../helpers/groupHelper';
 import { GroupResponse } from '../../../services/group/dtos/groupResponse';
 
-export interface Session {
-  number: number;
-  weekNumber: number;
-  springSemester: boolean;
-}
-
 @Component({
   selector: 'app-week-schedule',
   imports: [
@@ -37,13 +31,13 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
   sidenavOpened$: Observable<boolean>;
 
   groupsToDisplay: GroupResponse[] = []
-  session?: Session;
+  session?: SessionResponse;
 
   private destroy$ = new Subject<void>();
   
   constructor(
     private groupRepository: GroupRepositoryService,
-    userInGroupRepository: UserInGroupService,
+    private userInGroupRepository: UserInGroupService,
     private router: Router,
     private route: ActivatedRoute,
     private syncService: SyncService,
@@ -86,14 +80,23 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
       ) .subscribe({
         next: (session) => {
           this.session = session;
+          console.log('session', this.session);
+          console.log('groupsToDisplay', this.groupsToDisplay);
         },
         error: () => {
           this.router.navigateByUrl("");
         }
       })
     } else {
-      console.log('in else');
-      this.sessionRepository.getCurrentForLogged$().subscribe({
+      this.userInGroupRepository.getByLoggedIn$().pipe(
+        switchMap(userInGroups => {
+          console.log('in else');
+          this.groupsToDisplay = userInGroups
+            .filter(x => !x.isCandidate)
+            .map(x => x.group)
+          return this.sessionRepository.getCurrentForLogged$()
+        })
+      ).subscribe({
         next: (session) => {
           this.session = session
         }, 
@@ -113,9 +116,10 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     if (!this.session)
       return;
 
-    this.sessionRepository.getNext$(this.session.weekNumber, this.groupsToDisplay.map(x => x.id)).subscribe({
+    this.sessionRepository.getNext$(this.session.number, this.session.weekNumber, this.session.springSemester, this.groupsToDisplay.map(x => x.id)).subscribe({
       next:(session) => {
         this.session = {...session};
+        console.log('session', this.session);
         this.router.navigate([], { 
           queryParams: { session: this.session.number, spring: this.session.springSemester } 
         });

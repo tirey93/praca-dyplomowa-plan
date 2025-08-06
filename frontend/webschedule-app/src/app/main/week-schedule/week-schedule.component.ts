@@ -4,7 +4,7 @@ import { GroupRepositoryService } from '../../../services/group/groupRepository.
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SyncService } from '../../../services/sync.service';
-import { filter, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { filter, lastValueFrom, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserInGroupService } from '../../../services/userInGroup/userInGroup.service';
 import { MatCardModule } from '@angular/material/card';
@@ -50,7 +50,6 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
       takeUntil(this.destroy$),
       switchMap(() => userInGroupRepository.getByLoggedIn$()),
       switchMap(userInGroups => {
-          console.log('in sync');
           this.groupsToDisplay = userInGroups
           .filter(x => !x.isCandidate)
           .map(x => x.group)
@@ -68,7 +67,6 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
 
 
   ngOnInit(): void {
-    console.log(this.route.snapshot.queryParams);
     if (this.groupId) {
       this.groupRepository.isGroupExists$(this.groupId).pipe(
         switchMap((exist) => {
@@ -82,13 +80,14 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
         filter(session => session != null),
         switchMap((groups) => {
           this.groupsToDisplay = groups;
+          if (this.route.snapshot.queryParams['sessionId']) {
+            return this.sessionRepository.getById$(this.route.snapshot.queryParams['sessionId']);
+          }
           return this.sessionRepository.getCurrent$(this.groupId!);
         })
       ) .subscribe({
         next: (session) => {
           this.session = session;
-          console.log('session', this.session);
-          console.log('groupsToDisplay', this.groupsToDisplay);
         },
         error: () => {
           this.router.navigateByUrl("");
@@ -97,10 +96,12 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     } else {
       this.userInGroupRepository.getByLoggedIn$().pipe(
         switchMap(userInGroups => {
-          console.log('in else');
           this.groupsToDisplay = userInGroups
             .filter(x => !x.isCandidate)
             .map(x => x.group)
+          if (this.route.snapshot.queryParams['sessionId']) {
+            return this.sessionRepository.getById$(this.route.snapshot.queryParams['sessionId']);
+          }
           return this.sessionRepository.getCurrentForLogged$()
         })
       ).subscribe({
@@ -108,7 +109,7 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
           this.session = session
         }, 
         error: () => {
-          this.router.navigateByUrl("");
+          this.syncService.refreshGroups$.next();
         }
       })
     }
@@ -126,9 +127,8 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     this.sessionRepository.getNext$(this.session.number, this.session.weekNumber, this.session.springSemester, this.groupsToDisplay.map(x => x.id)).subscribe({
       next:(session) => {
         this.session = {...session};
-        console.log('session', this.session);
         this.router.navigate([], { 
-          queryParams: { session: this.session.number, spring: this.session.springSemester } 
+          queryParams: { sessionId: this.session.sessionId } 
         });
       },
       error: (err) => {
@@ -144,9 +144,8 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     this.sessionRepository.getPrevious$(this.session.number, this.session.weekNumber, this.session.springSemester, this.groupsToDisplay.map(x => x.id)).subscribe({
       next:(session) => {
         this.session = {...session};
-        console.log('session', this.session);
         this.router.navigate([], { 
-          queryParams: { session: this.session.number, spring: this.session.springSemester } 
+          queryParams: { sessionId: this.session.sessionId } 
         });
       },
       error: (err) => {

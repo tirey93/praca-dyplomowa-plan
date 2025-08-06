@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using WebSchedule.Controllers.Activity.Commands;
 using WebSchedule.Controllers.Activity.Queries;
 using WebSchedule.Controllers.Responses;
-using WebSchedule.Controllers.Session.Queries;
-using WebSchedule.Controllers.StudyCourse.Commands;
-using WebSchedule.Controllers.User.Exceptions;
 using WebSchedule.Domain;
 using WebSchedule.Utils;
 

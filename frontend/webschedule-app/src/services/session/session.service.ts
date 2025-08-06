@@ -21,6 +21,14 @@ import { UpdateSessionsRequest } from './dtos/updateSessionsRequest';
       })
     }
 
+    getById$(sessionId: number) {
+      return this.http.get<SessionResponse>(`${this.url}/${sessionId}`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
     getCurrent$(groupId: number) {
       return this.http.get<SessionResponse>(`${this.url}/Group/${groupId}/Current`, {
         headers: {

@@ -32,7 +32,7 @@ namespace WebSchedule.Controllers.Activity.Queries
                 StartingHour = activity.StartingHour,
                 Duration = activity.Duration,
                 WeekDay = activity.WeekDay.ToString(),
-                Session = new SessionInGroupResponse
+                Session = new SessionResponse
                 {
                     SessionId = activity.SessionId,
                     GroupId = activity.Session.GroupId,

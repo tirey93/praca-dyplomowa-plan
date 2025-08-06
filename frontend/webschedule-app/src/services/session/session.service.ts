@@ -29,8 +29,16 @@ import { UpdateSessionsRequest } from './dtos/updateSessionsRequest';
       })
     }
 
-    getNext$(sessionId: number) {
-      return this.http.get<SessionResponse>(`${this.url}/${sessionId}/Next`, {
+    getCurrentForLogged$() {
+      return this.http.get<SessionResponse>(`${this.url}/CurrentForLogged`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
+    getNext$(weekNumber: number, groupIds: number[]) {
+      return this.http.get<SessionResponse>(`${this.url}/Next?weekNumber=${weekNumber}&groupIds=${groupIds}`, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

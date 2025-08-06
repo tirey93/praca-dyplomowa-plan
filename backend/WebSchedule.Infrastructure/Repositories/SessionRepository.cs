@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Globalization;
+using WebSchedule.Domain.Entities;
 using WebSchedule.Domain.Entities.Study;
 using WebSchedule.Domain.Repositories;
 
@@ -15,28 +17,29 @@ namespace WebSchedule.Infrastructure.Repositories
         {
             int isoWeekNumber = ISOWeek.GetWeekOfYear(DateTime.Today);
             return _dbSet
+                .Include(x => x.Group).ThenInclude(x => x.StudyCourse)
                 .Where(x => x.GroupId == groupId && x.SpringSemester == springSemester && x.WeekNumber >= isoWeekNumber)
                 .OrderBy(x => x.Number)
                 .FirstOrDefault();
         }
 
-        public Session GetDefaultCurrentSession(bool springSemester)
+        public Session GetFirstSession(int groupId, bool springSemester)
         {
             int isoWeekNumber = ISOWeek.GetWeekOfYear(DateTime.Today);
             return _dbSet
-                .Where(x => x.GroupId == null && x.SpringSemester == springSemester && x.WeekNumber >= isoWeekNumber)
+                .Where(x => x.GroupId == groupId && x.SpringSemester == springSemester && x.Number == 1)
                 .OrderBy(x => x.Number)
                 .FirstOrDefault();
         }
 
-        public Session GetFirstSession(bool springSemester)
+        public Session GetFirstWeekSession(int groupId, bool springSemester)
         {
-            int isoWeekNumber = ISOWeek.GetWeekOfYear(DateTime.Today);
             return _dbSet
-                .Where(x => x.GroupId == null && x.SpringSemester == springSemester && x.Number == 1)
-                .OrderBy(x => x.Number)
+                .Where(x => x.GroupId == groupId && x.SpringSemester == springSemester)
+                .OrderBy(x => x.WeekNumber)
                 .FirstOrDefault();
         }
+
         public IEnumerable<Session> GetDefaults()
         {
             return _dbSet.Where(x => x.GroupId == null);
@@ -44,27 +47,36 @@ namespace WebSchedule.Infrastructure.Repositories
 
         public IEnumerable<Session> GetByGroup(int id)
         {
-            return _dbSet.Where(x => x.GroupId == id);
+            return _dbSet
+                .Where(x => x.GroupId == id);
         }
 
         public Session Get(int groupId, int number, bool springSemester)
         {
-            return _dbSet.FirstOrDefault(x => x.GroupId == groupId && x.Number == number && x.SpringSemester == springSemester);
+            return _dbSet
+                .FirstOrDefault(x => x.GroupId == groupId && x.Number == number && x.SpringSemester == springSemester);
         }
 
         public Session Get(int sessionId)
         {
-            return _dbSet.FirstOrDefault(x => x.Id == sessionId);
+            return _dbSet
+                .FirstOrDefault(x => x.Id == sessionId);
         }
 
-        public Session GetNext(Session session)
+
+        public Session GetNext(int groupId, int weekNumber)
         {
-            return _dbSet.FirstOrDefault(x => x.GroupId == session.GroupId && x.SpringSemester == session.SpringSemester && x.Number == session.Number + 1);
+            return _dbSet
+                .Include(x => x.Group)
+                .Where(x => x.GroupId == groupId && x.SpringSemester == x.Group.SpringSemester && x.WeekNumber > weekNumber)
+                .OrderBy(x => x.Number)
+                .FirstOrDefault();
         }
 
         public Session GetPrevious(Session session)
         {
-            return _dbSet.FirstOrDefault(x => x.GroupId == session.GroupId && x.SpringSemester == session.SpringSemester && x.Number == session.Number - 1);
+            return _dbSet
+                .FirstOrDefault(x => x.GroupId == session.GroupId && x.SpringSemester == session.SpringSemester && x.Number == session.Number - 1);
         }
     }
 }

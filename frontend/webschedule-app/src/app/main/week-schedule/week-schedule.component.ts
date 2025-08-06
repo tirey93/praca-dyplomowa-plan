@@ -17,6 +17,12 @@ import { WeekHelper } from '../../../helpers/weekHelper';
 import { GroupHelper } from '../../../helpers/groupHelper';
 import { GroupResponse } from '../../../services/group/dtos/groupResponse';
 
+export interface Session {
+  number: number;
+  weekNumber: number;
+  springSemester: boolean;
+}
+
 @Component({
   selector: 'app-week-schedule',
   imports: [
@@ -27,12 +33,11 @@ import { GroupResponse } from '../../../services/group/dtos/groupResponse';
   styleUrl: './week-schedule.component.scss'
 })
 export class WeekScheduleComponent implements OnInit, OnDestroy{
-  @Input() userGroups: number[] = [];
   @Input() groupId?: number;
   sidenavOpened$: Observable<boolean>;
 
   groupsToDisplay: GroupResponse[] = []
-  session?: SessionResponse;
+  session?: Session;
 
   private destroy$ = new Subject<void>();
   
@@ -52,6 +57,7 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
       switchMap(() => userInGroupRepository.getByLoggedIn$())
     ).subscribe({
       next: (userGroupsResponses) => {
+        console.log('in sync');
         this.groupsToDisplay = userGroupsResponses
           .filter(x => !x.isCandidate)
           .map(x => x.group)
@@ -86,15 +92,10 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
         }
       })
     } else {
-      this.groupRepository.getGroupsById$(this.userGroups).subscribe({
-        next: (groups) => {
-          this.groupsToDisplay = groups;
-          // this.session = {
-          //   number: 2,
-          //   sessionId: 1,
-          //   springSemester: false,
-          //   weekNumber: 41
-          // }
+      console.log('in else');
+      this.sessionRepository.getCurrentForLogged$().subscribe({
+        next: (session) => {
+          this.session = session
         }, 
         error: () => {
           this.router.navigateByUrl("");
@@ -112,12 +113,12 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     if (!this.session)
       return;
 
-    this.router.navigate([], { 
-      queryParams: { session: this.session.number + 1 } 
-    });
-    this.sessionRepository.getNext$(this.session.sessionId).subscribe({
+    this.sessionRepository.getNext$(this.session.weekNumber, this.groupsToDisplay.map(x => x.id)).subscribe({
       next:(session) => {
         this.session = {...session};
+        this.router.navigate([], { 
+          queryParams: { session: this.session.number, spring: this.session.springSemester } 
+        });
       },
       error: (err) => {
         this.snackBarService.openError(err);
@@ -129,17 +130,17 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     if (!this.session)
       return;
 
-    this.router.navigate([], { 
-      queryParams: { session: this.session.number - 1 } 
-    });
-    this.sessionRepository.getPrevious$(this.session.sessionId).subscribe({
-      next:(session) => {
-        this.session = {...session};
-      },
-      error: (err) => {
-        this.snackBarService.openError(err);
-      }
-    })
+    // this.router.navigate([], { 
+    //   queryParams: { session: this.session.number - 1 } 
+    // });
+    // this.sessionRepository.getPrevious$(this.session.sessionId).subscribe({
+    //   next:(session) => {
+    //     this.session = {...session};
+    //   },
+    //   error: (err) => {
+    //     this.snackBarService.openError(err);
+    //   }
+    // })
   }
 
   getPeriod(weekNumber: number): string {

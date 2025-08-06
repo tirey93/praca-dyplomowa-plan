@@ -6,7 +6,7 @@
                 Semester {{session.springSemester ? "letni" : "zimowy"}}, tydzień {{session.weekNumber}}
             </div>
             <div class="corner-space-middle-wrapper">
-                <button mat-icon-button [disabled]="session.number === 1" (click)="setPreviousSession()"> <mat-icon>arrow_left</mat-icon></button>
+                <button mat-icon-button [disabled]="session.number === 1 && !session.springSemester" (click)="setPreviousSession()"> <mat-icon>arrow_left</mat-icon></button>
                 <div class="corner-middle-space" [matTooltip]="getPeriod(session.weekNumber)">Zjazd {{session.number.toString().padStart(2, '0')}}</div>
                 <button mat-icon-button [disabled]="session.number === 10 && session.springSemester" (click)="setNextSession()"> <mat-icon>arrow_right</mat-icon></button>
             </div>

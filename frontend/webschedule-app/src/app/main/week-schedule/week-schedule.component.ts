@@ -48,14 +48,21 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
 
     syncService.refreshGroups$.pipe(
       takeUntil(this.destroy$),
-      switchMap(() => userInGroupRepository.getByLoggedIn$())
-    ).subscribe({
-      next: (userGroupsResponses) => {
-        console.log('in sync');
-        this.groupsToDisplay = userGroupsResponses
+      switchMap(() => userInGroupRepository.getByLoggedIn$()),
+      switchMap(userInGroups => {
+          console.log('in sync');
+          this.groupsToDisplay = userInGroups
           .filter(x => !x.isCandidate)
           .map(x => x.group)
-      }
+          return this.sessionRepository.getCurrentForLogged$()
+        })
+    ).subscribe({
+      next: (session) => {
+          this.session = session
+        }, 
+        error: () => {
+          this.router.navigateByUrl("");
+        }
     })
   }
 
@@ -134,17 +141,18 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     if (!this.session)
       return;
 
-    // this.router.navigate([], { 
-    //   queryParams: { session: this.session.number - 1 } 
-    // });
-    // this.sessionRepository.getPrevious$(this.session.sessionId).subscribe({
-    //   next:(session) => {
-    //     this.session = {...session};
-    //   },
-    //   error: (err) => {
-    //     this.snackBarService.openError(err);
-    //   }
-    // })
+    this.sessionRepository.getPrevious$(this.session.number, this.session.weekNumber, this.session.springSemester, this.groupsToDisplay.map(x => x.id)).subscribe({
+      next:(session) => {
+        this.session = {...session};
+        console.log('session', this.session);
+        this.router.navigate([], { 
+          queryParams: { session: this.session.number, spring: this.session.springSemester } 
+        });
+      },
+      error: (err) => {
+        this.snackBarService.openError(err);
+      }
+    })
   }
 
   getPeriod(weekNumber: number): string {

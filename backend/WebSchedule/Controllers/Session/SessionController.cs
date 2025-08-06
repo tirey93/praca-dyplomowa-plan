@@ -149,20 +149,27 @@ namespace WebSchedule.Controllers.Session
             }
         }
 
-        [HttpGet("{id}/Previous")]
+        [HttpGet("Previous")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
 #if !DEBUG
         [Authorize]
 #endif
-        public async Task<ActionResult<SessionResponse>> GetPrevious(int id)
+        public async Task<ActionResult<SessionResponse>> GetPrevious(
+            [FromQuery] int sessionNumber,
+            [FromQuery] int weekNumber,
+            [FromQuery] bool springSemester,
+            [FromQuery] string groupIds)
         {
             try
             {
                 return Ok(await _mediator.Send(new GetPreviousQuery
                 {
-                    SessionId = id
+                    SessionNumber = sessionNumber,
+                    WeekNumber = weekNumber,
+                    SpringSemester = springSemester,
+                    GroupIds = [.. groupIds.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(int.Parse)],
                 }));
             }
             catch (ApplicationException ex)

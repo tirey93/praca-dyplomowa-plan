@@ -45,8 +45,8 @@ import { UpdateSessionsRequest } from './dtos/updateSessionsRequest';
       })
     }
 
-    getPrevious$(sessionId: number) {
-      return this.http.get<SessionResponse>(`${this.url}/${sessionId}/Previous`, {
+    getPrevious$(sessionNumber: number, weekNumber: number, springSemester: boolean, groupIds: number[]) {
+      return this.http.get<SessionResponse>(`${this.url}/Previous?sessionNumber=${sessionNumber}&weekNumber=${weekNumber}&springSemester=${springSemester}&groupIds=${groupIds}`, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

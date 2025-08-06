@@ -32,6 +32,15 @@ namespace WebSchedule.Infrastructure.Repositories
                 .FirstOrDefault();
         }
 
+        public Session GetLastSession(int groupId, bool springSemester)
+        {
+            int isoWeekNumber = ISOWeek.GetWeekOfYear(DateTime.Today);
+            return _dbSet
+                .Where(x => x.GroupId == groupId && x.SpringSemester == springSemester && x.Number == 10)
+                .OrderBy(x => x.Number)
+                .FirstOrDefault();
+        }
+
         public Session GetFirstWeekSession(int groupId, bool springSemester)
         {
             return _dbSet
@@ -80,10 +89,21 @@ namespace WebSchedule.Infrastructure.Repositories
                 .Any();
         }
 
-        public Session GetPrevious(Session session)
+        public bool IsFirstWeekInGroup(int groupId, int weekNumber)
+        {
+            return !_dbSet
+                .Include(x => x.Group)
+                .Where(x => x.GroupId == groupId && !x.SpringSemester && x.WeekNumber < weekNumber)
+                .Any();
+        }
+
+        public Session GetPrevious(int groupId, bool springSemester, int sessionNumber, int weekNumber)
         {
             return _dbSet
-                .FirstOrDefault(x => x.GroupId == session.GroupId && x.SpringSemester == session.SpringSemester && x.Number == session.Number - 1);
+                .Include(x => x.Group)
+                .Where(x => x.GroupId == groupId && x.SpringSemester == springSemester && x.Number == sessionNumber && x.WeekNumber < weekNumber)
+                .OrderByDescending(x => x.Number)
+                .FirstOrDefault();
         }
     }
 }

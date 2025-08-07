@@ -168,7 +168,6 @@ export class CreateActivityDialogComponent implements OnInit {
       }).subscribe({
         next: () => {
           this.syncService.refreshActivities$.next();
-          this.syncService.refreshGroups$.next();
           this.snackBarService.openMessage("ActivityUpdated");
           this.dialogRef.close();
         },

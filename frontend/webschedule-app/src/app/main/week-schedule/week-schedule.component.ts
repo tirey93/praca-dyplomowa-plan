@@ -4,7 +4,7 @@ import { GroupRepositoryService } from '../../../services/group/groupRepository.
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SyncService } from '../../../services/sync.service';
-import { filter, lastValueFrom, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { combineLatest, filter, lastValueFrom, merge, Observable, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UserInGroupService } from '../../../services/userInGroup/userInGroup.service';
 import { MatCardModule } from '@angular/material/card';
@@ -66,10 +66,11 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
   ) {  
     this.sidenavOpened$ = syncService.groupSelected$;
 
-    syncService.refreshGroups$.pipe(
+    merge(syncService.refreshGroups$, syncService.refreshActivities$).pipe(
       takeUntil(this.destroy$),
       switchMap(() => userInGroupRepository.getByLoggedIn$()),
       switchMap(userInGroups => {
+          console.log('in sync');
           this.groupsToDisplay = userInGroups
           .filter(x => !x.isCandidate)
           .map(x => x.group)
@@ -248,7 +249,7 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
       name: x.name,
       duration: x.duration,
       start: x.startingHour - 7,
-      position: this.getPosition(x.session.groupId!)
+      position: this.getPosition(x.session.groupId!) + 1
     }) as Activity)
   }
   getPosition(groupId: number): number {

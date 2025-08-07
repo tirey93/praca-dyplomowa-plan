@@ -74,7 +74,8 @@ export class ActivitiesComponent implements OnDestroy{
       autoFocus: false,
       data: {
         group: this.userGroup?.group,
-        activityId: null
+        activityId: null,
+        isAdmin: this.userGroup?.isAdmin
       },
     })
   }
@@ -85,7 +86,8 @@ export class ActivitiesComponent implements OnDestroy{
       autoFocus: false,
       data: {
         group: this.userGroup?.group,
-        activityId: activityId
+        activityId: activityId,
+        isAdmin: this.userGroup?.isAdmin
       },
     })
   }

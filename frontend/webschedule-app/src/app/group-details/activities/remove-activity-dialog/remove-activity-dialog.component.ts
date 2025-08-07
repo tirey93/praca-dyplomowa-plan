@@ -43,6 +43,7 @@ export class RemoveActivityDialogComponent implements OnInit {
   }
 
   onNoClick() {
+    this.syncService.refreshActivities$.next();
     this.dialogRef.close();
   }
 

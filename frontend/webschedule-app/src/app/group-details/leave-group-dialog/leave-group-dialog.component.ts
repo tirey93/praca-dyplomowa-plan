@@ -7,6 +7,7 @@ import { GroupRepositoryService } from '../../../services/group/groupRepository.
 import { SnackBarService } from '../../../services/snackBarService';
 import { UserGroupResponse } from '../../../services/userInGroup/dtos/userGroupResponse';
 import { UserInGroupService } from '../../../services/userInGroup/userInGroup.service';
+import { SyncService } from '../../../services/sync.service';
 
 @Component({
   selector: 'app-leave-group-dialog',
@@ -25,7 +26,8 @@ export class LeaveGroupDialogComponent {
     private groupRepository: GroupRepositoryService,
     private userInGroupRepository: UserInGroupService,
     private dialogRef: MatDialogRef<LeaveGroupDialogComponent>,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private syncService: SyncService
   ) {
     groupRepository.canLeaveGroup$(this.userGroup.group.id).subscribe({
       next: (canLeave) => {
@@ -42,6 +44,8 @@ export class LeaveGroupDialogComponent {
     this.userInGroupRepository.disenrollFromGroup$({ groupId: this.userGroup.group.id }).subscribe({
       next: () => {
         this.snackBarService.openMessage('LeaveGroupSuccess');
+        this.syncService.unselectGroup();
+        this.syncService.refreshGroups$.next();
         this.dialogRef.close();
       },
       error: (err) => {

@@ -38,9 +38,12 @@
             <div class="day-name-wrapper">
                 <div class="day-name">Sobota</div>
             </div>
-            <div class="group-list" style="flex-direction: column;">
+            <div class="group-list" style="flex-direction: column-reverse;">
                 @for (group of groupsToDisplay; track $index) {
                     <div class="group-slot">{{getGroupName(group)}}</div>
+                }
+                @for (item of emptySlots; track $index) {
+                    <div class="group-slot"></div>
                 }
             </div>
         </div>
@@ -49,9 +52,12 @@
             <div class="day-name-wrapper">
                 <div class="day-name">Niedziela</div>
             </div>
-            <div class="group-list" style="flex-direction: column-reverse;">
+            <div class="group-list" style="flex-direction: column;">
                 @for (group of groupsToDisplay; track $index) {
                     <div class="group-slot">{{getGroupName(group)}}</div>
+                }
+                @for (item of emptySlots; track $index) {
+                    <div class="group-slot"></div>
                 }
             </div>
         </div>

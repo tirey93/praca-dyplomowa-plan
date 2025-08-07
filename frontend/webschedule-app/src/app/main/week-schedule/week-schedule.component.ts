@@ -226,6 +226,16 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
       position: index
     }) as Position)
   }
+
+  get emptySlots(): number[] {
+    const maxSlots = 3;
+    const result:number[] = []
+
+    for (let index = 0; index < maxSlots - this.groupsToDisplay.length; index++) {
+      result.push(index);
+    }
+    return result;
+  }
   getPeriod(weekNumber: number): string {
     return WeekHelper.getPeriod(WeekHelper.getSaturdayOfWeek(weekNumber))
   }

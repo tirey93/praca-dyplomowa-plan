@@ -125,6 +125,43 @@ namespace WebSchedule.Controllers.Activity
             }
         }
 
+        [HttpGet("ByWeek")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+#if !DEBUG
+        [Authorize]
+#endif
+        public async Task<ActionResult<IEnumerable<ActivityResponse>>> GetByWeek(
+            [FromQuery] int weekNumber,
+            [FromQuery] bool springSemester,
+            [FromQuery] string groupIds)
+        {
+            try
+            {
+                groupIds ??= string.Empty;
+
+                return Ok(await _mediator.Send(new GetByWeekQuery
+                {
+                    WeekNumber = weekNumber,
+                    SpringSemester = springSemester,
+                    GroupIds = [.. groupIds.Split(",", StringSplitOptions.RemoveEmptyEntries).Select(int.Parse)],
+                }));
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
+            }
+        }
+
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

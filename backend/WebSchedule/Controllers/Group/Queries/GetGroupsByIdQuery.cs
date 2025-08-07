@@ -20,7 +20,7 @@ namespace WebSchedule.Controllers.Group.Queries
 
         public Task<IEnumerable<GroupInfoResponse>> Handle(GetGroupsByIdQuery request, CancellationToken cancellationToken)
         {
-            var groups = _groupRepository.Get(request.GroupIds);
+            var groups = _groupRepository.Get(request.GroupIds).OrderBy(x => x.Id);
 
             return Task.FromResult(groups.Select(gi => new GroupInfoResponse
             {

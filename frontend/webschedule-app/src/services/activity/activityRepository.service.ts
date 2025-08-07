@@ -15,6 +15,14 @@ import { UpdateActivityRequest } from "./dtos/updateActivityRequest"
 
     constructor(private http: HttpClient, private cookieService: CookieService) { }
 
+    getByWeek$(weekNumber: number, springSemester: boolean, groupIds: number[]) {
+        return this.http.get<ActivityResponse[]>(`${this.url}/ByWeek?weekNumber=${weekNumber}&springSemester=${springSemester}&groupIds= ${groupIds}`, {
+            headers: {
+            authorization: `Bearer ${this.cookieService.get("token")}`
+            }
+        })
+    }
+
     getById$(activityId: number) {
         return this.http.get<ActivityResponse>(`${this.url}/${activityId}`, {
             headers: {

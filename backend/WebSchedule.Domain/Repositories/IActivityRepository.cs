@@ -8,6 +8,7 @@ namespace WebSchedule.Domain.Repositories
         Task AddActivity(Activity activity);
         Activity Get(int id);
         IEnumerable<Activity> GetActivitiesForDay(int groupId, int[] sessionNumbers, bool springSemester, WeekDay weekDay);
+        IEnumerable<Activity> GetActivitiesForWeek(int[] groupIds, int weekNumber, bool springSemester);
         IEnumerable<Activity> GetBySessionNumber(int groupId, int sessionCount, bool springSemester, int sessionNumber);
     }
 }

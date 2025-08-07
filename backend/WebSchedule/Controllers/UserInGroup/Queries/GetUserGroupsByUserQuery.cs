@@ -22,7 +22,7 @@ namespace WebSchedule.Controllers.UserInGroup.Queries
 
         public Task<IEnumerable<UserGroupResponse>> Handle(GetUserGroupsByUserQuery request, CancellationToken cancellationToken)
         {
-            var userGroups = _userInGroupRepository.GetUserGroupsByUser(request.UserId);
+            var userGroups = _userInGroupRepository.GetUserGroupsByUser(request.UserId).OrderBy(x => x.Group.Id);
             return Task.FromResult(userGroups.Select(userGroup => new UserGroupResponse
             {
                 Group = new GroupResponse

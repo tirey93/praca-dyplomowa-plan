@@ -18,6 +18,16 @@ namespace WebSchedule.Infrastructure.Repositories
                 .FirstOrDefault(x => x.Id == id);
         }
 
+        public IEnumerable<Activity> GetActivitiesForWeek(int[] groupIds, int weekNumber, bool springSemester)
+        {
+            return _dbSet
+                .Include(x => x.Session)
+                .Where(x => x.Session.GroupId != null
+                    && groupIds.Contains(x.Session.GroupId.Value)
+                    && x.Session.SpringSemester == springSemester
+                    && x.Session.WeekNumber == weekNumber);
+        }
+
         public IEnumerable<Activity> GetActivitiesForDay(int groupId, int[] sessionNumbers, bool springSemester, WeekDay weekDay)
         {
             return _dbSet

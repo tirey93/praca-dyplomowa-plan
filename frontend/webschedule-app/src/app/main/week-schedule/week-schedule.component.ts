@@ -18,9 +18,12 @@ import { GroupHelper } from '../../../helpers/groupHelper';
 import { GroupResponse } from '../../../services/group/dtos/groupResponse';
 import { ActivityRepositoryService } from '../../../services/activity/activityRepository.service';
 import { ActivityResponse } from '../../../services/activity/dtos/activityResponse';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateActivityDialogComponent } from '../../group-details/activities/create-activity-dialog/create-activity-dialog.component';
 
 interface Activity {
   id: number;
+  groupId: number;
   name: string;
   position: number;
   duration: number;
@@ -58,7 +61,8 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     private syncService: SyncService,
     private sessionRepository: SessionService,
     private snackBarService: SnackBarService,
-    private activityRepository: ActivityRepositoryService
+    private activityRepository: ActivityRepositoryService,
+    private readonly dialog: MatDialog,
   ) {  
     this.sidenavOpened$ = syncService.groupSelected$;
 
@@ -198,9 +202,31 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     })
   }
 
+  modifyActivity(activityId: number, groupId: number) {
+    this.groupRepository.getGroupsById$([groupId]).subscribe({
+      next: (groups) => {
+        if (groups.length > 0) {
+          this.dialog.open(CreateActivityDialogComponent, {
+            maxWidth: '50vw',
+            autoFocus: false,
+            data: {
+              group: groups[0],
+              activityId: activityId
+            },
+          })
+        }
+      },
+      error: (err) => {
+        this.snackBarService.openError(err);
+      }
+    })
+
+  }
+
   get activitiesForSaturday(): Activity[] {
     return this.activities.filter(x => x.weekDay === 'Saturday').map(x => ({
       id: x.activityId,
+      groupId: x.session.groupId!,
       name: x.name,
       duration: x.duration,
       start: x.startingHour - 7,
@@ -211,6 +237,7 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
   get activitiesForSunday(): Activity[] {
     return this.activities.filter(x => x.weekDay === 'Sunday').map(x => ({
       id: x.activityId,
+      groupId: x.session.groupId!,
       name: x.name,
       duration: x.duration,
       start: x.startingHour - 7,

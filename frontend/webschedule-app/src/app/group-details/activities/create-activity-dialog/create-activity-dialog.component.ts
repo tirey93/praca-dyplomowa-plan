@@ -24,6 +24,7 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { SyncService } from '../../../../services/sync.service';
 import { DividerComponent } from "../../../divider/divider.component";
+import { GroupResponse } from '../../../../services/group/dtos/groupResponse';
 
 @Component({
   selector: 'app-create-activity-dialog',
@@ -39,7 +40,7 @@ import { DividerComponent } from "../../../divider/divider.component";
 })
 export class CreateActivityDialogComponent implements OnInit {
   data = inject(DIALOG_DATA);
-  userGroup: UserGroupResponse = this.data.userGroup;
+  group: GroupResponse = this.data.group;
   activityId: number | null = this.data.activityId;
   activity: ActivityResponse | null = null;
   allSessions: SelectValue[] = [];
@@ -85,9 +86,9 @@ export class CreateActivityDialogComponent implements OnInit {
         }),
         switchMap(([duration, weekDay, startingHour, sessions]) => {
           return this.activityRepository.getConflicts$(
-            this.userGroup.group.id,
+            this.group.id,
             sessions!,
-            this.userGroup.group.springSemester,
+            this.group.springSemester,
             startingHour!,
             duration!,
             weekDay!
@@ -108,10 +109,10 @@ export class CreateActivityDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.sessionRepository.getByGroup$(this.userGroup.group.id).subscribe({
+    this.sessionRepository.getByGroup$(this.group.id).subscribe({
       next: (sessionsResponse) => {
         this.allSessions = sessionsResponse
-          .filter(x => x.springSemester === this.userGroup.group.springSemester)
+          .filter(x => x.springSemester === this.group.springSemester)
           .map(x => ({
             id: x.number,
             displayText: `${x.number.toString().padStart(2, '0')}`,
@@ -167,12 +168,12 @@ export class CreateActivityDialogComponent implements OnInit {
       })
     } else {
       this.activityRepository.create$({ 
-        groupId: this.userGroup.group.id!,
+        groupId: this.group.id!,
         name: this.activityForm.controls.name.value!,
         teacherFullName: this.activityForm.controls.teacherFullName.value!,
         sessionNumbers: this.sessionsSelected,
         weekDay: this.activityForm.controls.weekDay.value!,
-        springSemester: this.userGroup.group.springSemester,
+        springSemester: this.group.springSemester,
         startingHour: this.activityForm.controls.startingHour.value!,
         duration: this.activityForm.controls.duration.value!
       }).subscribe({
@@ -196,7 +197,7 @@ export class CreateActivityDialogComponent implements OnInit {
     }
     this.activityForm.get('sessions')?.setValue(this.sessionsSelected);
   }
-  getGroupName(userGroup: UserGroupResponse): string { return GroupHelper.groupInfoToString(userGroup.group)}
+  getGroupName(group: GroupResponse): string { return GroupHelper.groupInfoToString(group)}
 
   parseSessionNumber(sessionNumber: number): string {
     return sessionNumber.toString().padStart(2, '0') 

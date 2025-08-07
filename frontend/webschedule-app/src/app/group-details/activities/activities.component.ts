@@ -73,7 +73,7 @@ export class ActivitiesComponent implements OnDestroy{
       maxWidth: '50vw',
       autoFocus: false,
       data: {
-        userGroup: this.userGroup,
+        group: this.userGroup?.group,
         activityId: null
       },
     })
@@ -84,7 +84,7 @@ export class ActivitiesComponent implements OnDestroy{
       maxWidth: '50vw',
       autoFocus: false,
       data: {
-        userGroup: this.userGroup,
+        group: this.userGroup?.group,
         activityId: activityId
       },
     })

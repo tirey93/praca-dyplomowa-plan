@@ -1,9 +1,9 @@
-@if (userGroup) {
+@if (group) {
     <title mat-dialog-title>{{activityId ? "Modifikacja" : 'Utworzenie Nowych'}} Zajęć</title>
     <mat-dialog-content>
         <p class="dialog-description">
         @if(!activityId)  {
-            Tutaj możesz mod zajęcia do grupy <b>{{getGroupName(userGroup)}}</b>. 
+            Tutaj możesz mod zajęcia do grupy <b>{{getGroupName(group)}}</b>. 
             <br>Po utworzeniu pojawią się one na liście zajęć oraz w kalendarzu.
         }
         </p>    

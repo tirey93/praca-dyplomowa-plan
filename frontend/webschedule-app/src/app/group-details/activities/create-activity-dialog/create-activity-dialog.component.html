@@ -1,5 +1,5 @@
 @if (group) {
-    <title mat-dialog-title>{{activityId ? "Modifikacja" : 'Utworzenie Nowych'}} Zajęć</title>
+    <title mat-dialog-title> {{canModify ? 'Modifikacja' : activityId ? "Szczegóły" : 'Utworzenie Nowych'}} zajęć dla grupy {{getGroupName(group)}}</title>
     <mat-dialog-content>
         <p class="dialog-description">
         @if(!activityId)  {

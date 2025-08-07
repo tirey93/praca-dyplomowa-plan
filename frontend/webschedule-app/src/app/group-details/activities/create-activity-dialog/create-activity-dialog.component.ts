@@ -42,6 +42,7 @@ export class CreateActivityDialogComponent implements OnInit {
   data = inject(DIALOG_DATA);
   group: GroupResponse = this.data.group;
   activityId: number | null = this.data.activityId;
+  isAdmin: boolean = this.data.isAdmin;
   activity: ActivityResponse | null = null;
   allSessions: SelectValue[] = [];
   allHours: number[] = this.getAllHours();
@@ -140,6 +141,15 @@ export class CreateActivityDialogComponent implements OnInit {
         }
       })
     }
+    if (!this.isAdmin){
+      this.activityForm.controls.name.disable();
+      this.activityForm.controls.name.disable();
+      this.activityForm.controls.teacherFullName.disable();
+      this.activityForm.controls.weekDay.disable();
+      this.activityForm.controls.startingHour.disable();
+      this.activityForm.controls.duration.disable();
+    }
+
   }
 
   onNoClick() {
@@ -158,6 +168,7 @@ export class CreateActivityDialogComponent implements OnInit {
       }).subscribe({
         next: () => {
           this.syncService.refreshActivities$.next();
+          this.syncService.refreshGroups$.next();
           this.snackBarService.openMessage("ActivityUpdated");
           this.dialogRef.close();
         },
@@ -234,6 +245,9 @@ export class CreateActivityDialogComponent implements OnInit {
     return WeekHelper.getWeekendDay(WeekHelper.getSaturdayOfWeek(weekNumber), weekDay.toLowerCase() === "sunday");
   }
 
+  get canModify(): boolean {
+    return this.activityId != undefined && this.isAdmin;
+  }
   private getAllHours(): number[] {
     const dayStart = 8;
     const dayEnd = 20;

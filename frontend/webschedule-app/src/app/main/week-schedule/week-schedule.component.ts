@@ -16,6 +16,20 @@ import { SnackBarService } from '../../../services/snackBarService';
 import { WeekHelper } from '../../../helpers/weekHelper';
 import { GroupHelper } from '../../../helpers/groupHelper';
 import { GroupResponse } from '../../../services/group/dtos/groupResponse';
+import { ActivityRepositoryService } from '../../../services/activity/activityRepository.service';
+import { ActivityResponse } from '../../../services/activity/dtos/activityResponse';
+
+interface Activity {
+  id: number;
+  name: string;
+  position: number;
+  duration: number;
+  start: number;
+}
+interface Position {
+  groupId: number;
+  position: number;
+}
 
 @Component({
   selector: 'app-week-schedule',
@@ -32,6 +46,7 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
 
   groupsToDisplay: GroupResponse[] = []
   session?: SessionResponse;
+  activities: ActivityResponse[] = []
 
   private destroy$ = new Subject<void>();
   
@@ -42,7 +57,8 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     private route: ActivatedRoute,
     private syncService: SyncService,
     private sessionRepository: SessionService,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private activityRepository: ActivityRepositoryService
   ) {  
     this.sidenavOpened$ = syncService.groupSelected$;
 
@@ -54,11 +70,15 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
           .filter(x => !x.isCandidate)
           .map(x => x.group)
           return this.sessionRepository.getCurrentForLogged$()
+        }),
+      switchMap(session => {
+          this.session = session;
+          return this.activityRepository.getByWeek$(session.weekNumber, session.springSemester, this.groupsToDisplay.map(x => x.id))
         })
-    ).subscribe({
-      next: (session) => {
-          this.session = session
-        }, 
+      ) .subscribe({
+        next:(activities) => {
+          this.activities = activities;
+        },
         error: () => {
           this.router.navigateByUrl("");
         }
@@ -84,10 +104,14 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
             return this.sessionRepository.getById$(this.route.snapshot.queryParams['sessionId']);
           }
           return this.sessionRepository.getCurrent$(this.groupId!);
+        }),
+        switchMap(session => {
+          this.session = session;
+          return this.activityRepository.getByWeek$(session.weekNumber, session.springSemester, this.groupsToDisplay.map(x => x.id))
         })
       ) .subscribe({
-        next: (session) => {
-          this.session = session;
+        next:(activities) => {
+          this.activities = activities;
         },
         error: () => {
           this.router.navigateByUrl("");
@@ -103,11 +127,15 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
             return this.sessionRepository.getById$(this.route.snapshot.queryParams['sessionId']);
           }
           return this.sessionRepository.getCurrentForLogged$()
+        }),
+        switchMap(session => {
+          this.session = session
+          return this.activityRepository.getByWeek$(session.weekNumber, session.springSemester, this.groupsToDisplay.map(x => x.id))
         })
       ).subscribe({
-        next: (session) => {
-          this.session = session
-        }, 
+        next:(activities) => {
+          this.activities = activities;
+        },
         error: () => {
           this.syncService.refreshGroups$.next();
         }
@@ -124,12 +152,20 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     if (!this.session)
       return;
 
-    this.sessionRepository.getNext$(this.session.number, this.session.weekNumber, this.session.springSemester, this.groupsToDisplay.map(x => x.id)).subscribe({
-      next:(session) => {
-        this.session = {...session};
-        this.router.navigate([], { 
-          queryParams: { sessionId: this.session.sessionId } 
-        });
+    this.sessionRepository
+      .getNext$(this.session.number, this.session.weekNumber, this.session.springSemester, this.groupsToDisplay.map(x => x.id))
+      .pipe(
+        switchMap(session => {
+          this.session = {...session};
+          this.router.navigate([], { 
+            queryParams: { sessionId: this.session.sessionId } 
+          });
+          return this.activityRepository.getByWeek$(session.weekNumber, session.springSemester, this.groupsToDisplay.map(x => x.id))
+        })
+      )
+      .subscribe({
+      next:(activities) => {
+        this.activities = activities;
       },
       error: (err) => {
         this.snackBarService.openError(err);
@@ -141,12 +177,20 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     if (!this.session)
       return;
 
-    this.sessionRepository.getPrevious$(this.session.number, this.session.weekNumber, this.session.springSemester, this.groupsToDisplay.map(x => x.id)).subscribe({
-      next:(session) => {
-        this.session = {...session};
-        this.router.navigate([], { 
-          queryParams: { sessionId: this.session.sessionId } 
-        });
+    this.sessionRepository
+      .getPrevious$(this.session.number, this.session.weekNumber, this.session.springSemester, this.groupsToDisplay.map(x => x.id))
+      .pipe(
+        switchMap(session => {
+          this.session = {...session};
+          this.router.navigate([], { 
+            queryParams: { sessionId: this.session.sessionId } 
+          });
+          return this.activityRepository.getByWeek$(session.weekNumber, session.springSemester, this.groupsToDisplay.map(x => x.id))
+        })
+      )
+      .subscribe({
+      next:(activities) => {
+        this.activities = activities;
       },
       error: (err) => {
         this.snackBarService.openError(err);
@@ -154,6 +198,34 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     })
   }
 
+  get activitiesForSaturday(): Activity[] {
+    return this.activities.filter(x => x.weekDay === 'Saturday').map(x => ({
+      id: x.activityId,
+      name: x.name,
+      duration: x.duration,
+      start: x.startingHour - 7,
+      position: 3 - this.getPosition(x.session.groupId!)
+    }) as Activity)
+  }
+
+  get activitiesForSunday(): Activity[] {
+    return this.activities.filter(x => x.weekDay === 'Sunday').map(x => ({
+      id: x.activityId,
+      name: x.name,
+      duration: x.duration,
+      start: x.startingHour - 7,
+      position: this.getPosition(x.session.groupId!)
+    }) as Activity)
+  }
+  getPosition(groupId: number): number {
+    return this.positions.find(p => p.groupId === groupId)?.position!;
+  }
+  get positions(): Position[] {
+    return this.groupsToDisplay.map((x, index) => ({
+      groupId: x.id,
+      position: index
+    }) as Position)
+  }
   getPeriod(weekNumber: number): string {
     return WeekHelper.getPeriod(WeekHelper.getSaturdayOfWeek(weekNumber))
   }

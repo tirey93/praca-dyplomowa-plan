@@ -60,12 +60,21 @@
         <div class="grid-wrapper">
         <div class="grid-area">
             <div class="day-grid">
-                <mat-card class="class-tile class-tile--red" [style.grid-row]="'3'" [style.grid-column] = "'3 / span 4'">Podstawy sztucznej inteligencji</mat-card>
-                <mat-card class="class-tile class-tile--red" style="grid-row: 3; grid-column: 10 / span 4;">Programowanie sieciowe</mat-card>
+                @for (activity of activitiesForSaturday; track $index) {
+                    <mat-card class="class-tile class-tile--red" 
+                        [style.grid-row]="activity.position" 
+                        [style.grid-column]="`${activity.start} / span ${activity.duration}`">{{activity.name}}
+                    </mat-card>
+                }
             </div>
             <mat-divider></mat-divider>
             <div class="day-grid">
-                <mat-card class="class-tile class-tile--green" style="grid-row: 1; grid-column: 2 / span 3;">Projekt kompetencyjny</mat-card>
+                @for (activity of activitiesForSunday; track $index) {
+                    <mat-card class="class-tile class-tile--green" 
+                        [style.grid-row]="activity.position" 
+                        [style.grid-column]="`${activity.start} / span ${activity.duration}`">{{activity.name}}
+                    </mat-card>
+                }
             </div>
         </div>
         </div>

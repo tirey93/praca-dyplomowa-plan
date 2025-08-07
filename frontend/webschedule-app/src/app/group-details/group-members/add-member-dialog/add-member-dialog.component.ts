@@ -19,10 +19,10 @@ import { Role } from '../../../../helpers/roles';
 import { GroupResponse } from '../../../../services/group/dtos/groupResponse';
 import { SnackBarService } from '../../../../services/snackBarService';
 import { SyncService } from '../../../../services/sync.service';
-import { UserResponse } from '../../../../services/user/dtos/userResponse';
 import { UserRepositoryService } from '../../../../services/user/userRepository.service';
 import { UserGroupResponse } from '../../../../services/userInGroup/dtos/userGroupResponse';
 import { UserInGroupService } from '../../../../services/userInGroup/userInGroup.service';
+import { UserResponseWithGroupCount } from '../../../../services/user/dtos/userWithGroupCountResponse';
 
 @Component({
   selector: 'app-add-member-dialog',
@@ -40,7 +40,7 @@ export class AddMemberDialogComponent implements OnInit{
   userGroup: UserGroupResponse = this.data.userGroup;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  users?: MatTableDataSource<UserResponse>;
+  users?: MatTableDataSource<UserResponseWithGroupCount>;
   isLoading = true;
   noData = false;
 
@@ -73,7 +73,7 @@ export class AddMemberDialogComponent implements OnInit{
           this.noData = true;
           return;
         }
-        this.users = new MatTableDataSource<UserResponse>();
+        this.users = new MatTableDataSource<UserResponseWithGroupCount>();
         this.users.data = usersResponse
           .filter(x => !usersInGroup.map(u => u.user.id).includes(x.id))
           .sort((a, b) => a.displayName > b.displayName ? 1 : -1);
@@ -85,7 +85,7 @@ export class AddMemberDialogComponent implements OnInit{
             var map = new Map(JSON.parse(filter));
             let isMatch = false;
             for(let [key,value] of map){
-              isMatch = (record[key as keyof UserResponse] == value); 
+              isMatch = (record[key as keyof UserResponseWithGroupCount] == value); 
               if(!isMatch) return false;
             }
             return isMatch;
@@ -99,7 +99,7 @@ export class AddMemberDialogComponent implements OnInit{
     })
   }
 
-  handleAddToGroup(user: UserResponse) {
+  handleAddToGroup(user: UserResponseWithGroupCount) {
     this.userInGroupsService.addCandidate$({groupId: this.userGroup.group.id, userId: user.id}).pipe(
       switchMap(() => this.userInGroupsService
         .changeRole$({groupId: this.userGroup.group.id, userId: user.id, role: Role.Student.toString()}))

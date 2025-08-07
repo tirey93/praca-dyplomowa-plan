@@ -6,6 +6,7 @@ import { UserResponse } from './dtos/userResponse';
 import { UpdateUserLoginRequest } from './dtos/updateUserLoginRequest';
 import { UpdateUserDisplayNameRequest } from './dtos/updateUserDisplayNameRequest';
 import { UpdateUserPasswordRequest } from './dtos/updateUserPasswordRequest';
+import { UserResponseWithGroupCount } from './dtos/userWithGroupCountResponse';
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +25,7 @@ import { UpdateUserPasswordRequest } from './dtos/updateUserPasswordRequest';
     }
 
     get$() {
-      return this.http.get<UserResponse[]>(`${this.url}`, {
+      return this.http.get<UserResponseWithGroupCount[]>(`${this.url}`, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

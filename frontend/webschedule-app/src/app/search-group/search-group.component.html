@@ -75,11 +75,14 @@
             </ng-container>
             <ng-container matColumnDef="join">
                 <th mat-header-cell *matHeaderCellDef> Dołącz </th>
-                <td mat-cell *matCellDef="let element"> 
-                    <mat-chip-option 
-                        (selectionChange)="handleCandidateJoin(element, $event.selected)" 
-                        [selected]="element.isCandidate">{{isCandidate(element.id) ? "Zrezygnuj" : "Dołącz"}}
-                    </mat-chip-option> 
+                <td mat-cell *matCellDef="let element">
+                    <div [matTooltip]="userGroupsCount >= 3 ? 'Nie można dołączyć do więcej niż 3 grup.' : ''">
+                        <mat-chip-option 
+                            (selectionChange)="handleCandidateJoin(element, $event.selected)" 
+                            [selected]="element.isCandidate"
+                            [disabled]="userGroupsCount >= 3 && !isCandidate(element.id)">{{isCandidate(element.id) ? "Zrezygnuj" : "Dołącz"}}
+                        </mat-chip-option> 
+                    </div> 
                 </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

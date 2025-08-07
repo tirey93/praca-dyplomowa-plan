@@ -15,6 +15,14 @@ import { ChangeRoleRequest } from './dtos/changeRoleRequest';
 
     constructor(private http: HttpClient, private cookieService: CookieService) { }
 
+    getByUserId$(userId: number) {
+      return this.http.get<UserGroupResponse[]>(`${this.url}/ByUser/${userId}`, {
+        headers: {
+          authorization: `Bearer ${this.cookieService.get("token")}`
+        }
+      })
+    }
+
     getByLoggedIn$() {
       return this.http.get<UserGroupResponse[]>(`${this.url}/ByLoggedIn`, {
         headers: {

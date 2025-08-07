@@ -63,6 +63,8 @@ export class SearchGroupComponent implements OnInit {
   filteredOptionsCourse$: Observable<string[]>;
   filterOptionsCourse?: Set<string>;
 
+  userGroupsCount: number = 0;
+
   displayedColumns: string[] = [
     'name', 'startingYear', 'studyCourseName', 'studyLevel', 
     'subgroup', 'membersCount'];
@@ -136,6 +138,16 @@ export class SearchGroupComponent implements OnInit {
         this.snackBarService.openError(err);
       },
     })
+
+    if (this.hasJoinOption) {
+      this.userInGroupService.getByLoggedIn$().subscribe({
+        next:(userGroups) => {
+          this.userGroupsCount = userGroups.length;
+        }, error: (err) => {
+          this.snackBarService.openError(err);
+        },
+      })
+    }
   }
 
   getName(group: CandidateGroupInfoResponse):string {
@@ -176,6 +188,11 @@ export class SearchGroupComponent implements OnInit {
         this.groups.data = this.groups!.data.map(g => 
           g.id === group.id ? { ...g, isCandidate: selected} : g
         );
+        if (selected) {
+          this.userGroupsCount += 1;
+        } else {
+          this.userGroupsCount -= 1;
+        }
       },
       error:(err) => {
         this.snackBarService.openError(err);

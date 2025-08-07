@@ -9,5 +9,6 @@ namespace WebSchedule.Domain.Repositories
         IEnumerable<UserInGroup> GetAdminsForGroup(int groupId);
         IEnumerable<UserGroupDto> GetUserGroupsByGroup(int groupId);
         IEnumerable<UserGroupDto> GetUserGroupsByUser(int userId);
+        IEnumerable<UserGroupCount> GetUserInGroupCount();
     }
 }

@@ -12,6 +12,15 @@ namespace WebSchedule.Infrastructure.Repositories
         {
         }
 
+        public IEnumerable<UserGroupCount> GetUserInGroupCount()
+        {
+            return _dbSet.GroupBy(x => x.UserId).Select(x => new UserGroupCount
+            {
+                UserId = x.Key,
+                Count = x.Count()
+            });
+        }
+
         public IEnumerable<UserInGroup> GetAdminsForGroup(int groupId)
         {
             return _dbSet

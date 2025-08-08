@@ -10,6 +10,7 @@ import { SnackBarService } from '../../../../services/snackBarService';
 import { SyncService } from '../../../../services/sync.service';
 import { UserGroupResponse } from '../../../../services/userInGroup/dtos/userGroupResponse';
 import { UserInGroupService } from '../../../../services/userInGroup/userInGroup.service';
+import { filter, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-candidates-list',
@@ -37,16 +38,20 @@ export class CandidatesListComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    this.userInGroupRepository.getGroupCandidates$(this.groupId!).subscribe({
+    this.syncService.groupId$.pipe(
+      filter(groupId=> groupId != null),
+      switchMap(groupId => this.userInGroupRepository.getGroupCandidates$(groupId!)))
+    .subscribe({
       next: (userGroupsResponse => {
         this.isLoading = false;
+        this.candidates = new MatTableDataSource<UserGroupResponse>();
         if (userGroupsResponse.length === 0) {
           this.noData = true;
           return;
         }
-        this.candidates = new MatTableDataSource<UserGroupResponse>();
         this.candidates.data = userGroupsResponse.sort((a, b) => a.user.displayName > b.user.displayName ? 1 : -1);
         setTimeout(() => this.candidates!.paginator = this.paginator);
+        this.noData = false;
       }),
       error: (err) => {
         this.snackBarService.openError(err);

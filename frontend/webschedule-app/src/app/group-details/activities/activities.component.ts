@@ -45,7 +45,7 @@ export class ActivitiesComponent implements OnDestroy{
       filter(userGroup => userGroup != null),
       switchMap((userGroup) => {
         this.userGroup = userGroup;
-        return activityService.getByCurrentDate$(userGroup.group.id, userGroup.group.springSemester, 3);
+        return activityService.getByCurrentDate$(userGroup.group.id, userGroup.group.springSemester, 10);
       })
     ).subscribe({
       next: (activitiesInSessions) => {
@@ -55,7 +55,7 @@ export class ActivitiesComponent implements OnDestroy{
 
     syncService.refreshActivities$.pipe(
       takeUntil(this.destroy$),
-      switchMap(() => activityService.getByCurrentDate$(this.userGroup!.group.id, this.userGroup!.group.springSemester, 3))
+      switchMap(() => activityService.getByCurrentDate$(this.userGroup!.group.id, this.userGroup!.group.springSemester, 10))
     ).subscribe({
       next: (activitiesInSessions) => {
         this.activitiesInSessions = activitiesInSessions;

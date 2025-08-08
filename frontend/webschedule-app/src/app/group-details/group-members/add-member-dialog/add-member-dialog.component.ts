@@ -69,11 +69,11 @@ export class AddMemberDialogComponent implements OnInit{
     .subscribe({
       next: (([usersResponse, usersInGroup]) => {
         this.isLoading = false;
+        this.users = new MatTableDataSource<UserResponseWithGroupCount>();
         if (usersResponse.length === 0) {
           this.noData = true;
           return;
         }
-        this.users = new MatTableDataSource<UserResponseWithGroupCount>();
         this.users.data = usersResponse
           .filter(x => !usersInGroup.map(u => u.user.id).includes(x.id))
           .sort((a, b) => a.displayName > b.displayName ? 1 : -1);
@@ -92,6 +92,7 @@ export class AddMemberDialogComponent implements OnInit{
         }
 
         setTimeout(() => this.users!.paginator = this.paginator);
+        this.noData = false;
       }),
       error: (err) => {
         this.snackBarService.openError(err);

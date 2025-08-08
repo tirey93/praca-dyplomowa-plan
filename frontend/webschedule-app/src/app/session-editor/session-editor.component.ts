@@ -117,6 +117,7 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
 
   private loadSession(sessionsInGroupResponse: SessionResponse[]) {
     this.isLoading = false;
+    this.sessions = new MatTableDataSource<SessionDto>();
     if (sessionsInGroupResponse.length === 0) {
       this.noData = true;
       return;
@@ -127,8 +128,8 @@ export class SessionEditorComponent implements OnInit, OnDestroy {
     if(this.isAdmin && !this.displayedColumns.includes('up_down')) {
       this.displayedColumns.push('up_down');
     }
-    this.sessions = new MatTableDataSource<SessionDto>();
     this.sessions.data = this.getDataForSessions(sessionsInGroupResponse.filter(x => x.springSemester === this.springSemester));
+    this.noData = false;
   }
 
   private getWeekNumber(weekNumber: number): number {

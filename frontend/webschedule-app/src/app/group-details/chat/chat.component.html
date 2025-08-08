@@ -17,7 +17,7 @@
       </div>
     } @else {
       <div class="foreign-message">
-        <span class="author">{{message.user.displayName}}</span>
+        <span class="author"> <b [style.color]="message.user.role === 'Admin' ? 'red' : ''">{{message.user.displayName}}</b></span>
         <mat-card appearance="outlined" [matTooltip]="message.createdAt.toString()">
           <mat-card-actions [innerHTML]="message.content">
           </mat-card-actions>

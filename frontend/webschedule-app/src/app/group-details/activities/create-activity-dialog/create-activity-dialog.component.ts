@@ -212,6 +212,12 @@ export class CreateActivityDialogComponent implements OnInit {
   parseSessionNumber(sessionNumber: number): string {
     return sessionNumber.toString().padStart(2, '0') 
   }
+  get sessionsHalf1(): SelectValue[]  {
+    return this.allSessions.filter((x, index) => index < this.allSessions.length / 2);
+  }
+  get sessionsHalf2(): SelectValue[]  {
+    return this.allSessions.filter((x, index) => index >= this.allSessions.length / 2);
+  }
 
   getEndHour(): string {
     if (this.activityId) {

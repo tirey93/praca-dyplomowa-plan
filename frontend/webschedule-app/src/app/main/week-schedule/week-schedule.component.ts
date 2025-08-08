@@ -70,10 +70,12 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
       takeUntil(this.destroy$),
       switchMap(() => userInGroupRepository.getByLoggedIn$()),
       switchMap(userInGroups => {
-          console.log('in sync');
           this.groupsToDisplay = userInGroups
-          .filter(x => !x.isCandidate)
-          .map(x => x.group)
+            .filter(x => !x.isCandidate)
+            .map(x => x.group)
+          if (this.route.snapshot.queryParams['sessionId']) {
+            return this.sessionRepository.getById$(this.route.snapshot.queryParams['sessionId']);
+          }
           return this.sessionRepository.getCurrentForLogged$()
         }),
       switchMap(session => {

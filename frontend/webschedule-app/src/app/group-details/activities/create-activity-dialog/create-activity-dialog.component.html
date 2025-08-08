@@ -19,9 +19,14 @@
                 </mat-form-field>
             </div>
             <app-divider>Termin</app-divider>
-            <div style="margin: 30px 0; max-width: 500px;">
+            <div style="margin: 30px 0; max-width: 550px;">
                 <mat-chip-set>
-                    @for (option of allSessions; track $index) {
+                    @for (option of sessionsHalf1; track $index) {
+                        <mat-chip-option [disabled]="activityId" [selected]="activity && option.id === activity.session!.number" (selectionChange)="onSessionClicked(option.id, $event.selected)" [matTooltip]="option.additionalInfo" >Zjazd {{option.displayText}}</mat-chip-option>
+                    }
+                </mat-chip-set>
+                <mat-chip-set>
+                    @for (option of sessionsHalf2; track $index) {
                         <mat-chip-option [disabled]="activityId" [selected]="activity && option.id === activity.session!.number" (selectionChange)="onSessionClicked(option.id, $event.selected)" [matTooltip]="option.additionalInfo" >Zjazd {{option.displayText}}</mat-chip-option>
                     }
                 </mat-chip-set>

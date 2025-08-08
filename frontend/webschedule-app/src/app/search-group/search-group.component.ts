@@ -92,6 +92,7 @@ export class SearchGroupComponent implements OnInit {
     subscription.subscribe({
       next: (([candidates, groups]) => {
         this.isLoading = false;
+        this.groups = new MatTableDataSource<CandidateGroupInfoResponse>();
         if (groups.length === 0) {
           this.noData = true;
           return;
@@ -99,12 +100,12 @@ export class SearchGroupComponent implements OnInit {
         if (this.hasJoinOption && !this.displayedColumns.includes('join')) {
           this.displayedColumns.push('join')
         }
-        this.groups = new MatTableDataSource<CandidateGroupInfoResponse>();
         this.groups.data = groups.map(g => { 
            const result = g as CandidateGroupInfoResponse;
            result.isCandidate = candidates.some(x => x.group.id === g.id)
            return result;
         }).sort((a, b) => a.isCandidate ? -1 : 1);
+        this.noData = false;
         this.filterOptionsYear = new Set(this.groups?.data.map(x => x.startingYear).sort((a, b) => a - b))
         this.filterOptionsCourse = new Set(this.groups?.data.map(x => x.studyCourseName).sort((a, b) => a > b ? 1 : -1))
         this.courseFilterControl.setValue('')

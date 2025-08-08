@@ -208,25 +208,23 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
   }
 
   modifyActivity(activityId: number, groupId: number) {
-    this.groupRepository.getGroupsById$([groupId]).pipe(
-      switchMap(groups => {
+
+    combineLatest([this.groupRepository.getGroupsById$([groupId]), this.userInGroupRepository.loggedInHasAdminToGroup$(groupId)])
+    .subscribe({
+      next: ([groups, isAdmin]) => {
         if (groups.length > 0) {
-          return this.userInGroupRepository.getLoggedInByGroup$(groups[0].id);
+          console.log(groups[0]);
+          console.log('isAdmin',isAdmin);
+          this.dialog.open(CreateActivityDialogComponent, {
+            maxWidth: '50vw',
+            autoFocus: false,
+            data: {
+              group: groups[0],
+              activityId: activityId,
+              isAdmin: isAdmin
+            },
+          })
         }
-        return of(null);
-      }),
-      filter(userInGroup => userInGroup != null)
-    ).subscribe({
-      next: (userInGroup) => {
-        this.dialog.open(CreateActivityDialogComponent, {
-          maxWidth: '50vw',
-          autoFocus: false,
-          data: {
-            group: userInGroup.group,
-            activityId: activityId,
-            isAdmin: userInGroup.isAdmin
-          },
-        })
       },
       error: (err) => {
         this.snackBarService.openError(err);

@@ -20,6 +20,43 @@ namespace WebSchedule.Controllers.UserInGroup
             _mediator = mediator;
         }
 
+        [HttpGet("Group/{id}/LoggedIn/HasAdmin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+#if !DEBUG
+        [Authorize]
+#endif
+        public async Task<ActionResult<bool>> LoggedInHasAdminToGroup(int id)
+        {
+            try
+            {
+                var userId = JwtHelper.GetUserIdFromToken(Request.Headers.Authorization);
+                if (userId == null)
+                {
+                    return Ok(false);
+                }
+
+                return Ok(await _mediator.Send(new GetUserGroupsUserHasAdminQuery
+                {
+                    GroupId = id,
+                    UserId = userId.Value,
+                }));
+            }
+            catch (ApplicationException ex)
+            {
+                return BadRequest(ex.FromApplicationException());
+            }
+            catch (DomainException ex)
+            {
+                return BadRequest(ex.FromDomainException());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new { ex.Message });
+            }
+        }
+
         [HttpGet("ByLoggedIn")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

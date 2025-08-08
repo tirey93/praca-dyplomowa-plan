@@ -1,11 +1,11 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { CommonModule } from '@angular/common';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { filter, startWith, switchMap } from 'rxjs';
+import { filter, startWith, Subject, switchMap, takeUntil } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { RemoveFromGroupDialogComponent } from './remove-from-group-dialog/remove-from-group-dialog.component';
@@ -30,8 +30,8 @@ import { UserInGroupService } from '../../../services/userInGroup/userInGroup.se
   templateUrl: './group-members.component.html',
   styleUrl: './group-members.component.scss'
 })
-export class GroupMembersComponent implements OnInit {
-  @Input() userGroup?: UserGroupResponse
+export class GroupMembersComponent implements OnInit, OnDestroy {
+  userGroup?: UserGroupResponse
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
@@ -41,6 +41,8 @@ export class GroupMembersComponent implements OnInit {
 
   displayedColumns: string[] = ['displayName', 'role'];
 
+  private destroy$ = new Subject<void>();
+  
   constructor(
     private userInGroupRepository: UserInGroupService,
     private snackBarService: SnackBarService,
@@ -49,12 +51,19 @@ export class GroupMembersComponent implements OnInit {
   ) {
     
   }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   ngOnInit(): void {
-    this.syncService.groupId$.pipe(
-      filter(groupId=> groupId != null),
-      startWith(this.userGroup?.group.id),
-      switchMap((groupId) => this.userInGroupRepository.getByGroup$(groupId!, true))
-    ).subscribe({
+    this.syncService.currentUserGroup$.pipe(
+      takeUntil(this.destroy$),
+      filter(userGroup => userGroup != null),
+      switchMap((userGroup) => {
+        this.userGroup = userGroup;
+        return this.userInGroupRepository.getByGroup$(userGroup.group.id, true)
+      })).subscribe({
       next: (userGroupsResponse => {
         this.isLoading = false;
         if (userGroupsResponse.length === 0) {
@@ -67,6 +76,7 @@ export class GroupMembersComponent implements OnInit {
         if (this.userGroup?.isAdmin && !this.displayedColumns.includes('delete')) {
           this.displayedColumns.push('delete')
         }
+        console.log(this.displayedColumns);
         if (!this.users) {
           this.users = new MatTableDataSource<UserGroupResponse>();
           this.users!.sortingDataAccessor = (item, property) => {

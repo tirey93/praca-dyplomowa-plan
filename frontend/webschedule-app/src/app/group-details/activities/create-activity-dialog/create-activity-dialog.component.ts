@@ -54,6 +54,7 @@ export class CreateActivityDialogComponent implements OnInit {
   activityForm = new FormGroup({
     name: new FormControl("", {validators: [Validators.required]}),
     teacherFullName: new FormControl("", {validators: [Validators.required]}),
+    location: new FormControl("", {validators: [Validators.required]}),
     duration: new FormControl(2, {validators: [Validators.required, Validators.min(1), Validators.max(6)]}),
     startingHour: new FormControl<number | null>(null),
     endingHour: new FormControl<SelectValue | null>(null),
@@ -131,6 +132,7 @@ export class CreateActivityDialogComponent implements OnInit {
           this.activity = activity;
           this.activityForm.controls.name.setValue(activity.name);
           this.activityForm.controls.teacherFullName.setValue(activity.teacherFullName);
+          this.activityForm.controls.location.setValue(activity.location);
           this.activityForm.controls.weekDay.setValue(activity.weekDay.toLowerCase());
           this.activityForm.controls.startingHour.setValue(activity.startingHour);
           this.activityForm.controls.duration.setValue(activity.duration);
@@ -145,6 +147,7 @@ export class CreateActivityDialogComponent implements OnInit {
       this.activityForm.controls.name.disable();
       this.activityForm.controls.name.disable();
       this.activityForm.controls.teacherFullName.disable();
+      this.activityForm.controls.location.disable();
       this.activityForm.controls.weekDay.disable();
       this.activityForm.controls.startingHour.disable();
       this.activityForm.controls.duration.disable();
@@ -162,6 +165,7 @@ export class CreateActivityDialogComponent implements OnInit {
         activityId: this.activityId,
         name: this.activityForm.controls.name.value!,
         teacherFullName: this.activityForm.controls.teacherFullName.value!,
+        location: this.activityForm.controls.location.value!,
         weekDay: this.activityForm.controls.weekDay.value!,
         startingHour: this.activityForm.controls.startingHour.value!,
         duration: this.activityForm.controls.duration.value!
@@ -181,6 +185,7 @@ export class CreateActivityDialogComponent implements OnInit {
         groupId: this.group.id!,
         name: this.activityForm.controls.name.value!,
         teacherFullName: this.activityForm.controls.teacherFullName.value!,
+        location: this.activityForm.controls.location.value!,
         sessionNumbers: this.sessionsSelected,
         weekDay: this.activityForm.controls.weekDay.value!,
         springSemester: this.group.springSemester,

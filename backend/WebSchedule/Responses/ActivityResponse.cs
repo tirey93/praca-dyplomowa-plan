@@ -5,6 +5,7 @@
         public int ActivityId { get; set; }
         public string Name { get; set; }
         public string TeacherFullName { get; set; }
+        public string Location { get; set; }
         public int StartingHour { get; set; }
         public int Duration { get; set; }
         public string WeekDay { get; set; }

@@ -29,6 +29,7 @@ namespace WebSchedule.Controllers.Activity.Queries
                 ActivityId = activity.Id,
                 Name = activity.Name,
                 TeacherFullName = activity.TeacherFullName,
+                Location = activity.Location,
                 StartingHour = activity.StartingHour,
                 Duration = activity.Duration,
                 WeekDay = activity.WeekDay.ToString(),

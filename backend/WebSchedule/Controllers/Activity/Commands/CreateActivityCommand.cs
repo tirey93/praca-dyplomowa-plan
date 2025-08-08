@@ -15,6 +15,7 @@ namespace WebSchedule.Controllers.Activity.Commands
         public int StartingHour { get; set; }
         public string WeekDay { get; set; }
         public int Duration { get; set; }
+        public string Location { get; set; }
     }
 
     public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand>
@@ -46,7 +47,8 @@ namespace WebSchedule.Controllers.Activity.Commands
                     request.TeacherFullName, 
                     request.StartingHour, 
                     request.Duration, 
-                    Enum.Parse<WeekDay>(request.WeekDay, true))
+                    Enum.Parse<WeekDay>(request.WeekDay, true),
+                    request.Location)
                 );
             }
 

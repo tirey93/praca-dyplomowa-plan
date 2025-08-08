@@ -14,6 +14,7 @@ namespace WebSchedule.Controllers.Activity.Commands
         public int StartingHour { get; set; }
         public string WeekDay { get; set; }
         public int Duration { get; set; }
+        public string Location { get; set; }
     }
 
     public class UpdateActivityCommandHandler : IRequestHandler<UpdateActivityCommand>
@@ -35,6 +36,7 @@ namespace WebSchedule.Controllers.Activity.Commands
             activity.SetStartingHour(request.StartingHour);
             activity.SetWeekDay(Enum.Parse<WeekDay>(request.WeekDay, true));
             activity.SetDuration(request.Duration);
+            activity.SetLocation(request.Location);
 
             await _activityRepository.SaveChangesAsync();
         }

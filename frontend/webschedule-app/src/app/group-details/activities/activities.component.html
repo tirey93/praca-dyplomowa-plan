@@ -13,6 +13,7 @@
                         <div style="display: flex; gap: 5px;">
                             <mat-chip [matTooltip]="getDay(activity.session.weekNumber, activity.weekDay)">{{activity.weekDay | translate}}</mat-chip>
                             <mat-chip>{{activity.startingHour}}:00 - {{activity.startingHour + activity.duration}}:00</mat-chip>
+                            <mat-chip>{{activity.location}}</mat-chip>
                         </div>
                         @if (userGroup?.isAdmin) {
                             <button matTooltip="Ustawienia" mat-icon-button [matMenuTriggerFor]="settings"> <mat-icon>more_vert</mat-icon></button>

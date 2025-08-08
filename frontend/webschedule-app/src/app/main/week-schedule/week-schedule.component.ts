@@ -20,6 +20,7 @@ import { ActivityRepositoryService } from '../../../services/activity/activityRe
 import { ActivityResponse } from '../../../services/activity/dtos/activityResponse';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateActivityDialogComponent } from '../../group-details/activities/create-activity-dialog/create-activity-dialog.component';
+import { MatChipsModule } from '@angular/material/chips';
 
 interface Activity {
   id: number;
@@ -28,6 +29,7 @@ interface Activity {
   position: number;
   duration: number;
   start: number;
+  location: string;
 }
 interface Position {
   groupId: number;
@@ -240,7 +242,8 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
       name: x.name,
       duration: x.duration,
       start: x.startingHour - 7,
-      position: 3 - this.getPosition(x.session.groupId!)
+      position: 3 - this.getPosition(x.session.groupId!),
+      location: x.location
     }) as Activity)
   }
 
@@ -251,7 +254,8 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
       name: x.name,
       duration: x.duration,
       start: x.startingHour - 7,
-      position: this.getPosition(x.session.groupId!) + 1
+      position: this.getPosition(x.session.groupId!) + 1,
+      location: x.location
     }) as Activity)
   }
   getPosition(groupId: number): number {

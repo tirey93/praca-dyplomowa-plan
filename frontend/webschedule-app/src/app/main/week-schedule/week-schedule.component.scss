@@ -151,8 +151,19 @@ mat-divider {
   line-height: 1.2;
   border-radius: 8px;
   z-index: 10;
+  position: relative; /* Wymagane dla pozycjonowania absolutnego dziecka */
+  overflow: visible;  /* Upewnij się, że tekst nie będzie przycinany */
 }
-
+.corner-text {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 4px 8px;
+  background: rgba(0, 0, 0, 0.5); /* Półprzezroczyste tło */
+  color: white;
+  border-top-left-radius: 4px; /* Zaokrąglenie tylko lewego górnego rogu */
+  font-size: 12px;
+}
 .class-tile--red {
   border: 1px solid #B71C1C;
   background-color: #FFEBEE;

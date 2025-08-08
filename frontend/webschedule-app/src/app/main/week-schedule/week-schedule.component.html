@@ -70,7 +70,9 @@
                     <mat-card (click)="modifyActivity(activity.id, activity.groupId)" 
                         class="class-tile class-tile--red" 
                         [style.grid-row]="activity.position" 
-                        [style.grid-column]="`${activity.start} / span ${activity.duration}`" >{{activity.name}}                        
+                        [style.grid-column]="`${activity.start} / span ${activity.duration}`" >
+                        {{activity.name}}                        
+                        <div class="corner-text">{{activity.location}}</div>
                     </mat-card>
                 }
             </div>
@@ -80,7 +82,9 @@
                     <mat-card (click)="modifyActivity(activity.id, activity.groupId)"
                         class="class-tile class-tile--green" 
                         [style.grid-row]="activity.position" 
-                        [style.grid-column]="`${activity.start} / span ${activity.duration}`">{{activity.name}}
+                        [style.grid-column]="`${activity.start} / span ${activity.duration}`">
+                        {{activity.name}}
+                        <div class="corner-text">{{activity.location}}</div>
                     </mat-card>
                 }
             </div>

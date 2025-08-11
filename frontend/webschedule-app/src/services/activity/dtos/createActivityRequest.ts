@@ -1,7 +1,7 @@
 export interface CreateActivityRequest {
     name: string;
     teacherFullName: string;
-    location: string;
+    room: string;
     groupId: number;
     sessionNumbers: number[];
     springSemester: boolean;

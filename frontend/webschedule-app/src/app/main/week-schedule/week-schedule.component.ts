@@ -29,7 +29,7 @@ interface Activity {
   position: number;
   duration: number;
   start: number;
-  location: string;
+  room: string;
 }
 interface Position {
   groupId: number;
@@ -241,7 +241,7 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
       duration: x.duration,
       start: x.startingHour - 7,
       position: 3 - this.getPosition(x.session.groupId!),
-      location: x.location
+      room: x.room
     }) as Activity)
   }
 
@@ -253,7 +253,7 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
       duration: x.duration,
       start: x.startingHour - 7,
       position: this.getPosition(x.session.groupId!) + 1,
-      location: x.location
+      room: x.room
     }) as Activity)
   }
   getPosition(groupId: number): number {

@@ -2,7 +2,7 @@ export interface UpdateActivityRequest {
     activityId: number;
     name: string;
     teacherFullName: string;
-    location: string;
+    room: string;
     startingHour: number;
     weekDay: string;
     duration: number;

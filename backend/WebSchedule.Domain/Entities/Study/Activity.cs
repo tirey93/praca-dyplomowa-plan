@@ -5,7 +5,7 @@ namespace WebSchedule.Domain.Entities.Study
     {
         public string Name { get; private set; }
         public string TeacherFullName { get; private set; }
-        public string Location { get; private set; }
+        public string Room { get; private set; }
         public int StartingHour { get; private set; }
         public int Duration { get; private set; }
         public WeekDay WeekDay { get; private set; }
@@ -14,7 +14,7 @@ namespace WebSchedule.Domain.Entities.Study
 
         public Activity() { }
 
-        public Activity(Session session, string name, string teacherFullName, int startingHour, int duration, WeekDay weekDay, string location)
+        public Activity(Session session, string name, string teacherFullName, int startingHour, int duration, WeekDay weekDay, string room)
         {
             Session = session;
             SessionId = Session.Id;
@@ -23,7 +23,7 @@ namespace WebSchedule.Domain.Entities.Study
             StartingHour = startingHour;
             Duration = duration;
             WeekDay = weekDay;
-            Location = location;
+            Room = room;
         }
 
         public bool IsOverlapping(int startingHour, int duration)
@@ -59,9 +59,9 @@ namespace WebSchedule.Domain.Entities.Study
             WeekDay = weekDay;
         }
 
-        public void SetLocation(string location)
+        public void SetRoom(string room)
         {
-            Location = location;
+            Room = room;
         }
     }
 }

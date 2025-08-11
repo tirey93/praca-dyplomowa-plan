@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using WebSchedule.Controllers.Building.Exceptions;
 using WebSchedule.Controllers.Group.Exceptions;
 using WebSchedule.Domain.Entities.Study;
 using WebSchedule.Domain.Repositories;
@@ -15,7 +16,8 @@ namespace WebSchedule.Controllers.Activity.Commands
         public int StartingHour { get; set; }
         public string WeekDay { get; set; }
         public int Duration { get; set; }
-        public string room { get; set; }
+        public string Room { get; set; }
+        public int BuildingId { get; set; }
     }
 
     public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand>
@@ -23,12 +25,14 @@ namespace WebSchedule.Controllers.Activity.Commands
         private readonly IActivityRepository _activityRepository;
         private readonly IGroupRepository _groupRepository;
         private readonly ISessionRepository _sessionRepository;
+        private readonly IBuildingRepostory _buildingRepostory;
 
-        public CreateActivityCommandHandler(IActivityRepository activityRepository, IGroupRepository groupRepository, ISessionRepository sessionRepository)
+        public CreateActivityCommandHandler(IActivityRepository activityRepository, IGroupRepository groupRepository, ISessionRepository sessionRepository, IBuildingRepostory buildingRepostory)
         {
             _activityRepository = activityRepository;
             _groupRepository = groupRepository;
             _sessionRepository = sessionRepository;
+            _buildingRepostory = buildingRepostory;
         }
 
         public async Task Handle(CreateActivityCommand request, CancellationToken cancellationToken)
@@ -36,6 +40,9 @@ namespace WebSchedule.Controllers.Activity.Commands
             var groupExists = _groupRepository.GroupExists(request.GroupId);
             if (!groupExists)
                 throw new GroupNotFoundException(request.GroupId);
+
+            var building = _buildingRepostory.Get(request.BuildingId)
+                ?? throw new BuildingNotFoundException(request.BuildingId);
 
             var sessions = _sessionRepository.GetByGroup(request.GroupId)
                 .Where(x => x.SpringSemester == request.SpringSemester && request.SessionNumbers.Contains(x.Number));
@@ -48,7 +55,8 @@ namespace WebSchedule.Controllers.Activity.Commands
                     request.StartingHour, 
                     request.Duration, 
                     Enum.Parse<WeekDay>(request.WeekDay, true),
-                    request.room)
+                    request.Room,
+                    building)
                 );
             }
 

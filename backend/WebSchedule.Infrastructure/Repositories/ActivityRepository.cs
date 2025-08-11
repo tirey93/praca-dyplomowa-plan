@@ -15,6 +15,7 @@ namespace WebSchedule.Infrastructure.Repositories
         {
             return _dbSet
                 .Include(x => x.Session)
+                .Include(x => x.Building)
                 .FirstOrDefault(x => x.Id == id);
         }
 
@@ -22,6 +23,7 @@ namespace WebSchedule.Infrastructure.Repositories
         {
             return _dbSet
                 .Include(x => x.Session)
+                .Include(x => x.Building)
                 .Where(x => x.Session.GroupId != null
                     && groupIds.Contains(x.Session.GroupId.Value)
                     && x.Session.SpringSemester == springSemester
@@ -32,6 +34,7 @@ namespace WebSchedule.Infrastructure.Repositories
         {
             return _dbSet
                 .Include(x => x.Session)
+                .Include(x => x.Building)
                 .Where(x => x.Session.GroupId == groupId 
                     && x.Session.SpringSemester == springSemester
                     && x.WeekDay == weekDay
@@ -42,6 +45,7 @@ namespace WebSchedule.Infrastructure.Repositories
         {
             return _dbSet
                 .Include(x => x.Session)
+                .Include(x => x.Building)
                 .Where(x => x.Session.GroupId == groupId
                     && x.Session.SpringSemester == springSemester
                     && x.Session.Number >= sessionNumber

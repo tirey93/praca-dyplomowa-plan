@@ -10,5 +10,6 @@
         public int Duration { get; set; }
         public string WeekDay { get; set; }
         public SessionResponse Session { get; set; }
+        public BuildingResponse Building { get; set; }
     }
 }

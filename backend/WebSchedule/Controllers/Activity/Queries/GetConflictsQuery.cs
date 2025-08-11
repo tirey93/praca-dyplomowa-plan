@@ -46,6 +46,12 @@ namespace WebSchedule.Controllers.Activity.Queries
                     Number = activity.Session.Number,
                     WeekNumber = activity.Session.WeekNumber,
                     SpringSemester = activity.Session.SpringSemester
+                },
+                Building = new BuildingResponse
+                {
+                    BuildingId = activity.BuildingId.Value,
+                    Name = activity.Building.Name,
+                    Link = activity.Building.Link,
                 }
             }));
         }

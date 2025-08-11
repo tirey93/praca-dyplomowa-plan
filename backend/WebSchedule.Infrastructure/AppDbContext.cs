@@ -12,6 +12,7 @@ namespace WebSchedule.Infrastructure
         public DbSet<UserInGroup> UserInGroups { get; set; }
         public DbSet<StudyCourse> StudyCourses { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<Building> Buildings { get; set; }
         public DbSet<Session> Sessions { get; set; }
         public DbSet<Activity> Activities { get; set; }
 

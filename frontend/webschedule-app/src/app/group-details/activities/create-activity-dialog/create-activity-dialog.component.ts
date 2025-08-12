@@ -37,7 +37,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatFormFieldModule, MatOptionModule, MatInputModule, MatSelectModule,
     MatSliderModule, MatChipsModule, MatDividerModule, CommonModule,
     MatRadioModule, MatCheckboxModule, MatAutocompleteModule, AsyncPipe,
-    DividerComponent, MatIconModule
+    DividerComponent, MatIconModule, MatButtonModule
 ],
   templateUrl: './create-activity-dialog.component.html',
   styleUrl: './create-activity-dialog.component.scss'
@@ -48,6 +48,7 @@ export class CreateActivityDialogComponent implements OnInit, OnDestroy {
   activityId: number | null = this.data.activityId;
   isAdmin: boolean = this.data.isAdmin;
   activity: ActivityResponse | null = null;
+  viewBuilding = true;
   allSessions: SelectValue[] = [];
   allHours: number[] = this.getAllHours();
   isLoading = false;

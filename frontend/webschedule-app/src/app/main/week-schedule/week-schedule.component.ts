@@ -239,7 +239,7 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
       duration: x.duration,
       start: x.startingHour - 7,
       position: 3 - this.getPosition(x.session.groupId!),
-      room: x.room
+      room: x.building ? x.building.name + ' ' + x.room : null
     }) as Activity)
   }
 
@@ -251,7 +251,7 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
       duration: x.duration,
       start: x.startingHour - 7,
       position: this.getPosition(x.session.groupId!) + 1,
-      room: x.room
+      room: x.building ? x.building.name + ' ' + x.room : null
     }) as Activity)
   }
   getPosition(groupId: number): number {

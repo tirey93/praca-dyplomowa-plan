@@ -8,4 +8,5 @@ export interface CreateActivityRequest {
     startingHour: number;
     weekDay: string;
     duration: number;
+    buildingId?: number;
 }

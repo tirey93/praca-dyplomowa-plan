@@ -6,4 +6,5 @@ export interface UpdateActivityRequest {
     startingHour: number;
     weekDay: string;
     duration: number;
+    buildingId?: number;
 }

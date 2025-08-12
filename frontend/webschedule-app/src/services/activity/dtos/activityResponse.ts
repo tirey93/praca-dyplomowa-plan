@@ -1,3 +1,4 @@
+import { BuildingResponse } from "../../building/dtos/buildingResponse";
 import { SessionResponse } from "../../session/dtos/sessionResponse";
 
 export interface ActivityResponse {
@@ -8,5 +9,6 @@ export interface ActivityResponse {
     startingHour: number;
     duration: number;
     weekDay: string;
-    session: SessionResponse
+    session: SessionResponse;
+    building: BuildingResponse;
 }

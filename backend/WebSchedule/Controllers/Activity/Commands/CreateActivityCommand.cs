@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using WebSchedule.Controllers.Building.Exceptions;
 using WebSchedule.Controllers.Group.Exceptions;
 using WebSchedule.Domain.Entities.Study;
 using WebSchedule.Domain.Repositories;
@@ -17,7 +16,7 @@ namespace WebSchedule.Controllers.Activity.Commands
         public string WeekDay { get; set; }
         public int Duration { get; set; }
         public string Room { get; set; }
-        public int BuildingId { get; set; }
+        public int? BuildingId { get; set; }
     }
 
     public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand>
@@ -41,23 +40,23 @@ namespace WebSchedule.Controllers.Activity.Commands
             if (!groupExists)
                 throw new GroupNotFoundException(request.GroupId);
 
-            var building = _buildingRepostory.Get(request.BuildingId)
-                ?? throw new BuildingNotFoundException(request.BuildingId);
+            var building = request.BuildingId == null ? null : _buildingRepostory.Get(request.BuildingId.Value);
 
             var sessions = _sessionRepository.GetByGroup(request.GroupId)
                 .Where(x => x.SpringSemester == request.SpringSemester && request.SessionNumbers.Contains(x.Number));
 
             foreach (var session in sessions)
             {
-                await _activityRepository.AddActivity(new Domain.Entities.Study.Activity(
-                    session, request.Name, 
-                    request.TeacherFullName, 
-                    request.StartingHour, 
-                    request.Duration, 
+                var activity = new Domain.Entities.Study.Activity(
+                    session, request.Name,
+                    request.TeacherFullName,
+                    request.StartingHour,
+                    request.Duration,
                     Enum.Parse<WeekDay>(request.WeekDay, true),
-                    request.Room,
-                    building)
-                );
+                    request.Room);
+
+                activity.SetBuilding(building);
+                await _activityRepository.AddActivity(activity);
             }
 
             await _activityRepository.SaveChangesAsync();

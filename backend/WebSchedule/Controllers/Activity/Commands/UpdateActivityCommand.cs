@@ -10,7 +10,7 @@ namespace WebSchedule.Controllers.Activity.Commands
     public class UpdateActivityCommand : IRequest
     {
         public int ActivityId { get; set; }
-        public int BuildingId { get; set; }
+        public int? BuildingId { get; set; }
         public string Name { get; set; }
         public string TeacherFullName { get; set; }
         public int StartingHour { get; set; }
@@ -35,8 +35,6 @@ namespace WebSchedule.Controllers.Activity.Commands
             var activity = _activityRepository.Get(request.ActivityId)
                 ?? throw new ActivityNotFoundException(request.ActivityId);
 
-            var building = _buildingRepostory.Get(request.BuildingId)
-                ?? throw new BuildingNotFoundException(request.BuildingId);
 
             activity.SetName(request.Name);
             activity.SetTeachFullName(request.TeacherFullName);
@@ -44,6 +42,8 @@ namespace WebSchedule.Controllers.Activity.Commands
             activity.SetWeekDay(Enum.Parse<WeekDay>(request.WeekDay, true));
             activity.SetDuration(request.Duration);
             activity.SetRoom(request.Room);
+
+            var building = request.BuildingId == null ? null : _buildingRepostory.Get(request.BuildingId.Value);
             activity.SetBuilding(building);
 
             await _activityRepository.SaveChangesAsync();

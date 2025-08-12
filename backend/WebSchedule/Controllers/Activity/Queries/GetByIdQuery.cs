@@ -41,7 +41,7 @@ namespace WebSchedule.Controllers.Activity.Queries
                     WeekNumber = activity.Session.WeekNumber,
                     SpringSemester = activity.Session.SpringSemester
                 },
-                Building = new BuildingResponse
+                Building = activity.BuildingId == null ? null : new BuildingResponse
                 {
                     BuildingId = activity.BuildingId.Value,
                     Name = activity.Building.Name,

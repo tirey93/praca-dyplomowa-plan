@@ -45,7 +45,7 @@ export class LoginComponent {
   noConnection: boolean = false;
 
   backdoor() {
-    this.tryLogin('student18', 'string');
+    this.tryLogin('string', 'string');
   }
 
   handleCreateNewUser() {

@@ -5,7 +5,6 @@ using WebSchedule.Controllers.Building.Commands;
 using WebSchedule.Controllers.Building.Queries;
 using WebSchedule.Controllers.Responses;
 using WebSchedule.Domain;
-using WebSchedule.Responses;
 
 namespace WebSchedule.Controllers.Building
 {
@@ -52,12 +51,12 @@ namespace WebSchedule.Controllers.Building
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [AllowAnonymous]
-        public async Task<ActionResult<StudyCourseResponse>> Create([FromBody] CreateBuildingCommand command)
+        public async Task<ActionResult<BuildingResponse>> Create([FromBody] CreateBuildingCommand command)
         {
             try
             {
-                 await _mediator.Send(command);
-                return NoContent();
+                var building = await _mediator.Send(command);
+                return Ok(building);
             }
             catch (ApplicationException ex)
             {

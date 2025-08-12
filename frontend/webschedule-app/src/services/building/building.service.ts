@@ -22,7 +22,7 @@ import { BuildingRequest } from './dtos/buildingRequest';
       })
     }
     create$(buildingRequest: BuildingRequest) {
-      return this.http.post(`${this.url}`, buildingRequest, {
+      return this.http.post<BuildingResponse>(`${this.url}`, buildingRequest, {
         headers: {
           authorization: `Bearer ${this.cookieService.get("token")}`
         }

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { UserGroupResponse } from '../../../../services/userInGroup/dtos/userGroupResponse';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { GroupHelper } from '../../../../helpers/groupHelper';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SelectValue } from '../../../dtos/selectValue';
@@ -29,6 +29,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { BuildingService } from '../../../../services/building/building.service';
 import { MatIconModule } from '@angular/material/icon';
+import { CreateBuildingDialogComponent } from './create-building-dialog/create-building-dialog.component';
 
 @Component({
   selector: 'app-create-activity-dialog',
@@ -80,7 +81,8 @@ export class CreateActivityDialogComponent implements OnInit, OnDestroy {
     private snackBarService: SnackBarService,
     private activityRepository: ActivityRepositoryService,
     private syncService: SyncService,
-    private buildingService: BuildingService
+    private buildingService: BuildingService,
+    private readonly dialog: MatDialog,
   ) {
       this.updateBuildings(null);
       this.filteredOptionsBuilding$ = this.activityForm.controls.building.valueChanges.pipe(
@@ -273,14 +275,14 @@ export class CreateActivityDialogComponent implements OnInit, OnDestroy {
   }
 
   handleCreateBuilding() {
-    // this.dialog.open(CreateCourseDialogComponent, {
-    //   maxWidth: '100vw',
-    //   autoFocus: false
-    // }).afterClosed().subscribe((result:SelectValue | null) => {
-    //   if(!result)
-    //     return;
-    //   this.updateStudyCourses(result);
-    // });
+    this.dialog.open(CreateBuildingDialogComponent, {
+      maxWidth: '100vw',
+      autoFocus: false
+    }).afterClosed().subscribe((result: SelectValue | null) => {
+      if(!result)
+        return;
+      this.updateBuildings(result);
+    });
   }
 
   getGroupName(group: GroupResponse): string { return GroupHelper.groupInfoToString(group)}

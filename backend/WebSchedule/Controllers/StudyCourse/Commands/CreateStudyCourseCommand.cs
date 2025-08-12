@@ -1,13 +1,9 @@
 ﻿using MediatR;
-using WebSchedule.Controllers.Authentication.Commands;
-using WebSchedule.Controllers.Authentication.Exceptions;
 using WebSchedule.Controllers.StudyCourse.Commands;
 using WebSchedule.Controllers.StudyCourse.Exceptions;
-using WebSchedule.Domain.Entities;
 using WebSchedule.Domain.Entities.Study;
 using WebSchedule.Domain.Repositories;
 using WebSchedule.Responses;
-using WebSchedule.Utils;
 
 namespace WebSchedule.Controllers.StudyCourse.Commands
 {

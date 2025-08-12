@@ -76,7 +76,6 @@ export class GroupMembersComponent implements OnInit, OnDestroy {
         if (this.userGroup?.isAdmin && !this.displayedColumns.includes('delete')) {
           this.displayedColumns.push('delete')
         }
-        console.log(this.displayedColumns);
         if (!this.users) {
           this.users = new MatTableDataSource<UserGroupResponse>();
           this.users!.sortingDataAccessor = (item, property) => {

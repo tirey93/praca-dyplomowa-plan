@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { UserGroupResponse } from '../../../../services/userInGroup/dtos/userGroupResponse';
 import { DIALOG_DATA } from '@angular/cdk/dialog';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -18,13 +18,17 @@ import { MatSliderModule } from '@angular/material/slider';
 import { ActivityRepositoryService } from '../../../../services/activity/activityRepository.service';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
-import { combineLatest, debounceTime, filter, map, Observable, startWith, switchMap } from 'rxjs';
+import { combineLatest, debounceTime, filter, map, Observable, startWith, Subject, switchMap, takeUntil } from 'rxjs';
 import { ActivityResponse } from '../../../../services/activity/dtos/activityResponse';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { MatRadioModule } from '@angular/material/radio';
 import { SyncService } from '../../../../services/sync.service';
 import { DividerComponent } from "../../../divider/divider.component";
 import { GroupResponse } from '../../../../services/group/dtos/groupResponse';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { BuildingService } from '../../../../services/building/building.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-create-activity-dialog',
@@ -32,13 +36,13 @@ import { GroupResponse } from '../../../../services/group/dtos/groupResponse';
     MatDialogModule, ReactiveFormsModule, MatTooltipModule, MatButtonModule,
     MatFormFieldModule, MatOptionModule, MatInputModule, MatSelectModule,
     MatSliderModule, MatChipsModule, MatDividerModule, CommonModule,
-    MatRadioModule,
-    DividerComponent
+    MatRadioModule, MatCheckboxModule, MatAutocompleteModule, AsyncPipe,
+    DividerComponent, MatIconModule
 ],
   templateUrl: './create-activity-dialog.component.html',
   styleUrl: './create-activity-dialog.component.scss'
 })
-export class CreateActivityDialogComponent implements OnInit {
+export class CreateActivityDialogComponent implements OnInit, OnDestroy {
   data = inject(DIALOG_DATA);
   group: GroupResponse = this.data.group;
   activityId: number | null = this.data.activityId;
@@ -51,6 +55,10 @@ export class CreateActivityDialogComponent implements OnInit {
   sessionsSelected: number[] = [];
   activitiesConflicted: ActivityResponse[] = []
 
+  private destroy$ = new Subject<void>();
+
+  filteredOptionsBuilding$: Observable<SelectValue[]>;
+  allBuildings: SelectValue[] = [];
   activityForm = new FormGroup({
     name: new FormControl("", {validators: [Validators.required]}),
     teacherFullName: new FormControl("", {validators: [Validators.required]}),
@@ -60,7 +68,9 @@ export class CreateActivityDialogComponent implements OnInit {
     endingHour: new FormControl<SelectValue | null>(null),
     sessions: new FormControl<number[] | null>(null, [Validators.minLength(1), Validators.required]),
     hasConflicts: new FormControl(false),
-    weekDay: new FormControl("", [Validators.required])
+    isRemote: new FormControl(false),
+    weekDay: new FormControl("", [Validators.required]),
+    building: new FormControl<SelectValue | null>(null, {validators: [Validators.required]}),
   });
 
   constructor(
@@ -68,8 +78,24 @@ export class CreateActivityDialogComponent implements OnInit {
     private sessionRepository: SessionService,
     private snackBarService: SnackBarService,
     private activityRepository: ActivityRepositoryService,
-    private syncService: SyncService
+    private syncService: SyncService,
+    private buildingService: BuildingService
   ) {
+      this.updateBuildings(null);
+      this.filteredOptionsBuilding$ = this.activityForm.controls.building.valueChanges.pipe(
+        map((value) => {
+          if (!this.allBuildings) {
+            return [];
+          }
+          const filterValue = (typeof value === 'string' ? value : value?.displayText || '').toLowerCase();
+          
+          if (!filterValue.trim()) {
+            return this.allBuildings.slice();
+          }
+          return this.allBuildings.filter(building => building.displayText.toLowerCase().includes(filterValue));
+        }),
+      );
+
       combineLatest([
         this.activityForm.controls.duration.valueChanges.pipe(startWith(this.activityForm.controls.duration.value)),
         this.activityForm.controls.weekDay.valueChanges.pipe(startWith(this.activityForm.controls.weekDay.value)),
@@ -109,8 +135,29 @@ export class CreateActivityDialogComponent implements OnInit {
         }
       });
   }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 
   ngOnInit(): void {
+    this.activityForm.controls.isRemote.valueChanges.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (isRemote) => {
+        if (isRemote) {
+          this.activityForm.controls.room.clearValidators();
+          this.activityForm.controls.room.setValue(null);
+          this.activityForm.controls.building.clearValidators();
+          this.activityForm.controls.building.setValue(null);
+        } else {
+          this.activityForm.controls.room.addValidators([Validators.required]);
+          this.activityForm.controls.building.addValidators([Validators.required]);
+        }
+        this.activityForm.controls.room.updateValueAndValidity();
+        this.activityForm.controls.building.updateValueAndValidity();
+        this.updateBuildings(null);
+      }
+    })
+
     this.sessionRepository.getByGroup$(this.group.id).subscribe({
       next: (sessionsResponse) => {
         this.allSessions = sessionsResponse
@@ -136,6 +183,12 @@ export class CreateActivityDialogComponent implements OnInit {
           this.activityForm.controls.weekDay.setValue(activity.weekDay.toLowerCase());
           this.activityForm.controls.startingHour.setValue(activity.startingHour);
           this.activityForm.controls.duration.setValue(activity.duration);
+          if (activity.building) {
+            this.activityForm.controls.isRemote.setValue(false);
+            this.updateBuildings({ id: activity.building.buildingId, displayText: activity.building.name });
+          } else {
+            this.activityForm.controls.isRemote.setValue(true);
+          }
           this.isLoading = false;
           this.activityForm.setErrors({'incorrect': true})
         }, error: (err) => {
@@ -148,6 +201,8 @@ export class CreateActivityDialogComponent implements OnInit {
       this.activityForm.controls.name.disable();
       this.activityForm.controls.teacherFullName.disable();
       this.activityForm.controls.room.disable();
+      this.activityForm.controls.building.disable();
+      this.activityForm.controls.isRemote.disable();
       this.activityForm.controls.weekDay.disable();
       this.activityForm.controls.startingHour.disable();
       this.activityForm.controls.duration.disable();
@@ -160,6 +215,7 @@ export class CreateActivityDialogComponent implements OnInit {
   }
 
   submit() {
+    const building = this.activityForm.controls.building.value;
     if (this.activityId) {
       this.activityRepository.update$({
         activityId: this.activityId,
@@ -168,7 +224,8 @@ export class CreateActivityDialogComponent implements OnInit {
         room: this.activityForm.controls.room.value!,
         weekDay: this.activityForm.controls.weekDay.value!,
         startingHour: this.activityForm.controls.startingHour.value!,
-        duration: this.activityForm.controls.duration.value!
+        duration: this.activityForm.controls.duration.value!,
+        buildingId: building?.id,
       }).subscribe({
         next: () => {
           this.syncService.refreshActivities$.next();
@@ -190,7 +247,8 @@ export class CreateActivityDialogComponent implements OnInit {
         weekDay: this.activityForm.controls.weekDay.value!,
         springSemester: this.group.springSemester,
         startingHour: this.activityForm.controls.startingHour.value!,
-        duration: this.activityForm.controls.duration.value!
+        duration: this.activityForm.controls.duration.value!,
+        buildingId: building?.id,
       }).subscribe({
         next: () => {
           this.syncService.refreshActivities$.next();
@@ -212,6 +270,18 @@ export class CreateActivityDialogComponent implements OnInit {
     }
     this.activityForm.get('sessions')?.setValue(this.sessionsSelected);
   }
+
+  handleCreateBuilding() {
+    // this.dialog.open(CreateCourseDialogComponent, {
+    //   maxWidth: '100vw',
+    //   autoFocus: false
+    // }).afterClosed().subscribe((result:SelectValue | null) => {
+    //   if(!result)
+    //     return;
+    //   this.updateStudyCourses(result);
+    // });
+  }
+
   getGroupName(group: GroupResponse): string { return GroupHelper.groupInfoToString(group)}
 
   parseSessionNumber(sessionNumber: number): string {
@@ -254,10 +324,28 @@ export class CreateActivityDialogComponent implements OnInit {
   getDay(weekNumber: number, weekDay: string): string {
     return WeekHelper.getWeekendDay(WeekHelper.getSaturdayOfWeek(weekNumber), weekDay.toLowerCase() === "sunday");
   }
+  displayFn(value: SelectValue): string {
+    return value && value.displayText ? value.displayText : '';
+  }
 
   get canModify(): boolean {
     return this.activityId != undefined && this.isAdmin;
   }
+
+  private updateBuildings(building: SelectValue | null) {
+    this.buildingService.get$().pipe(
+      map(buildings => buildings.map(x => ({
+        id: x.buildingId,
+        displayText: x.name
+      }) as SelectValue))
+    ).subscribe({
+      next: (value) => {
+        this.allBuildings = value
+        this.activityForm.controls.building.setValue(building);
+      }
+    });
+  }
+
   private getAllHours(): number[] {
     const dayStart = 8;
     const dayEnd = 20;

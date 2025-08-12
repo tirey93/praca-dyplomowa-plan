@@ -213,8 +213,6 @@ export class WeekScheduleComponent implements OnInit, OnDestroy{
     .subscribe({
       next: ([groups, isAdmin]) => {
         if (groups.length > 0) {
-          console.log(groups[0]);
-          console.log('isAdmin',isAdmin);
           this.dialog.open(CreateActivityDialogComponent, {
             maxWidth: '50vw',
             autoFocus: false,

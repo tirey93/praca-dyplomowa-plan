@@ -18,12 +18,33 @@
                     <input formControlName="teacherFullName" required type="text" matInput>
                 </mat-form-field>
             </div>
-            <div class="dialog-content-half-container">
-                <mat-form-field appearance="outline">
-                    <mat-label>Sala</mat-label>
-                    <input formControlName="room" required type="text" matInput>
-                </mat-form-field>
-            </div>
+            <app-divider>Lokalizacja</app-divider>
+            <mat-checkbox formControlName="isRemote">Zdalnie</mat-checkbox>
+            @if (!activityForm.controls.isRemote.value) {
+                <div class="dialog-content-flex-container">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Budynek</mat-label>
+                        <input type="text" matInput formControlName="building" [matAutocomplete]="auto">
+                        <mat-autocomplete 
+                            [displayWith]="displayFn"
+                            autoActiveFirstOption 
+                            #auto="matAutocomplete">
+                        @for (option of filteredOptionsBuilding$ | async; track $index) {
+                            <mat-option [value]="option">{{option.displayText}}</mat-option>
+                        }
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <button matTooltip="Brakuje budynku? Kliknij, aby utworzyć nowy." 
+                        (click)="handleCreateBuilding()"
+                        mat-mini-fab type="button">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                    <mat-form-field appearance="outline" class="dialog-full-width">
+                        <mat-label>Sala</mat-label>
+                        <input formControlName="room" type="text" matInput>
+                    </mat-form-field>
+                </div>
+            }
             <app-divider>Termin</app-divider>
             <div style="margin: 30px 0; max-width: 550px;">
                 <mat-chip-set>
@@ -83,15 +104,17 @@
         </form>
         <mat-dialog-actions>
             <button mat-raised-button type="button" (click)="onNoClick()">Anuluj</button>
-            <div style="margin-left: 15px;">
-                <button 
-                    mat-flat-button
-                    type="submit" 
-                    cdkFocusInitial
-                    [disabled]="activityForm.invalid || isLoading"
-                    (click)="submit()">{{activityId ? 'Zmień' : 'Utwórz'}}
-                </button>
-            </div>
+            @if (isAdmin) {
+                <div style="margin-left: 15px;">
+                    <button 
+                        mat-flat-button
+                        type="submit" 
+                        cdkFocusInitial
+                        [disabled]="activityForm.invalid || isLoading"
+                        (click)="submit()">{{activityId ? 'Zmień' : 'Utwórz'}}
+                    </button>
+                </div>
+            }
         </mat-dialog-actions>
     </mat-dialog-content>
 }
